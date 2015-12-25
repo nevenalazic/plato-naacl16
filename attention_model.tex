@@ -1,0 +1,7 @@
+\section{Model Definition}
+Assume we have $n$ mentions we wish to disambiguate. The $i^{th}$ mention will have $n_i$ candidates and we denote those by $c_1,\ldots, c_{n_i}$. The goal 
+of the entity linking model is to assign a label $y_i\in \{c_1,\ldots, c_{n_i}\}$ to each mention.
+
+As with other coherence based approaches, we use local and pairwise scorews. Local scores are denoted by $s_i(y_i)$, and score each candidate $y_i$ for the $i^{th}$ mention based on local evidence (e.g., context, mention text etc). The pairwise scores are denoted by $s_{i,j}(y_i,y_j)$ and score each candidate pair based on its coherence. 
+
+In what follows, we first describe the inference part of our model. Namely, how to predict the labels $y_i$ given the scores. We later explain how scores are claculated and learned.
