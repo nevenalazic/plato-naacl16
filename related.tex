@@ -1,0 +1,9 @@
+\section{Related work}
+\label{sec:related}
+
+Coherence among the choice of entity labels for a document has been exploited since early NERD papers \cite{Cucerzan07,Milne2008}.  What has evolved is the manner in which coherence is a.~modeled and b.~optimized.
+
+Several systems \cite{Milne2008,KulkarniSRC09,Hoffart2011} used the ``Milne and Witten'' (hereafter, M\&W) coherence measure \cite{Milne2008} or simpler or unweighted forms of it \cite{Cucerzan07}.  All of these used Wikipedia's category (an uncomfortable mixture of topics and entity types) structure to characterize entity-to-entity similarity.  Several other signals have been used later.  Apart from categories, Wikipedia also provides direct evidence of relatedness between entities $c_1$ and $c_2$ by way of an intra-Wikipedia link from the page for $c_1$ to the page for $c_2$.  Further, links from a Web page to Wikipedia entity pages for entities $c_1, c_2$ signify relatedness between them.  Such links have been used in several systems \cite{ChengR13,Chisholm2015}.
+
+Coherence optimization is naturally modeled as collective inference, which is generally intractable.  \cite{Cucerzan07} avoided the problem by aggregating the profile vectors representing candidates for all mentions other than the one being labeled, but the aggregates were therefore superpositions of correct and incorrect labels.  \cite{Milne2008} pinned no/low-ambiguity mentions first and then chose labels for other mentions.  \cite{KulkarniSRC2009} used integer linear programs and hill-climbing, which were too slow for Web-scale NERD.  \cite{Hoffart2011} used an iterative heuristic to remove unpromising mention-entity edges.  
+
