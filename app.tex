@@ -1,0 +1,65 @@
+Write the Lagrangian (ignore non-negativity since it'll be satisfied anyway)
+\be
+L(\lambda,\alpha) = \sum_i \mu_i v_i - \beta^{-1} \sum_i \mu_i\log{\mu_i} + 
+\lambda \left(\sum_i\mu_i-K\right)  + \sum_i \alpha_i(1-\mu_i)
+\ee
+Derive wrt $\mu_i$ to get:
+\be
+v_i - \beta^{-1}  - \beta^{-1} \log{\mu_i} +  \lambda - \alpha_i = 0
+\ee
+So:
+\be
+\mu_i = e^{\beta v_i -1 + \beta \lambda - \beta \alpha_i}
+\ee
+Plug back to Lagrangian:
+\bea
+g(\lambda,\alpha) &=&  \sum_i \mu_i v_ i-\beta^{-1} \sum_i \mu_i \left[\beta v_i -1 + \beta \lambda - \beta \alpha_i \right] + \lambda \left(\sum_i\mu_i-K\right) + \sum_i \alpha_i(1-\mu_i) \\
+&=& -\lambda K  + \beta^{-1} \sum_i \mu_i  + \sum_i \alpha_i \\
+&=& -\lambda K  + \beta^{-1} \sum_i   e^{\beta v_i -1 + \beta \lambda - \beta \alpha_i}  + \sum_i \alpha_i 
+\eea
+Now try to solve wrt $\lambda$. Take derivative:
+\be
+\pdTwo{g(\lambda,\alpha)}{\lambda} = -K +  \sum_i e^{\beta v_i -1 + \beta \lambda-\beta \alpha_i}  =0
+\ee
+From which we can solve for $\lambda$:
+\bea
+e^{\beta \lambda} &=& \frac{K}{ \sum_i e^{\beta v_i -1-\beta \alpha_i}} \\
+\lambda^* &=& \beta^{-1}  \log{\frac{K}{ \sum_i e^{\beta v_i -1-\beta \alpha_i}} }
+\eea
+Eliminating the optimal $\lambda$ we have:
+\bean
+g(\alpha) &=& K(\beta^{-1} -\lambda^*)  + \sum_i\alpha_i \\
+&=& K\beta^{-1}  (1 - \log{\frac{K}{ \sum_i e^{\beta v_i -1 -\beta \alpha_i}}}) + \sum_i \alpha_i \\
+&=& K\beta^{-1}   \log{\frac{ \sum_i e^{\beta v_i-\beta \alpha_i}}{K}} + \sum_i \alpha_i
+\label{eq:dualopt}
+\eean
+Now lets try to solve for $\alpha_i$. Recall that it is constrained to be non-negative. So we add
+Lagrange multipliers $\gamma_i$ and a term $-\sum_i \gamma_i\alpha_i$ to the Lagrangian.
+Take gradient of this Lagrangian wrt $\alpha_i$:
+\bea
+-K \frac{e^{\beta v_i -\beta \alpha_i}}{\sum_i e^{\beta v_i-\beta \alpha_i}} + 1  - \gamma_i= 0 \\
+\frac{e^{\beta v_i -\beta \alpha_i}}{\sum_i e^{\beta v_i-\beta \alpha_i}} =  {1-\gamma_i\over K} 
+\eea
+Lets propose a solution and see if it meets KKT. First, assume wlog that $\vv$ is sorted descending.
+Now, take the first $K-1$ elements, and shift those to a constant $c$ by using $\alpha_i$. Set all other $\alpha_i$ to zero. So for $i=1,\ldots,K-1$:
+\be
+\alpha_i = v_i -c 
+\ee
+We'll find $c$ later.  For those $\alpha_i>0$ we have $\gamma_i=0$ so it should hold that:
+\be
+\frac{e^{\beta c}}{(K-1)e^{\beta c}+ \sum_{i=K}^ne^{\beta v_i}} = {1\over K}
+\ee
+So:
+\be
+c ={1\over \beta} \log{\sum_{i=K}^ne^{\beta v_i}}
+\ee
+which is a soft max on the suffix of $\vv$.
+
+Plugging this into the dual objective \eqref{eq:dualopt}:
+\be
+K\beta^{-1} \log {\frac{(K-1)e^{\beta c} + \sum_{i=K}^{n}e^{\beta v_i} }{K}} + \sum_{i=1}^{K-1} (v_i-c)
+\ee
+This gives:
+\be
+c + \sum_{i=1}^{K-1} v_i 
+\ee
