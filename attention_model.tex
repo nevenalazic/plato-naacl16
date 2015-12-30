@@ -90,8 +90,17 @@ f_i(y_i) = s_i(y_i) + \samax(s_{i1}(y_i), \ldots, s_{in}(y_i)) ~,
 \label{eq:samax_obj}
 \ee
 and maximize $f(y_i)$ to obtain the label.
-
  
+\subsection{Score Parameterization}
+Thus far we assumed the singelton and pairwise scores were given. As in other structured prediction works, we will assume that the scores are features of the input and labels. Specifically, denote a set of singleton features by $\fs\in\reals^{n_s}$ and a set of pairwise features by $\fp\in\reals^{n_p}$. Then the model has two sets of weights $\ws$ and $\wp$ and the scores are obtained as a linear combination of the features. Namely:
+\bea
+s_i(y_i;\ws) &=& \ws\cdot\fs  \\
+s_{ij}(y_i,y_j;\wp) &=& \wp\cdot\fp ~, \\
+\eea
+where we have expicitly denoted the dependence of the scores on the weight vectors. See \secref{sec:features} for details on how the features are chosen. It of course possibel to consider non-linear alternatives for the score function, as in recept works \cite{manning,neurosis}, but we focus on the linear case for simplicity.
+
+\subsection{Parameter Learning}
+The parameters $\ws,\wp$ are learned from labeled data, as explained next. 
 
 
 
