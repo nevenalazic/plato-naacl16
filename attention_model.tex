@@ -100,7 +100,18 @@ s_{ij}(y_i,y_j;\wp) &=& \wp\cdot\fp ~, \\
 where we have expicitly denoted the dependence of the scores on the weight vectors. See \secref{sec:features} for details on how the features are chosen. It of course possibel to consider non-linear alternatives for the score function, as in recept works \cite{manning,neurosis}, but we focus on the linear case for simplicity.
 
 \subsection{Parameter Learning}
-The parameters $\ws,\wp$ are learned from labeled data, as explained next. 
+The parameters $\ws,\wp$ are learned from labeled data, as explained next. Since prediction is performed for each mention separately, we use a simple hinge loss for that mention. The loss is defined as follows. Denote by $y^*_i$ the ground
+truth label for mention $i$. Define the corresponding ground truth $s_{ij}$ as:
+\be
+s^*_{ij} = s_{ij}(y^*_i,y^*_j)
+\ee
+Then the hinge loss is:
+\bea
+\ell_i &=& \max_{y_i}[ s_i(y_i) + \samax(s_{i1}(y_i), \ldots, s_{in}(y_i))  \\
+       && - s_i(y^*_i) - \samax(s^*_{i1}, \ldots, s^*_{in})  
+       + \Delta(y_i,y^*_i) ]
+\eea
+where $\Delta(y_i,y^*_i)$ is zero if $y_i=y^*_i$ and one otherwise.
 
-
+The overall loss is simply the sum of loss for all the mentions, plus $\ell_2$ regularization over $\ws,\wp$. To minimize the loss we use AdaGrad \cite{adagrad} with learning rate $\eta=0.1$.
 
