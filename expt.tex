@@ -1,0 +1,54 @@
+\section{Experimental evaluation}
+
+We use the output of Plato \cite{Lazic2015} as our baseline, as well as to generate candidates and initial scores $t_{mc}$. Plato does not have an explicit coherence model; however, it does capture some coherence information as referrent phrases are included as string features. Plato outputs posterior probabilities of candidates for each mention $p(c|m)$. Our model has no probabilistic interpretation, and we simply set $t_{mc} = \ln p(c|m) - \ln (1 - p(c|m))$, so that likely candidates get positive scores. We set edge weights to $s_{cc'} = \ln n_{cc'} + \beta$, where $n_{cc'}$ is the number of outlinks from the Wikipedia page of $c$ to the page of $c'$ and $\beta=0.7$. We consider up to $k=3$ candidates for each mention; if the Plato posterior for the top candidate exceeds $0.9$, we only include the top candidate in the graph.
+
+We evaluate our approach on the same three corpora as \newcite{Lazic2015}. The CoNLL dataset ~\cite{Hachey2013130} contains 1,393 articles with about 34K
+mentions, and the standard performance metric is mention-averaged accuracy.
+The TAC KBP datasets \cite{TAC2011,TAC2012} include 2,226 mentions (2012) and 2,250 mentions (2011), of which roughly half are linkable to the reference KB. The competition evaluation includes $\NIL$ entities;
+participants are required to cluster $\NIL$ mentions across documents
+so that all mentions of each unknown entity are assigned a unique
+identifier. We use the same $\NIL$ cluster labels as Plato. For these datasets, we report in-KB accuracy, overall accuracy (including $\NIL$ mentions), and the competition metric $B^{3+} F_1$. 
+
+We show the performance of the Plato baseline, Plato with coherence, and the best results reported in literature in Tables \ref{table:tac_results} and \ref{table:conll_results}.  The coherence model improves performance on all three datasets, yielding new state-of-the-art results on the TAC KBP datasets. While coherence also leads to improved performance on CoNLL, the overall system does not surpass the state of the art. One reason for this is that the candidate recall of the baseline system (an upper bound on accuracy) is relatively low -- below the accuracy of the system of \cite{Pershina2015}. 
+
+
+\begin{table*}[ht]
+\small
+\centering
+\begin{tabular}{|l|l|l|c|c|c|}
+\hline 
+\bf Data & \bf Plato & \bf Model & \bf In-KB & \bf Overall & ${\bf B^{3+}F_1}$ \\ 
+& \bf cand. recall &  & \bf accuracy & \bf accuracy & \\ \hline
+TAC 2011 & 84.8 & \newcite{Cucerzan2011} &- & 86.8 &  {84.1} \\
+&& Plato \cite{Lazic2015} & 79.3 & 86.5 & 84.0 \\
+&& Plato with coherence & {\bf 81.2} & {\bf 87.0} & {\bf 84.5} \\
+\hline
+\hline
+TAC 2012 & 83.2 &\newcite{Cucerzan2012}  Run 1 & 72.0 & 76.2 & 72.1  \\
+& &\newcite{Cucerzan2012} Run 3 & 71.2 & {76.6} & {\bf 73.0} \\
+& &Plato \cite{Lazic2015} & {74.2} & {76.6} & 71.2 \\
+& &Plato with coherence & {\bf 75.1} & {\bf 77.3} & {72.2} \\
+\hline
+\end{tabular}
+\caption{ \label{table:tac_results} TAC KBP evaluation results for our model and previous highest-accuracy systems.  }
+\end{table*}
+
+\begin{table*}[ht]
+\small
+\centering
+\begin{tabular}{|l|l|l|c|}
+\hline 
+\bf Data & \bf Plato & \bf Model & \bf In-KB  \\ 
+& \bf cand. recall &  & \bf accuracy \\ \hline
+CoNLL all & 91.7 & \newcite{Pershina2015} & {\bf 91.8}  \\
+&& Plato \cite{Lazic2015} & 86.5 \\
+&& Plato with coherence & 86.9  \\
+\hline
+\hline
+CoNLL test-b &  & \newcite{Chisholm2015} & {\bf 88.7} \\
+& &Plato \cite{Lazic2015} & {86.4}  \\
+& &Plato with coherence & {87.1} \\
+\hline
+\end{tabular}
+\caption{ \label{table:conll_results} CoNLL evaluation results for our model and previous highest-accuracy systems. }
+\end{table*}
