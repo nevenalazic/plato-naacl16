@@ -1,0 +1,15 @@
+
+
+\section{Definitions and notation}
+
+We are given a document with $N$ mentions, where each mention $m$ has a set of candidate entities $\mathcal{C}_m = \{c_1, ..., c_{N_m}\}$. The goal is to assign a label $y_m \in \mathcal{C}_m$ to each mention.
+
+Similarly to previous work, our approach to disambiguation relies on local and pairwise candidate scores. We denote the local score for mention $m$ and candidate $c$ by $s_m(c)$; this score is based only on local evidence, such as the mention phrase and surrounding textual features. The pairwise score for mentions $i$, $j$ and corresponding candidates $c$, $c'$ is denoted by $s_{ij}(c, c')$,  and it is based on the relatedness of the two candidates. In the \texttt{SingleLink} model, we compute these scores deterministically and use them as fixed model inputs. In the \texttt{Attention} model, we parameterize the scores and learn them using a labeled dataset.
+
+Coherence models typically attempt to maximize a {\em global} objective function that assigns a score to each complete labeling ${\bf y} = (y_1,\ldots, y_n)$.  A commonly used function is the sum of all singleton and pairwise scores for selected candidates:
+ %A common example of such a function $g(y_1,\ldots,y_n)$ is:
+\be
+g({\bf y}) = \sum_i s_i(y_i) + \sum_{j \neq i} s_{ij}(y_i,y_j)
+\label{eq:global_obj}
+\ee 
+One disadvantage of this approach is that maximizing $g$ takes type exponential in $n$, and requires approximate inference. Another, as we discuss later, is that it sums information across all entities and can introduce noise in the process. Our two models explore alternative optimization objectives.
