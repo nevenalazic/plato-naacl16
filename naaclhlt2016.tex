@@ -70,8 +70,8 @@
 \maketitle
 
 \begin{abstract}
-Entity resolution is the task of linking each mention of an entity in text to the corresponding record in a knowledge base (KB). Coherence models for entity resolution encourage all referring expressions in a document to resolve to entities that are related in the KB. 
-Such models are often specified via a graph whose vertices correspond to candidate entities, and weighted edges to entity relations. We present a new graph-based coherence method which attempts to find the best link for each candidate and relies on the max-sum algorithm for inference.  Applying our approach to the output of an existing system improves its performance on three (out of three) benchmarks, yielding state-of-the-art results on the TAC KBP 2011 and 2012 tasks.
+Entity resolution is the task of linking each mention of an entity in text to the corresponding record in a knowledge base (KB). Coherence models for entity resolution encourage all referring expressions in a document to resolve to entities that are related in the KB. Such models often consider the relations between a candidate entity and all other entities in the document, which may dilute the evidence for non-salient entities. In this work, we explore attention-like mechanisms for coherence that focus on a small set of most relevant relations for each candidate.
+ Applying our approach to the output of an existing system improves its performance on three (out of three) benchmarks, yielding state-of-the-art results on the TAC KBP 2011 and 2012 tasks.
 \end{abstract}
 
 
