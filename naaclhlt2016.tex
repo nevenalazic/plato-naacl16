@@ -78,13 +78,13 @@ Entity resolution is the task of linking each mention of an entity in text to th
 
 \input{intro}
 \input{notation}
-\input{maxsum}
+%\input{maxsum}
 \input{attention_model}
 \input{expt}
 
 \section{Discussion and conclusion}
 
-We have described a simple new graph-based approach to coherence, where each candidate can have at most one relation to another candidate in the solution subgraph. Our approach in effect maximizes over relation scores rather than averaging, which ensures that the scores are not diluted. Compared to the recently popular PageRank methods, our model can only exploit one-hop links. TODO why this is good and multihop relations spurious.
+We have described a simple new graph-based approach to coherence, where each candidate can have at most one relation to another candidate in the solution subgraph. Our approach in effect maximizes over relation scores rather than averaging, which ensures that the scores are not diluted. Compared to the recently popular PageRank methods, our model can only exploit one-hop links. \hl{TODO: more discussion}
 
 %\section*{Acknowledgments}
 

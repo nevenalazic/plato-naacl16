@@ -1,44 +1,39 @@
 
 
+\section{Single-link model}
+
+In our first approach, which we name \emph{single link}, we consider a simple global objective function which maximizes over relation scores for each entity, rather than summing or averaging them:
+\begin{align}
+g^{SL}({\bf y}) &= \sum_i \bigg( s_i(y_i) + \max_{ j \neq i} s_{ij}(y_i, y_j) \bigg).
+\end{align}
+We consider relations between candidate entities to be directed, with asymmetric pairwise scores $s_{ij}(y_i, y_j)$, and rely on deterministic (not learned) scores. 
+While exact inference in this model remains intractable, we can find approximate solutions using max-sum belief propagation. We provide the corresponding iterative message updates in Appendix A. 
+
 \section{Attention model}
 
-Assume we have $n$ mentions we wish to disambiguate. The $i^{th}$ mention will have $n_i$ candidates and we denote those by $c_1,\ldots, c_{n_i}$. The goal 
-of the entity linking model is to assign a label $y_i\in \{c_1,\ldots, c_{n_i}\}$ to each mention.
-
-As with other coherence based approaches, we use local and pairwise scores. Local scores are denoted by $s_i(y_i)$, and score each candidate $y_i$ for the $i^{th}$ mention based on local evidence (e.g., context, mention text etc). The pairwise scores are denoted by $s_{i,j}(y_i,y_j)$ and score each candidate pair based on its coherence. 
-
-In what follows, we first describe the inference part of our model. Namely, how to predict the labels $y_i$ given the scores. We later explain how scores are calculated and learned.
-
+We now describe the our attention model for scoring relations. We first describe the optimization objective and inference, and then provide details on how scores are calculated and learned.
 \subsection{Inference}
-One approach to coherence modeling is to maximize a {\em global} objective function, that assigns a score to each complete labeling $y_1,\ldots,y_n$.
- A common example of such a function $g(y_1,\ldots,y_n)$ is:
-\be
-\sum_i s_i(y_i) + \sum_{i\neq j} s_{ij}(y_i,y_j)
-\label{eq:global_obj}
-\ee 
-One disadvantage of this approach is that it maximizing $g$ takes type exponential in $n$. Another, as we discuss later, is that it sums information across all entities and can introduce noise in the process, which our attention model can overcome.
-
-\subsubsection{The Star Model}
-To avoid the computational hardness, we first consider a simpler inference procedure, which we call a {\em star model}. We will later introduce attention into the model, but begin with the attention free case. Our approach labels each $y_i$ separately. To label $y_i$ we consider a star shaped graphical model, which is centered at $y_i$, as illustrated in \figref{fig:star}. The corresponding score function is:
+\subsubsection{Star model}
+We start by considering a simple attention-free model in which inference is tractable, which we call a {\em star model}. Here, each mention $i$ is labeled independently of other mentions, based on a star-shaped graphical model centered at $i$, as illustrated in $\figref{fig:star}$. The corresponding score function $f_i$ is:
 \be
 f_i(y_1,\ldots,y_n) = \sum_j s_j(y_j) + \sum_{j\neq i} s_{ij}(y_i,y_j) ~,
 \label{eq:star_obj}
 \ee
 and the label $y_i$ is obtained by maximizing over all labels, and returning that of $y_i$. Namely:
 \be
-y_i = \arg\max_{y_i} \max_{y_{j}: j\neq i} f_i(y_1,\ldots,y_n)
+y_i = \arg\max_{y_i} \max_{y_{j}: j\neq i} f_i(y_1,\ldots,y_n).
 \ee
-Since $f_i$ corresponds to a star shaped graphical model, maximization is easy and can be done in $O(nC^2)$, where $C$ is the maximum number of candidates.
+Due to the structure of $f_i$, maximization is easy and can be done in $O(nC^2)$, where $C$ is the maximum number of candidates.
 
-\subsubsection{Adding Attention \label{sec:add_attention}}
+\subsubsection{Adding attention \label{sec:add_attention}}
 The score function in \eqref{eq:star_obj} aggregates scores from all other mentions $j\neq i$, in order to label mention $i$. If the document has many mentions, this can introduce noise into the decision process. To reduce this effect, we introduce attention into our model, and allow it to only use scores from mentions that have high coherence with $y_i$. We next define this notion more formally. 
 
-We specify a parameter $K$, that denotes the maximum number of mentions to attend to. Next, define the function $\amax(z_1,\ldots,z_n)$ to be
-the sum of the top $K$ values in $z_1,\ldots,z_n$.  For each $j\neq i$, we define the coherency between $y_i$ and $j$ to be:
+We specify a parameter $K$ that denotes the maximum number of relations to consider for a candidate. Next, define the function $\amax(z_1,\ldots,z_n)$ to be
+the sum of the top $K$ values in $z_1,\ldots,z_n$.  For each $j\neq i$, we define the coherence between label $y_i$ and mention $j$ to be:
 \be
-s_{ij}(y_i) = \max_{y_j}  s_{ij}(y_i,y_j)  + s_j(y_j)
+s_{ij}(y_i) = \max_{y_j}  s_{ij}(y_i,y_j)  + s_j(y_j),
 \ee
-Where we also define $s_{ii}(y_i)=-\infty$ to simplify notation later. Thus, $s_{ij}(y_i)$ gives the strength of support that mention $j$ gives to candidate $y_i$. Since we want to only attend to the most informative mentions, we will only consider  the $K$ best mentions. Namely, we consider the score function:
+and we also define $s_{ii}(y_i)=-\infty$ to simplify notation later. Thus, $s_{ij}(y_i)$ gives the strength of support that mention $j$ gives to candidate $y_i$. Since we want to only attend to the most informative mentions, we will only consider  the $K$ best mentions. Namely, we consider the score function:
 \be
 f_i(y_i) = s_i(y_i) + \amax(s_{i1}(y_i), \ldots, s_{in}(y_i))
 \label{eq:amax_obj}
@@ -46,7 +41,7 @@ f_i(y_i) = s_i(y_i) + \amax(s_{i1}(y_i), \ldots, s_{in}(y_i))
 Labeling is then simply done by taking the argmax of $f_i(y_i)$. Computationally, the cost is $O(nC^2+ n\log{n})$ since sorting is required.\footnote{Note that if $k < \log{n}$, we can use $nk$ instead of $n\log{n}$.}  
 
 \subsubsection{Soft Attention \label{sec:soft_attention}}
-Several works on attention have shown that it is better to use a soft form of attention, where the level of attention is not zero or one, but can rather take intermediate values. In current attention models, the attention is to a single object (e.g., a word as in \cite{} or part of an image as in \cite{}). In these cases, it is natural to change the max function in the attention operator to a soft-max. In our case, the attention beam contains $K$ elements, and we require a different notion of a soft-max, which we develop below.
+Several works on attention have shown that it is better to use a soft form of attention, where the level of attention is not zero or one, but can rather take intermediate values. In current attention models, the attention is to a single object (\hl{TODO: citations}e.g., a word as in \cite{} or part of an image as in \cite{}). In these cases, it is natural to change the max function in the attention operator to a soft-max. In our case, the attention beam contains $K$ elements, and we require a different notion of a soft-max, which we develop below.
 
 Our goal is to obtain a soft-version of the function  $\amax(z_1,\ldots,z_n)$. To do so, we first use an alternative definition of this function, as the solution 
 to the optimization problem:
@@ -59,7 +54,7 @@ x_1,\ldots,x_n: \\
  \end{array}
  } \sum_i z_i x_i
 \ee
-The optimization problem above is a linear program, whose solution is the top $K$ element of $z$ as required. This follows, since $x_i$ at the optimum can easily be seen to attain only integral values (otherwise the objective can be improved. Alternatively, it can be shown that the vertices of the constraining polytope are integral).
+The optimization problem above is a linear program, whose solution are the top $K$ elements of $z$ as required. This follows since optimal $x_i$ can easily be seen to attain only integral values (otherwise the objective can be improved). Alternatively, it can be shown that the vertices of the constraining polytope are integral.
 
 Given this optimization view of $\amax(z_1,\ldots,z_n)$ it is natural to smooth it \cite{Nesterov} by adding a non-linearity to the optimization. A very natural choice
 is an entropy regularizer, which also recovers the standard soft-max case for $K=1$.  Consider the optimization problem:
@@ -79,11 +74,11 @@ Assume $i_1,\ldots,i_n$ are such that $z_{i_1}\geq \ldots \geq z_{i_n}$. Then:
 \be
 \samax(z_1,\ldots,z_n) = \sum_{j=1}^{K-1} z_{i_j} + \beta \log\sum_{j=K} e^{\beta^{-1} z_{i_j}}  
 \ee
-Furthermore, $\samax(z_1,\ldots,z_n)$ is differentiable and its gradient is given by $....$ 
+Furthermore, $\samax(z_1,\ldots,z_n)$ is differentiable and its gradient is given by $....$ \hl{TODO}
 \end{proposition}  
 Proof is provided in the appendix.
 
-Note that when $K=1$, we recover the standard soft-max function \cite{}. For other $K$, the function $\samax$ has an intuitive interpretation: take the sum of the top $K-1$ elements of $z_1,\ldots,z_n$, and add the soft-max of all other elements. As $\beta\to 0$, this soft-max will approach the true max and therefore the soft-max of the suffix will be exactly the $K^{th}$ top element, and $\samax$ will therefore be the sum of the top $K$ elements as expected. For finite $\beta$ we have a soft version of $\amax$.
+As noted, $K=1$ recovers the standard soft-max function \cite{}. For other values of $K$, the function $\samax$ has an intuitive interpretation: take the sum of the top $K-1$ elements of $z_1,\ldots,z_n$, and add the soft-max of all other elements. As $\beta\to 0$, this soft-max will approach the true max and therefore the soft-max of the suffix will be exactly the $K^{th}$ top element, and $\samax$ will therefore be the sum of the top $K$ elements as expected. For finite $\beta$ we have a soft version of $\amax$.
 
 Our soft attention based model will therefore consider the soft-variant of \eqref{eq:amax_obj} 
 \be
@@ -98,7 +93,7 @@ Thus far we assumed the singelton and pairwise scores were given. As in other st
 s_i(y_i;\ws) &=& \ws\cdot\fs  \\
 s_{ij}(y_i,y_j;\wp) &=& \wp\cdot\fp ~, \\
 \eea
-where we have expicitly denoted the dependence of the scores on the weight vectors. See \secref{sec:features} for details on how the features are chosen. It of course possibel to consider non-linear alternatives for the score function, as in recept works \cite{manning,neurosis}, but we focus on the linear case for simplicity.
+where we have expicitly denoted the dependence of the scores on the weight vectors. See \secref{sec:features} for details on how the features are chosen. It of course possible to consider non-linear alternatives for the score function, as in recent works \cite{manning,neurosis}, but we focus on the linear case for simplicity.
 
 \subsection{Parameter Learning}
 The parameters $\ws,\wp$ are learned from labeled data, as explained next. Since prediction is performed for each mention separately, we use a simple hinge loss for that mention. The loss is defined as follows. Denote by $y^*_i$ the ground
