@@ -28,13 +28,15 @@ We show the performance of the Plato baseline, Plato with coherence, and the bes
 & \bf cand. recall &  & \bf accuracy & \bf accuracy & \\ \hline
 TAC 2011 & 84.8 & \newcite{Cucerzan2011} &- & 86.8 &  {84.1} \\
 && Plato \cite{Lazic2015} & 79.3 & 86.5 & 84.0 \\
-&& Plato with coherence & {\bf 81.2} & {\bf 87.0} & {\bf 84.5} \\
+&& Plato with \emph{single lin} & {\bf 81.2} & {\bf 87.0} & {\bf 84.5} \\
+&& Plato with \emph{soft attention} & & & \\
 \hline
 \hline
 TAC 2012 & 83.2 &\newcite{Cucerzan2012}  Run 1 & 72.0 & 76.2 & 72.1  \\
-& &\newcite{Cucerzan2012} Run 3 & 71.2 & {76.6} & {\bf 73.0} \\
-& &Plato \cite{Lazic2015} & {74.2} & {76.6} & 71.2 \\
-& &Plato with coherence & {\bf 75.1} & {\bf 77.3} & {72.2} \\
+&&\newcite{Cucerzan2012} Run 3 & 71.2 & {76.6} & {\bf 73.0} \\
+&&Plato \cite{Lazic2015} & {74.2} & {76.6} & 71.2 \\
+&&Plato with \emph{single link} & {\bf 75.1} & {\bf 77.3} & {72.2} \\
+&& Plato with \emph{soft attention} & & & \\
 \hline
 \end{tabular}
 \caption{ \label{table:tac_results} TAC KBP evaluation results for our model and previous highest-accuracy systems.  }
@@ -44,17 +46,13 @@ TAC 2012 & 83.2 &\newcite{Cucerzan2012}  Run 1 & 72.0 & 76.2 & 72.1  \\
 \small
 \centering
 \begin{tabular}{|l|l|l|c|}
-\hline 
+\hline
 \bf Data & \bf Plato & \bf Model & \bf In-KB  \\ 
-& \bf cand. recall &  & \bf accuracy \\ \hline
-CoNLL all & 91.7 & \newcite{Pershina2015} & {\bf 91.8}  \\
-&& Plato \cite{Lazic2015} & 86.5 \\
-&& Plato with coherence & 86.9  \\
-\hline
-\hline
+& \bf cand. recall &  & \bf accuracy\\ \hline
 CoNLL test-b &  & \newcite{Chisholm2015} & {\bf 88.7} \\
 & &Plato \cite{Lazic2015} & {86.4}  \\
-& &Plato with coherence & {87.1} \\
+& &Plato with \emph{single link} & {87.1} \\
+& & Plato with \emph{soft attention} & 87.4 \\
 \hline
 \end{tabular}
 \caption{ \label{table:conll_results} CoNLL evaluation results for our model and previous highest-accuracy systems. }

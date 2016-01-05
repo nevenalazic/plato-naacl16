@@ -1,84 +1,16 @@
 
 
-\begin{figure*}[!ht]
-\begin{tikzpicture}[node distance=1.5cm,>=stealth',bend angle=35,auto]
-  \tikzstyle{candidate}=[rectangle,dashed,rounded corners=2mm,thick,draw=black,fill=white,minimum size=6mm]
-  \tikzstyle{selected} = [rectangle,rounded corners=2mm,thick,draw=black,fill=gray!10,minimum size=6mm]
-  \tikzstyle{mention}=[rectangle,thick,draw=black!75,
-  			  fill=black!10,minimum size=6mm]
-  \tikzstyle{every label}=[black]
 
- \begin{scope}
-    % First mention.
-   % \node [mention] (m1){\qtext{Beirut}};
-   % \node [candidate] (c11) [label=above:0.5] {Beirut, Lebanon};
-   \node [candidate] (c11) {Beirut, Lebanon};
-    \node [candidate] (c12) [below of=c11]  {Beirut (game)};
-        \node [selected] (c13)  [below of=c12] {Beirut (band)};
+\section{Single-link model}
 
-   % Second mention.
-   % \node [mention] [right=3cm of m1](m2){\qtext{Santa Fe}};
-    \node [selected] (c21) [right=2cm of c11] {Santa Fe, New Mexico};
-        \node [candidate] (c22) [below of=c21]  {Santa Fe (1951 Western)};
-    \node [candidate] (c23)  [below of=c22] {Santa Fe (Beirut song)};
-
-      
-     % Third mention.
-   % \node [mention] [right=3cm of m2](m3){\qtext{New Mexico}};
-    \node [selected] (c31) [right=2cm of c21] {New Mexico (state)};
-    \node [candidate] (c32)  [below of=c31] {Univ. New Mexico};
- 
-      
-   %\path (c13) edge [post,line width=2pt] node[above]{0.5} (c21);
-   \path (c13) edge [post,line width=2pt] (c21);
-   \path (c13) edge [post,dashed,line width=2pt] (c23);
-   \path (c31) edge [post,line width=2pt] (c21);
-   \path (c21) edge [post,line width=2pt,bend right] (c31);
-  \end{scope}
-\end{tikzpicture}
-\caption{Example coherency graph for mentions $\qtext{Beirut}$, $\qtext{Santa Fe}$ and $\qtext{New Mexico}$. Solid lines indicate a valid solution subgraph, where each selected candidate has at most one outgoing edge to another candidate. TODO: better example?}
-\label{fig:graph}
-\end{figure*}
-
-
-
-\section{Message passing with coherence}
-
-\subsection{Model}
-
-Similarly to prior work, we specify the model using a graph in which vertices are candidate entities for each mention in the document, and directed edges are known relations between entities. Each vertex $(m, c)$, corresponding to candidate $c$ for mention $m$, is associated with a prior score $t_{mc}$ for $m$ resolving to $c$.  Similarly, each edge from $(m,c)$ to $(m',c')$ is associated with a score $s_{cc'}$, indicating the strength of the relation between the  two candidate entities. 
-Edges are directed because pairwise relations are often asymmetric, especially if one entity is more common than the other (for example, Springfield NE and Nebraska). We do not allow edges between candidates for the same mention. 
-
-Our goal is to find the highest-weight subgraph such that (1) we select exactly one candidate for each mention, and (2) each candidate has at most one \emph{outgoing} edge to another candidate. We place no constraints on the number of incoming edges; however, note that edges can only exist between selected candidates. See Figure \ref{fig:graph} for an example. TODO: some rationale (max wt, salient entities).
-
-For notational convenience, we augment the graph with a special vertex $(0, 0)$ that all other vertices link to with edge weight $0$ and require each candidate to have exactly one outgoing edge. An edge from $(m, c)$ to $(0, 0)$ then indicates that $m$ resolves to $c$ and $c$ has no relations to other resolved entities. 
-
-Let $x_{mc}^{m'c'}$ be a binary variable indicating whether a directed edge from $(m, c)$ to $(m', c')$ is present in the solution subgraph or not. We will use ``:'' to indicate the entire range of an index, so that $x_{mc}^{::}$ is the set of variables corresponding to all outgoing edges from $(m,c)$.  According to our formulation, mention $m$ will resolve to candidate $c$ if vertex $(m,c)$ has an outgoing edge, or $ \max x_{mc}^{::}=1$. We now specify the overall objective and constraints using these binary edge variables. Maximize:
+In our first approach, which we name \emph{single link}, we consider a simple global objective function which maximizes over relation scores for each entity, rather than summing or averaging them:
 \begin{align}
-E(x_{::}^{::}) =& \sum_{(m, c), (m',c')} t_{mc} \;x^{m'c'}_{mc}  + \sum_m \phi_m( x_{m:}^{::}) \nonumber \\
-&+ \sum_{(m,c), (m', c') \in \mathcal{E}} \sigma_{mc}^{m'c'}(x_{mc}^{m'c'}, x_{m'c'}^{::}) \\ \nonumber \\
-\phi_{m}&= 
-\begin{cases} 
-0 & \text{if} \; \sum_{c, (m',c')} x^{m'c'}_{mc} = 1 \\
--\infty & \text{otherwise.}
-\end{cases} \\ \nonumber \\
-\sigma_{mc}^{m'c'} &= %(x_{mc}^{m'c'}, x_{m'c'}^{::}) &=
-\begin{cases}
- s_{cc'} & \text{if $x_{mc}^{m'c'}=1$ and $\max x_{m'c'}^{::} =1$} \\
- -\infty & \text{if $x_{mc}^{m'c'}=1$ and $\max x_{m'c'}^{::}=0$} \\
-  0 & \text{ if $x_{mc}^{m'c'} = 0$ } 
- \end{cases}
+g^{SL}({\bf y}) &= \sum_i \bigg( s_i(y_i) + \max_{ j \in \mathcal{E}_i} s_{ij}(y_i, y_j) \bigg).
 \end{align}
-Here, the factors $t_{mc} x_{mc}^{m'c'}$ incorporate the prior score that mention $m$ resolves to candidate entity $c$. 
-Factors $\phi_m$ enforce the constraints that each mention resolves to exactly one candidate and has exactly one outgoing edge. 
-Finally, factors $\sigma_{mc}^{m'c'}$ add the score $s_{cc'}$ if the edge corresponding to $x_{mc}^{m'c'}$ is included in the solution subgraph. They also enforce the constraint that $x_{mc}^{m'c'}$ cannot be included in the solution unless the vertex $(m', c')$ is included as well, that is  $\max x_{m'c'}^{::} = 1$.
+We consider relations between candidate entities to be directed, with asymmetric pairwise scores $s_{ij}(y_i, y_j)$, and rely on deterministic (not learned) scores. 
+While exact inference in this model remains intractable, we can find approximate solutions using max-sum belief propagation. 
 
-%
-
-
-\subsection{Inference}
-
-\subsubsection{Max-sum algorithm}
+\paragraph{Max-sum algorithm} 
 The max-sum algorithm is an iterative algorithm for maximum-a-posteriori (MAP) inference:
 \begin{equation}
 {\bf x}^{MAP} = \arg \max_{\bf x} p({\bf x}) = \arg \max_{\bf x} \sum_a \phi_a({\bf x}_a).
@@ -88,31 +20,15 @@ The max-sum algorithm is an iterative algorithm for maximum-a-posteriori (MAP) i
 \mu_{\phi_a \rightarrow X_i}(x_i) =& \max_{ {\bf x}_a \setminus x_i } \bigg[ \phi_a({\bf x}_a) + \sum_{j \neq i} q_j^{\setminus a}(x_j)\bigg]
 \label{eq:damping}
 \end{align}
-\noindent where $q_j^{\setminus a}$ is the sum of all messages except the one from factor $\phi_a$. For binary variables, it is often convenient to update log-odds messages and beliefs, $\mu_{\phi \rightarrow X} \equiv \mu_{\phi \rightarrow X}(1)-\mu_{\phi \rightarrow X}(0)$. It is also often beneficial to use damped message updates
+\noindent where $q_j^{\setminus a}$ is the sum of all messages except the one from factor $\phi_a$.  It is also often beneficial to use damped message updates, where the new message is a linear combination of its value at previous and current iteration.
+
+\paragraph{Max-sum in the single link model}
+The above model consists of singleton factors $s_i(y_i)$ and global factors over all variables $\phi_i({\bf y}) = \max_{j \neq i} s_{ij}(y_i, y_j)$.  The message from the singleton factor to its corresponding variable is just the value of the local score. The message from a global factor $\phi_i$ to variable $y_i$ is
 \begin{align}
-\mu^{t+1} &= \alpha \mu^t + (1 - \alpha) \mu^{update}, \;\;\; \alpha \in [0, 1)  
+\mu(y_i) &= \max_{{\bf y} \setminus y_i} \bigg[ \max_{j \neq i} s_{ij}(y_i, y_j) + \sum_{j \neq i} b^{\setminus i}(y_j)\bigg].
 \end{align}
-where $t$ is the iteration and $\mu^{update}$ is the message defined in Eq. \ref{eq:update}.
-
-
-\subsubsection{Max-sum in the coherence model}
-
-Our coherence model has three types of factors, corresponding to the prior scores, relation scores, and constraints. The messages for prior factors $t_{mc} x_{mc}^{m'c'}$ do not change across iterations and are simply equal to $t_{mc}$. The message from factor $\phi_m$ to a variable $x_{mc}^{m'c'}$ has the form
+The maximization can be computed by sorting $s_{ij}(y_i, c) + b^{\setminus i}(c)$ for all mentions $j$ and candidates $c \in \mathcal{C}_j$ for which the score $s_{ij}$ is nonzero (relation exists). The message from factor $\phi_i$ to a variable $y_j$ is
 \begin{align}
-\mu_{\phi_m \rightarrow x_{mc}^{m'c'}} = -\max \{ q_{m:}^{::} \; \setminus \; q_{mc}^{m'c'}\} 
+\mu_i(y_j) &= \max_{{\bf y} \setminus y_j} \bigg[ \max_{k \neq i} s_{ik}(y_i, y_k) + \sum_{k \neq j} b^{\setminus i}(y_k) \bigg]
 \end{align}
-where each $q_{mi}^{jk}$ is the sum of all messages to $x_{mi}^{jk}$ except that from $\phi_m$. In effect, the message lowers the belief for $x_{mc}^{m'c'}$ by the highest $q$ of a competing edge.
-
-The message from factor $\sigma_{mc}^{m'c'}$ to the corresponding edge variable $x_{mc}^{m'c'}$  is:
-\begin{align}
-\mu_{\sigma_{mc}^{m'c'} \rightarrow x_{mc}^{m'c'}} &= s_{cc'} + \min(0, \max_{(i, j)} \tilde{q}_{m'c'}^{ij} )
-\end{align}
-where $\tilde{q}$ is the sum of all messages except from $\sigma$. In this case, the message corresponds to the edge weight $s_{cc'}$, and gets discounted if all of the $\tilde{q}$s for candidate $(m', c')$ are negative. Finally, the message from $\sigma_{mc}^{m'c'}$ to a variable $x_{m'c'}^{ij}$ is
-\begin{align}
-\mu_{\sigma_{mc}^{m'c'} \rightarrow x_{mc}^{ij}} &= \max(0, s_{cc'} + \tilde{q}_{mc}^{m'c'}) \\ 
- &- \max (0, s_{cc'} + \tilde{q}_{mc}^{m'c'} + \max_{(k,l) \neq (i, j)} \tilde{q}_{m'c'}^{kl}  ) \nonumber
-\end{align}
-
-We initialize to zero all messages except those from prior factors, and use updates with damping $\alpha=0.9$ .  We iteratively update relation factors $\sigma$ and corresponding constraint factors $\phi$ for five cycles over all factors. Following the updates, each mention $m$ is assigned the candidate with the highest belief for any edge: $c^* = {\arg \max}_{c} (\max b_{mc}^{::})$.
-
-
+In this case, we are also maximizing over $y_i$ (the source of the directed link), so computing the message requires sorting $s_{ij}(y_i, y_j) + b^{setminus i}(y_i) + b^{setminus i}(y_j)$ for all candidates $y_i \mathcal{C}_i$ and all candidates $y_k \in \mathcal{C_k}$ which have a positive relation score.

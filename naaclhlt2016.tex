@@ -37,7 +37,7 @@
 \newcommand{\NIL}{\mbox{\textsc{nil}}}
 \newcommand{\qtext}[1]{\texttt{#1}}
 
-\title{Coherence model for entity resolution (name?)}
+\title{Coherence models with attention for named entity resolution and disambiguation}
 
 % Author information can be set in various styles:
 % For several authors from the same institution:
@@ -78,7 +78,7 @@ Entity resolution is the task of linking each mention of an entity in text to th
 
 \input{intro}
 \input{notation}
-%\input{maxsum}
+\input{maxsum}
 \input{attention_model}
 \input{expt}
 
@@ -86,12 +86,15 @@ Entity resolution is the task of linking each mention of an entity in text to th
 
 We have described a simple new graph-based approach to coherence, where each candidate can have at most one relation to another candidate in the solution subgraph. Our approach in effect maximizes over relation scores rather than averaging, which ensures that the scores are not diluted. Compared to the recently popular PageRank methods, our model can only exploit one-hop links. \hl{TODO: more discussion}
 
+
 %\section*{Acknowledgments}
 
 %Do not number the acknowledgment section.
 
 \bibliography{refs}
 \bibliographystyle{naaclhlt2016}
+
+
 
 
 \end{document}

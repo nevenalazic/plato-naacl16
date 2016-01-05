@@ -1,14 +1,4 @@
 
-
-\section{Single-link model}
-
-In our first approach, which we name \emph{single link}, we consider a simple global objective function which maximizes over relation scores for each entity, rather than summing or averaging them:
-\begin{align}
-g^{SL}({\bf y}) &= \sum_i \bigg( s_i(y_i) + \max_{ j \neq i} s_{ij}(y_i, y_j) \bigg).
-\end{align}
-We consider relations between candidate entities to be directed, with asymmetric pairwise scores $s_{ij}(y_i, y_j)$, and rely on deterministic (not learned) scores. 
-While exact inference in this model remains intractable, we can find approximate solutions using max-sum belief propagation. We provide the corresponding iterative message updates in Appendix A. 
-
 \section{Attention model}
 
 We now describe the our attention model for scoring relations. We first describe the optimization objective and inference, and then provide details on how scores are calculated and learned.
