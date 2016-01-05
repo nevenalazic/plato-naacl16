@@ -16,7 +16,8 @@ In the \emph{single link} model, we simply set the local score for mention $i$ a
 
 
 \paragraph{Results.}
-We show the performance of the Plato baseline, Plato with coherence, and the best results reported in literature in Tables \ref{table:tac_results} and \ref{table:conll_results}.  The coherence model improves performance on all three datasets, yielding new state-of-the-art results on the TAC KBP datasets. While coherence also leads to improved performance on CoNLL, the overall system does not surpass the state of the art. One reason for this is that the candidate recall of the baseline system (an upper bound on accuracy) is relatively low -- below the accuracy of the system of \cite{Pershina2015}. 
+Tables \ref{table:tac_results} and \ref{table:conll_results} show the performance of the Plato baseline, performance after reranking using coherence, and the best results reported in literature for the CoNLL and TAC KBP datasets. The developed coherence models improve the on the baseline model on all three dataset, and the \emph{soft attention} model achieves new state-of-the-art results on the TAC KBP datasets (\hl{may not turn out to be true}). 
+ While coherence also leads to improved performance on CoNLL, the overall system does not surpass the state of the art. One reason for this is that the candidate recall of the baseline system (an upper bound on accuracy) is relatively low. 
 
 
 \begin{table*}[ht]
@@ -28,7 +29,7 @@ We show the performance of the Plato baseline, Plato with coherence, and the bes
 & \bf cand. recall &  & \bf accuracy & \bf accuracy & \\ \hline
 TAC 2011 & 84.8 & \newcite{Cucerzan2011} &- & 86.8 &  {84.1} \\
 && Plato \cite{Lazic2015} & 79.3 & 86.5 & 84.0 \\
-&& Plato with \emph{single lin} & {\bf 81.2} & {\bf 87.0} & {\bf 84.5} \\
+&& Plato with \emph{single link} & {\bf 81.2} & {\bf 87.0} & {\bf 84.5} \\
 && Plato with \emph{soft attention} & & & \\
 \hline
 \hline
@@ -49,7 +50,7 @@ TAC 2012 & 83.2 &\newcite{Cucerzan2012}  Run 1 & 72.0 & 76.2 & 72.1  \\
 \hline
 \bf Data & \bf Plato & \bf Model & \bf In-KB  \\ 
 & \bf cand. recall &  & \bf accuracy\\ \hline
-CoNLL test-b &  & \newcite{Chisholm2015} & {\bf 88.7} \\
+CoNLL test-b & 91.7 & \newcite{Chisholm2015} & {\bf 88.7} \\
 & &Plato \cite{Lazic2015} & {86.4}  \\
 & &Plato with \emph{single link} & {87.1} \\
 & & Plato with \emph{soft attention} & 87.4 \\

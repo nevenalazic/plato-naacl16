@@ -84,7 +84,7 @@ Entity resolution is the task of linking each mention of an entity in text to th
 
 \section{Discussion and conclusion}
 
-We have described a simple new graph-based approach to coherence, where each candidate can have at most one relation to another candidate in the solution subgraph. Our approach in effect maximizes over relation scores rather than averaging, which ensures that the scores are not diluted. Compared to the recently popular PageRank methods, our model can only exploit one-hop links. \hl{TODO: more discussion}
+We have described two new approaches to modeling coherence for NERD. While most existing systems consider all relations in the document to assign a coherence score to a candidate, we use a novel attention mechanism to select the most relevant relations. Our experimental results support \hl{do they?} the premise that the inclusion of all relations can hurt performance. Our models improve the performance of a baseline system on three evaluation benchmarks, and the \emph{soft attention} coherence model achieves state-of-the-art results on the TAC KBP tasks \hl{or does it?}
 
 
 %\section*{Acknowledgments}
