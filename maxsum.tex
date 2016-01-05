@@ -31,4 +31,4 @@ The maximization can be computed by sorting $s_{ij}(y_i, c) + b^{\setminus i}(c)
 \begin{align}
 \mu_i(y_j) &= \max_{{\bf y} \setminus y_j} \bigg[ \max_{k \neq i} s_{ik}(y_i, y_k) + \sum_{k \neq j} b^{\setminus i}(y_k) \bigg]
 \end{align}
-In this case, we are also maximizing over $y_i$ (the source of the directed link), so computing the message requires sorting $s_{ij}(y_i, y_j) + b^{setminus i}(y_i) + b^{setminus i}(y_j)$ for all candidates $y_i \mathcal{C}_i$ and all candidates $y_k \in \mathcal{C_k}$ which have a positive relation score.
+In this case, we are also maximizing over $y_i$ (the source of the directed link), so computing the message requires sorting $s_{ij}(y_i, y_j) + b^{\setminus i}(y_i) + b^{\setminus i}(y_j)$ for all candidates $y_i \in \mathcal{C}_i$ and all candidates $y_k \in \mathcal{C_k}$ which have a positive relation score.
