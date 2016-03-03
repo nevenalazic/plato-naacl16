@@ -1,1 +1,1 @@
-# plato-naacl16
+# Collective Entity Linking with Multi-Focal Attention
