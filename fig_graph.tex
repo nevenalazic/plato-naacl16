@@ -1,0 +1,39 @@
+\begin{figure*}[!ht]
+\begin{tikzpicture}[node distance=1.5cm,>=stealth',bend angle=35,auto]
+  \tikzstyle{candidate}=[rectangle,dashed,rounded corners=2mm,thick,draw=black,fill=white,minimum size=6mm]
+  \tikzstyle{selected} = [rectangle,rounded corners=2mm,thick,draw=black,fill=gray!10,minimum size=6mm]
+  \tikzstyle{mention}=[rectangle,thick,draw=black!75,
+  			  fill=black!10,minimum size=6mm]
+  \tikzstyle{every label}=[black]
+
+ \begin{scope}
+    % First mention.
+   % \node [mention] (m1){\qtext{Beirut}};
+   % \node [candidate] (c11) [label=above:0.5] {Beirut, Lebanon};
+   \node [candidate] (c11) {Beirut, Lebanon};
+    \node [candidate] (c12) [below of=c11]  {Beirut (game)};
+        \node [selected] (c13)  [below of=c12] {Beirut (band)};
+
+   % Second mention.
+   % \node [mention] [right=3cm of m1](m2){\qtext{Santa Fe}};
+    \node [selected] (c21) [right=2cm of c11] {Santa Fe, New Mexico};
+        \node [candidate] (c22) [below of=c21]  {Santa Fe (1951 Western)};
+    \node [candidate] (c23)  [below of=c22] {Santa Fe (Beirut song)};
+
+      
+     % Third mention.
+   % \node [mention] [right=3cm of m2](m3){\qtext{New Mexico}};
+    \node [selected] (c31) [right=2cm of c21] {New Mexico (state)};
+    \node [candidate] (c32)  [below of=c31] {Univ. New Mexico};
+ 
+      
+   %\path (c13) edge [post,line width=2pt] node[above]{0.5} (c21);
+   \path (c13) edge [post,line width=2pt] (c21);
+   \path (c13) edge [post,dashed,line width=2pt] (c23);
+   \path (c31) edge [post,line width=2pt] (c21);
+   \path (c21) edge [post,line width=2pt,bend right] (c31);
+  \end{scope}
+\end{tikzpicture}
+\caption{Example coherency graph for mentions $\qtext{Beirut}$, $\qtext{Santa Fe}$ and $\qtext{New Mexico}$. Solid lines indicate a valid solution subgraph, where each selected candidate has at most one outgoing edge to another candidate. TODO: better example?}
+\label{fig:graph}
+\end{figure*}
