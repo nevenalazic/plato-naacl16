@@ -1,65 +1,49 @@
-Write the Lagrangian (ignore non-negativity since it'll be satisfied anyway)
-\be
-L(\lambda,\alpha) = \sum_i \mu_i v_i - \beta^{-1} \sum_i \mu_i\log{\mu_i} + 
-\lambda \left(\sum_i\mu_i-K\right)  + \sum_i \alpha_i(1-\mu_i)
-\ee
-Derive wrt $\mu_i$ to get:
-\be
-v_i - \beta^{-1}  - \beta^{-1} \log{\mu_i} +  \lambda - \alpha_i = 0
-\ee
-So:
-\be
-\mu_i = e^{\beta v_i -1 + \beta \lambda - \beta \alpha_i}
-\ee
-Plug back to Lagrangian:
-\bea
-g(\lambda,\alpha) &=&  \sum_i \mu_i v_ i-\beta^{-1} \sum_i \mu_i \left[\beta v_i -1 + \beta \lambda - \beta \alpha_i \right] + \lambda \left(\sum_i\mu_i-K\right) + \sum_i \alpha_i(1-\mu_i) \\
-&=& -\lambda K  + \beta^{-1} \sum_i \mu_i  + \sum_i \alpha_i \\
-&=& -\lambda K  + \beta^{-1} \sum_i   e^{\beta v_i -1 + \beta \lambda - \beta \alpha_i}  + \sum_i \alpha_i 
-\eea
-Now try to solve wrt $\lambda$. Take derivative:
-\be
-\pdTwo{g(\lambda,\alpha)}{\lambda} = -K +  \sum_i e^{\beta v_i -1 + \beta \lambda-\beta \alpha_i}  =0
-\ee
-From which we can solve for $\lambda$:
-\bea
-e^{\beta \lambda} &=& \frac{K}{ \sum_i e^{\beta v_i -1-\beta \alpha_i}} \\
-\lambda^* &=& \beta^{-1}  \log{\frac{K}{ \sum_i e^{\beta v_i -1-\beta \alpha_i}} }
-\eea
-Eliminating the optimal $\lambda$ we have:
-\bean
-g(\alpha) &=& K(\beta^{-1} -\lambda^*)  + \sum_i\alpha_i \\
-&=& K\beta^{-1}  (1 - \log{\frac{K}{ \sum_i e^{\beta v_i -1 -\beta \alpha_i}}}) + \sum_i \alpha_i \\
-&=& K\beta^{-1}   \log{\frac{ \sum_i e^{\beta v_i-\beta \alpha_i}}{K}} + \sum_i \alpha_i
-\label{eq:dualopt}
-\eean
-Now lets try to solve for $\alpha_i$. Recall that it is constrained to be non-negative. So we add
-Lagrange multipliers $\gamma_i$ and a term $-\sum_i \gamma_i\alpha_i$ to the Lagrangian.
-Take gradient of this Lagrangian wrt $\alpha_i$:
-\bea
--K \frac{e^{\beta v_i -\beta \alpha_i}}{\sum_i e^{\beta v_i-\beta \alpha_i}} + 1  - \gamma_i= 0 \\
-\frac{e^{\beta v_i -\beta \alpha_i}}{\sum_i e^{\beta v_i-\beta \alpha_i}} =  {1-\gamma_i\over K} 
-\eea
-Lets propose a solution and see if it meets KKT. First, assume wlog that $\vv$ is sorted descending.
-Now, take the first $K-1$ elements, and shift those to a constant $c$ by using $\alpha_i$. Set all other $\alpha_i$ to zero. So for $i=1,\ldots,K-1$:
-\be
-\alpha_i = v_i -c 
-\ee
-We'll find $c$ later.  For those $\alpha_i>0$ we have $\gamma_i=0$ so it should hold that:
-\be
-\frac{e^{\beta c}}{(K-1)e^{\beta c}+ \sum_{i=K}^ne^{\beta v_i}} = {1\over K}
-\ee
-So:
-\be
-c ={1\over \beta} \log{\sum_{i=K}^ne^{\beta v_i}}
-\ee
-which is a soft max on the suffix of $\vv$.
+\section{Proof of Proposition \ref{prop:softkmax}}
+Assume w.l.o.g. that $z_i$ are sorted in decreasing order. 
+Begin with the optimization problem in \eqref{eq:softkmax_opt}. Introduce the following Lagrange multipliers: $\lambda$ 
+for the $\sum_i\mu_i=K$ constraint, and $\alpha_i\geq 0 $ for the $\mu_i \leq 1$ constraint. We can ignore the $\mu_i \geq 0 $
+constraint, as it will turn out to be satisfied. Denote the corresponding Lagrangian by $L(\mu,\lambda,\alpha)$. We will show the result
+by using the convex dual  $g(\lambda,\alpha) = \min_{\mu} L(\mu,\lambda,\alpha)$ and the fact that the solution of  \eqref{eq:softkmax_opt}
+is $\max_{\lambda,\alpha} g(\lambda,\alpha)$.
 
-Plugging this into the dual objective \eqref{eq:dualopt}:
+Minimizing $L$ with respect to $\mu_i$ yields:
 \be
-K\beta^{-1} \log {\frac{(K-1)e^{\beta c} + \sum_{i=K}^{n}e^{\beta v_i} }{K}} + \sum_{i=1}^{K-1} (v_i-c)
+\mu_i = e^{\beta z_i -1 + \beta \lambda - \beta \alpha_i}
+\label{eq:opt_mu}
 \ee
-This gives:
+From this we can obtain the convex dual:
 \be
-c + \sum_{i=1}^{K-1} v_i 
+g(\lambda,\alpha) = -\lambda K  + \beta^{-1} \sum_i   e^{\beta z_i -1 + \beta \lambda - \beta \alpha_i}  + \sum_i \alpha_i 
 \ee
+Maximizing this with respect to $\lambda$ yields the maximizing $\lambda^*$:
+\be
+\lambda^* = \beta^{-1}  \log{\frac{K}{ \sum_i e^{\beta z_i -1-\beta \alpha_i}} }
+\ee
+We can now express $g$ as a function of only $\alpha$
+\be
+g(\alpha) =  K\beta^{-1}   \log{\frac{ \sum_i e^{\beta z_i-\beta \alpha_i}}{K}} + \sum_i \alpha_i
+\ee
+Next, we maximize the above with respect to $\alpha\geq 0 $. Introduce Lagrange multipliers 
+$\gamma_i$ for the constraint $\alpha_i \geq 0$ and the corresponding Lagrangian $\bar{L}(\alpha,\gamma)$. We next propose
+a solution for $\alpha,\gamma$ and show that it satisfies the KKT conditions. Minimizing $\bar{L}$ wrt $\alpha$ we can characterize
+the optimal $\gamma$ as:
+\be
+\gamma_i = -K \frac{e^{\beta z_i -\beta \alpha_i}}{\sum_i e^{\beta z_i-\beta \alpha_i}} + 1 
+\label{eq:opt_gamma}
+\ee
+Define: 
+\be
+c ={1\over \beta} \log{\sum_{i=K}^n e^{\beta z_i}}
+\ee
+Set $\alpha_i$ as follows:
+\be
+\alpha_i = 
+\left\{
+\begin{array}{ll}
+z_i - c & i=1,\ldots, K -1  \\
+0 & i = K,\ldots, n
+\end{array}
+\right.
+\label{eq:opt_alpha}
+\ee
+It can now be confirmed that the $\alpha,\gamma$ from Equations \ref{eq:opt_alpha} and \ref{eq:opt_gamma} satisfy the KKT conditions. Plugging the $\alpha $ value into $g(\alpha)$ yields the solution in the proposition. The result from the gradient follows from the fact that $L(\mu,\lambda,\alpha)$ is uniquely  minimized by \eqref{eq:opt_mu} and this is the subgradient (and due to uniqueness also the gradient) of $\samax(z)$ with respect to $z$.

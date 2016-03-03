@@ -4,12 +4,15 @@
 
 We are given a document with $n$ mentions, where each mention $i$ has a set of candidate entities $\mathcal{C}_i = \{c_1, ..., c_{n_i}\}$. The goal is to assign a label $y_i \in \mathcal{C}_i$ to each mention.
 
-Similarly to previous work, our approach to disambiguation relies on local and pairwise candidate scores. We denote the local score for mention $i$ by $s_i(y_i)$; this score is based only on local evidence, such as the mention phrase and surrounding textual features. The pairwise score for mentions $i$, $j$ is denoted by $s_{ij}(y_i, y_j)$,  and it is based on the relatedness of the two candidates. In the \emph{single link} model, we compute these scores deterministically and use them as fixed model inputs. In the \emph{attention} model, we parameterize the scores and learn them using a labeled dataset.
+Similarly to previous work, our approach to disambiguation relies on local and pairwise candidate scores. We denote the local score for mention $i$ by $s_i(y_i)$; this score is based only on local evidence, such as the mention phrase and surrounding textual features. The pairwise score for mentions $i$, $j$ is denoted by $s_{ij}(y_i, y_j)$,  and it is based on the relatedness of the two candidates. In Sections \ref{sec:score_param} and \ref{sec:learning} we discuss how these scores may be parameterized and learned.\todo{Maybe say that in some works these have been fixed} 
 
-Coherence models typically attempt to maximize a {\em global} objective function that assigns a score to each complete labeling ${\bf y} = (y_1,\ldots, y_n)$ given the local and pairwise scores. An example of such a function is the sum of all singleton and pairwise scores for selected candidates:
+%In the \emph{single link} model, we compute these scores deterministically and use them as fixed model inputs. In the \emph{attention} model, we parameterize the scores and learn them using a labeled dataset.
+
+Coherence models typically attempt to maximize a {\em global} objective function that assigns a score to each complete labeling ${\bf y} = (y_1,\ldots, y_n)$, given the local and pairwise scores. An example of such a function is the sum of all singleton and pairwise scores for selected candidates:
  %A common example of such a function $g(y_1,\ldots,y_n)$ is:
 \be
 g({\bf y}) = \sum_i s_i(y_i) + \sum_{j \neq i} s_{ij}(y_i,y_j).
 \label{eq:global_obj}
 \ee 
-One disadvantage of this approach is that maximizing $g$ takes type exponential in $n$. Another, as we discuss later, is that it sums information across all entities and can introduce noise in the process. In this paper we explore alternative optimization objectives.
+One disadvantage of this approach is that maximizing $g$ corresponds to calculating the MAP of a general pairwise Markov random field, and is hence
+NP hard for the general case \cite{wainwright2008graphical}. Another limitation, as we discuss later, is that it sums information across all entities and can introduce noise in the process. In this paper we explore alternative optimization objectives, that address both these issues.
