@@ -38,7 +38,7 @@
 \newcommand{\NIL}{\mbox{\textsc{nil}}}
 \newcommand{\qtext}[1]{\texttt{#1}}
 
-\title{Collective Entity linking with Multi-Focal Attention}
+\title{Collective Entity Resolution with Multi-Focal Attention}
 
 % Author information can be set in various styles:
 % For several authors from the same institution:
@@ -70,21 +70,8 @@
 \maketitle
 
 \begin{abstract}
-Entity resolution is the task of linking mentions of entities in text
-to their corresponding record in a knowledge base (KB). Coherence
-models for entity resolution jointly disambiguate all mentions in the
-document,  encouraging interpretations that are globally
-coherent. Such models often consider the relations between a candidate
-entity and all other entities in the document, which may dilute the
-evidence for non-salient entities. However, for large documents with
-many mentions, enforcing coherence between all linked entities seems
-computationally infeasible. Instead, we propose an attention-based coherence
-model that uses information from only a small set of most relevant
-mentions for each candidate, leading to a tractable inference
-algorithm based on sorting. We also provide a differentiable attention
-model that generalizes softmax. Applying our approach to the output of an existing system
-improves its performance to beat the state-of-the-art on three
-standard benchmarks, CoNLL, TAC KBP 2011 and TAC KBP 2012.
+Entity resolution (ER) is the task of linking mentions of entities in text to their corresponding records in a knowledge base. Coherence models for ER jointly disambiguate all mentions in the document, and encourage a solution in which entities are related to each other. A common approach is to aggregate information for a candidate by considering relations to all other entities. We argue that this may dilute evidence for non-salient entities (with few relations), in addition to possibly being computationally infeasible for large documents. Instead, we propose an attention mechanism for coherence which selects a few relevant relations for each candidate. Our approach enjoys tractable inference and relies on a novel differentiable attention function which generalizes softmax. 
+Applying our approach to the output of an existing system improves its performance to beat the state-of-the-art on three standard benchmarks: CoNLL, TAC KBP 2011, and TAC KBP 2012.
 \end{abstract}
 
 \input{macros}
