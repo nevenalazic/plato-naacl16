@@ -5,7 +5,7 @@ We now describe the our attention model for scoring relations. We first introduc
 As noted earlier, the global score function in \eqref{eq:global_obj} is hard to maximize. Many approaches to circumvent this problem have been proposed, from iterative search to belief propagation.\todo{refs} Here we will employ a somewhat different inference approach, that decomposes inference into a set of star shaped models. We choose this approach since integrating attention into it is simple, both in terms of inference and learning. 
 
 \subsubsection{Star model}
-We start by considering a simple attention-free model in which inference is tractable, which we call a {\em star model}. In this approach, the entity $y_i$ for mention $i$ is obtained as follows. Consider a star-shaped graphical model centered at $i$, as illustrated in $\figref{fig:star}$. Namely, the graph that contains all interactions of $i$ with other labels, but not interactions between the other labels. This graph naturally corresponds to the following score function $f_i$:
+We start by considering a simple attention-free model in which inference is tractable, which we call a {\em star model}. In this approach, the entity $y_i$ for mention $i$ is obtained as follows. Consider a star-shaped graphical model centered at $y_i$, as illustrated in \figref{fig:star}. Namely, the graph that contains all interactions of $y_i$ with other labels, but not interactions between the other labels. This graph naturally corresponds to the following score function $f_i$:
 \be
 f_i(y_1,\ldots,y_n) = \sum_j s_j(y_j) + \sum_{j\neq i} s_{ij}(y_i,y_j) ~.
 \label{eq:star_obj}
@@ -17,6 +17,28 @@ y_i = \arg\max_{y_i} \max_{y_{j}: j\neq i} f_i(y_1,\ldots,y_n) ~,
 \ee
 and all other labels $y_j$ for $j\neq i$ are discarded. This avoids any issues of inconsistency,\footnote{It is of course possible that the stars corresponding to $y_2$  and $y_4$ will yield different arg max values for $y_5$, but the latter is discarded, and the label $y_5$ is obtained by maximizing the corresponding star graph.} since the label $y_i$ is chosen from a single prediction.
 
+\begin{figure*}
+\begin{subfigure}[t]{.3\textwidth}
+\includegraphics[width=\linewidth]{./complete_graph.pdf}
+\label{fig:fig_complete}
+\end{subfigure}
+\begin{subfigure}[t]{.3\textwidth}
+\includegraphics[width=\linewidth]{./y2_graph.pdf}
+\label{fig:fig_y2}
+\end{subfigure}
+\begin{subfigure}[t]{.3\textwidth}
+\includegraphics[width=\linewidth]{./y3_graph.pdf}
+\label{fig:fig_y3}
+\end{subfigure}
+%\includegraphics[width=2in]{./y2_graph.pdf}
+%\includegraphics[width=2in]{./y3_graph.pdf}
+%\subfloat[The complete graph corresponding to \eqref{eq:global_obj}]
+%\subfloat[A star shaped subgraph corresponding to $y_2$. This will be used to obtaining the label $y_2$]
+\begin{minipage}[t]{\textwidth}
+\caption{{\bf Left:} The complete graph corresponding to \eqref{eq:global_obj}. {\bf Middle:}  A star shaped subgraph corresponding to $y_2$. This will be used to obtaining the label $y_2$. {\bf Right: } The star graph for $y_3$.}
+\label{fig:star}
+\end{minipage}
+\end{figure*}
 
 Due to the structure of $f_i$, maximization is easy and can be done in $O(nC^2)$, where $C$ is the maximum number of candidates. A similar decomposition has previously been used in the context of approximate learning for structured prediction.\cite{SontagNIPS10} 
 
