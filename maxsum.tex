@@ -3,32 +3,16 @@
 
 \section{Single-link model}
 
-In our first approach, which we name \emph{single link}, we consider a simple global objective function which maximizes over relation scores for each entity, rather than summing or averaging them:
+To motivate our modeling choices of using multi-focal attention and decomposed inference, we additionally consider a simple baseline model with single-focus attention and global inference. In this approach, which we name \emph{single link}, each mention $i$ attends to exactly one other mention that maximizes the pairwise relation score. The corresponding objective can be written as
 \begin{align}
-g^{SL}({\bf y}) &= \sum_i \bigg( s_i(y_i) + \max_{ j \in \mathcal{E}_i} s_{ij}(y_i, y_j) \bigg).
+g^{SL}({\bf y}) &= \sum_i \bigg( s_i(y_i) + \max_{ j | j \neq i} s_{ij}(y_i, y_j) \bigg).
 \end{align}
-We consider relations between candidate entities to be directed, with asymmetric pairwise scores $s_{ij}(y_i, y_j)$, and rely on deterministic (not learned) scores. 
-While exact inference in this model remains intractable, we can find approximate solutions using max-sum belief propagation \cite{Kschischang2001}. 
 
-\paragraph{Max-sum algorithm} 
-The max-sum algorithm is an iterative algorithm for maximum-a-posteriori (MAP) inference:
-\begin{equation}
-{\bf x}^{MAP} = \arg \max_{\bf x} p({\bf x}) = \arg \max_{\bf x} \sum_a \phi_a({\bf x}_a).
-\end{equation}
- It can be described in terms of messages $\mu_{\phi \rightarrow X}(x)$ sent from factors $\phi$ to their neighboring variables. At convergence, each variable is assigned to the value that maximizes its \emph{belief} $b(x)$, defined as the sum of all incoming messages. The message updates have the following form:
+While exact inference in this model remains intractable, we can find approximate solutions using max-sum belief propagation \cite{Kschischang2001}. 
+As a reminder, max-sum is an iterative algorithm for MAP inference which can be described in terms of messages sent from model factors $g_a({\bf y}_a)$ to each of their variables $y \in {\bf y}_a$. At convergence, each variable is assigned to the value that maximizes \emph{belief} $b(y)$, defined as the sum of incoming messages. The message updates have the following form:
 \begin{align}
-\mu_{\phi_a \rightarrow X_i}(x_i) =& \max_{ {\bf x}_a \setminus x_i } \bigg[ \phi_a({\bf x}_a) + \sum_{j \neq i} q_j^{\setminus a}(x_j)\bigg]
+\mu_{g_a \rightarrow Y}(y) =& \max_{ {\bf y}_a \setminus y } \bigg[ g_a({\bf y}_a) + \sum_{j \neq i} q_j^{\setminus a}(y_j)\bigg]
 \label{eq:damping}
 \end{align}
-\noindent where $q_j^{\setminus a}$ is the sum of all messages except the one from factor $\phi_a$.  It is also often beneficial to use damped message updates, where the new message is a linear combination of its value at previous and current iteration.
-
-\paragraph{Max-sum in the single link model}
-The above model consists of singleton factors $s_i(y_i)$ and global factors over all variables $\phi_i({\bf y}) = \max_{j \neq i} s_{ij}(y_i, y_j)$.  The message from the singleton factor to its corresponding variable is just the value of the local score. The message from a global factor $\phi_i$ to variable $y_i$ is
-\begin{align}
-\mu_i(y_i) &= \max_{{\bf y} \setminus y_i} \bigg[ \max_{j \neq i} s_{ij}(y_i, y_j) + \sum_{j \neq i} q_j^{\setminus i}(y_j)\bigg].
-\end{align}
-The maximization can be computed by sorting $s_{ij}(y_i, y_j) + q_j^{\setminus i}(y_j)$ for all mentions $j \neq i$ and candidates $y_j \in \mathcal{C}_j$ for which the score $s_{ij}$ is nonzero (relation exists). The message from factor $\phi_i$ to a variable $y_j$ is
-\begin{align}
-\mu_i(y_j) &= \max_{{\bf y} \setminus y_j} \bigg[ \max_{k \neq i} s_{ik}(y_i, y_k) + \sum_{k \neq j} q_k^{\setminus i}(y_k) \bigg]
-\end{align}
-In this case, we are also maximizing over $y_i$ (the source of the directed link), so computing the message requires sorting $s_{ij}(y_i, y_j) + q_i^{\setminus i}(y_i) + q_j^{\setminus i}(y_j)$ for all candidates $y_i \in \mathcal{C}_i$ and all candidates $y_k \in \mathcal{C}_k$ which have a relation with $y_i$.
+\noindent where $q_j^{\setminus a}(y_j)$ is the sum of all messages to $y_j$ except the one from factor $g_a$. 
+While the single-link model contains global factors $\max_{ j | j \neq i} s_{ij}(y_i, y_j)$ over $n$ variables, computing the messages from these factors is tractable and requires sorting.
