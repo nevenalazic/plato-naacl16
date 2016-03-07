@@ -70,7 +70,9 @@
 \maketitle
 
 \begin{abstract}
-Entity resolution (ER) is the task of linking mentions of entities in text to their corresponding records in a knowledge base. Coherence models for ER jointly disambiguate all mentions in the document, and encourage a solution in which entities are related to each other. A common approach is to aggregate information for a candidate by considering relations to all other entities. We argue that this may dilute evidence for non-salient entities (with few relations), in addition to possibly being computationally infeasible for large documents. Instead, we propose an attention mechanism for coherence which selects a few relevant relations for each candidate. Our approach enjoys tractable inference and relies on a novel differentiable attention function which generalizes softmax. 
+Entity resolution (ER) is the task of linking mentions of entities in text to their corresponding records in a knowledge base. Coherence models for ER jointly disambiguate all mentions in the document, and encourage a solution in which entities are related to each other. 
+In this work, we propose a novel coherence model with multi-focal attention. Rather than aggregating information for an entity over the entire document (which may dilute evidence for entities with few relations), we select a small set of relevant relations for each candidate. 
+Our approach enjoys tractable inference and relies on a novel differentiable multi-focus attention function which generalizes softmax. 
 Applying our approach to the output of an existing system improves its performance to beat the state-of-the-art on three standard benchmarks: CoNLL, TAC KBP 2011, and TAC KBP 2012.
 \end{abstract}
 
