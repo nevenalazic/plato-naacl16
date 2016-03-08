@@ -25,7 +25,13 @@ We evaluate our approach by adding coherence to the context model from the recen
 Our contributions thus consist of defining a novel multi-focal attention based model, where inference is efficient, and applying it successfully to an entity resolution system. We note that our model can be easily applied to other structured prediction problems in NLP.\todo{Consider expanding this}
 %Our premise is that this may also hold for entity relations: aggregating support for an entity label over the whole document may dilute the evidence for non-salient entities. We explore two new approaches to coherence that focus on a \emph{limited number} of relations for each candidate, rather than relations to all other entities. 
 
-\input{fig_graph}
+%\input{fig_graph}
+\begin{figure*}[th]
+\centerline{
+\includegraphics[width=0.5\linewidth]{beirut.pdf}
+}
+\caption{Illustration of the entity linking problem for the three mentions ``Beirut'', ``New Mexico'' and ``Santa Fe''. Each mention has three possible disambiguations. The links indicate disambiguations that have wikipedia links between their respective pages. }
+\end{figure*}
 %  Accordingly, we propose to choose the label for each mention based on the best support from a \emph{limited number} of other mentions.  In other words,  each mention is labeled by (tractable) inference in a star graph, but one where most edges are (dynamically) ignored.
 \comment{
 \subsection{Our contributions}
