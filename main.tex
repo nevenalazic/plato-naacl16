@@ -7,6 +7,8 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{hyperref}
 \usepackage{float}
+\usepackage{enumitem}
+\setlist{nosep}
 \usepackage{subcaption}
 \usepackage{soul}
 \hypersetup{
@@ -71,7 +73,7 @@ document to resolve to entities that are related in the KB.
 Effectively, such models seek evidence in favor of a candidate entity
 from \emph{all} other mentions in the document.  Such document-wide
 support may simply not exist for non-salient entities that are not
-densely connected in the KG.  The result is that valuable signals in
+densely connected in the KB.  The result is that valuable signals in
 favor of non-salient entities get diluted in the all-pairs coherence
 objective.  Inspired by attention models in deep learning, here we
 explore attention-like mechanisms for coherence that focus on a small
@@ -98,10 +100,9 @@ We have described two new approaches to modeling coherence for entity resolution
 
 %Do not number the acknowledgment section.
 
-\small
+\begin{small}
 \bibliography{refs}
 \bibliographystyle{acl2016}
-\normalsize 
-
+\end{small}
 
 \end{document}

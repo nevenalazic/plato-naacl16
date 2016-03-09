@@ -1,7 +1,5 @@
-
-
-
 \section{Single-link model}
+\label{sec:maxsum}
 
 To motivate our modeling choices of using multi-focal attention and decomposed inference, we additionally consider a simple baseline model with single-focus attention and global inference. In this approach, which we name \emph{single link}, each mention $i$ attends to exactly one other mention that maximizes the pairwise relation score. The corresponding objective can be written as
 \begin{align}
@@ -16,3 +14,10 @@ As a reminder, max-sum is an iterative algorithm for MAP inference which can be 
 \end{align}
 \noindent where $q_j^{\setminus a}(y_j)$ is the sum of all messages to $y_j$ except the one from factor $g_a$. 
 While the single-link model contains global factors $\max_{ j | j \neq i} s_{ij}(y_i, y_j)$ over $n$ variables, computing the messages from these factors is tractable and requires sorting.
+
+
+%%% Local Variables: ***
+%%% mode:latex ***
+%%% TeX-master: "main.tex"  ***
+%%% tex-main-file: "main.tex"  ***
+%%% End: ***

@@ -1,21 +1,95 @@
 \section{Experimental evaluation}
+\label{sec:expt}
 
-\subsection{Evaluation data and setup.}
-We evaluate our approach on the same three corpora as \newcite{Lazic2015}. The CoNLL dataset ~\cite{Hachey2013130} contains 1,393 articles with about 34K
-mentions, and the standard performance metric is mention-averaged accuracy. Most authors report performance on the subset of 231 test-b documents with 4,483 linkable mentions.
-The TAC KBP datasets \cite{TAC2011,TAC2012} include 2,226 mentions (2012) and 2,250 mentions (2011), of which roughly half are linkable to the reference KB. The competition evaluation includes $\NIL$ entities;
-participants are required to cluster $\NIL$ mentions across documents
-so that all mentions of each unknown entity are assigned a unique
-identifier. We use the same $\NIL$ cluster labels as Plato. For these datasets, we report in-KB accuracy, overall accuracy (including $\NIL$ mentions), and the competition metric $B^{3+} F_1$. 
+\subsection{Testbed}
 
-\subsection{Local and pairwise scores}
-We use the output of Plato \cite{Lazic2015} as our baseline, as well as to generate candidates and local scores $s_i(y_i)$. Plato does not have an explicit coherence model; however, it does capture some coherence information as referrent phrases are included as string features. Plato outputs a posterior distribution $p_i(c)$ over candidates $c$ for each mention $i$, but our models have no probabilistic interpretation.
+\subsubsection{CoNLL benchmark}
 
-In the \emph{single link} model, we simply set the local score for mention $i$ and candidate $c$ to $s_i(c) = \ln p_i(c) - \ln (1 - p_i(c))$, so that likely candidates get positive scores. we set the pairwise score between two candidates as $s_{ij}(c, c') = \ln n_{cc'} + 0.7$, where $n_{cc'}$ is the number of outlinks from the Wikipedia page of $c$ to the page of $c'$.  We consider up to three candidates for each mention; if the Plato posterior for the top candidate exceeds $0.9$, we only consider the top candidate.  \hl{TODO: scores in the attention model}
+The CoNLL dataset ~\cite{Hoffart2011} contains 1,393 articles with
+about 34K mentions, and the standard performance metric is
+mention-averaged accuracy.  The documents are partitioned into train,
+test-a and test-b.  Most authors report performance on the subset of
+231 test-b documents with 4,483 linkable mentions.
+
+\subsubsection{TAC-KBP benchmark}
+
+The TAC KBP datasets \cite{TAC2011,TAC2012} include 2,226 mentions
+(2012) and 2,250 mentions (2011), of which roughly half are linkable
+to the reference KB.  The competition evaluation includes $\NIL$
+entities; participants are required to cluster $\NIL$ mentions across
+documents so that all mentions of each unknown entity are assigned a
+unique identifier.  For these datasets, we report in-KB accuracy,
+overall accuracy (including $\NIL$ mentions), and the competition
+metric $B^{3+} F_1$.  \todo{double-blind? We use the same $\NIL$
+  cluster labels as Plato.}
+
+\subsubsection{KB and alias-entity mappings}
+
+Our KB is derived from the Wikipedia subset of Freebase \todo{download
+  date?}, with about \todo{FILL} entities.  Experiments reported in
+the literature vary widely with regard to the many-to-many mapping
+between names and entities that they use.  ER algorithms are usually
+quite sensitive to the coverage of and noise in these mappings.  Along
+with CoNLL gold entity annotations, \newcite{Hoffart2011} released a
+name-entity mapping by extending the ``means'' tables of YAGO
+\cite{hoffart2013yago2}.  When it was published, it had 100\% mention
+recall, i.e., every gold annotation can be mapped to one or more
+entities, including the gold entity.  However, changes in canonical
+Wikipedia URLs, accented characters and unicode usually result in a
+small number of mention losses.  Our default name-entity mapping is
+derived from Wikipedia anchor text and \todo{CHECK} filtered anchor
+text from Web links into Wikipedia pages \cite{singh12:wiki-links}.
+Over gold mentions in CoNLL, the above sources have average ambiguity
+(number of candidates per mention) in the range of 55--70; their union
+has average ambiguity of almost 80.  A third source of name-entity
+mapping is \newcite{Pershina2015}, but its average ambiguity is only
+13.3, with the gold entity always included.  This usually results in
+higher apparent ER accuracy being reported
+\cite{Pershina2015,YamadaS0T16}.
 
 
+\subsubsection{Local and pairwise scores}
+\label{sec:expt:features}
 
-\paragraph{Results.}
+Our baseline system is similar to Plato \cite{Lazic2015} in terms of
+design and accuracy.  For each candidate $c$ for mention $i$, it emits
+a posterior distribution $p_i(c)$.  The baseline system does not have
+an explicit coherence model; however, it does capture some coherence
+information indirectly, because referrent phrases are included as
+string features.  For standardized comparison we limit ourselves to
+candidates proposed by the baseline system.
+
+\paragraph*{Scores for single-link model:}
+In the \emph{single link} model, we simply set the local score for
+mention $i$ and candidate $c$ to $s_i(c) = \ln p_i(c) - \ln (1 -
+p_i(c))$ (i.e., log-odds), so that likely candidates get positive
+scores.  We set the pairwise score between two candidates as
+$s_{ij}(c, c') = \ln n_{cc'} + 0.7$, where $n_{cc'}$ is the number of
+outlinks from the Wikipedia page of $c$ to the page of $c'$.  We
+consider up to three candidates for each mention; if the baseline
+score for the top candidate exceeds $0.9$, we only consider the top
+candidate.
+
+\paragraph*{Scores for attention model:}
+Local scores $s_i(y_i)$ for the attention model are derived from
+$p_i(c)$.  As the attention models have no probabilistic
+interpretation, we inject these local feature values:
+\begin{itemize}
+\item $1$ if $p_i(c)\ne 0$, and 0 otherwise
+\item $\log p_i(c)$ if $p_i(c)>0$, and $1$ otherwise
+\item $\log(1-p_i(c))$ if $p_i(c)<1$, and $1$ otherwise
+\end{itemize}
+and we let $\ws$ learn their best linear combination.  Edge scores
+$s_{ij}(y_i, y_j)$ are computed using the edge model $\wp$ and edge
+features between entity pairs:
+\todo{amirg@ COMPLETE THIS}.
+
+
+\subsection{Results}
+
+\subsubsection{Summary}
+
+
 Tables \ref{table:tac_results} and \ref{table:conll_results} show the performance of the Plato baseline, performance after re-ranking candidates using coherence, and the best results reported in literature for the CoNLL and TAC KBP datasets. The developed coherence models improve the on the baseline model on all three dataset, and the \emph{soft attention} model achieves new state-of-the-art results on the TAC KBP datasets (\hl{may not turn out to be true}). 
  While coherence also leads to improved performance on CoNLL, the overall system does not surpass the state of the art. One reason for this may be that the candidate recall of the baseline system (an upper bound on accuracy) is relatively low. 
 
@@ -58,3 +132,20 @@ CoNLL test-b & 91.7 & \newcite{Chisholm2015} & {\bf 88.7} \\
 \end{tabular}
 \caption{ \label{table:conll_results} CoNLL evaluation results for our model and previous highest-accuracy systems. }
 \end{table*}
+
+
+
+\subsubsection{Attention vs.\ single-link}
+
+\subsubsection{Effect of $K$ on attention model}
+
+\subsubsection{Examples of gains (and losses)}
+
+
+
+
+%%% Local Variables: ***
+%%% mode:latex ***
+%%% TeX-master: "main.tex"  ***
+%%% tex-main-file: "main.tex"  ***
+%%% End: ***
