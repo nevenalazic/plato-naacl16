@@ -1,7 +1,3 @@
-%
-% File naaclhlt2016.tex
-%
-
 \documentclass[11pt]{article}
 \usepackage{acl2016}
 \usepackage{times}
@@ -68,10 +64,21 @@
 \maketitle
 
 \begin{abstract}
-Entity resolution (ER) is the task of linking mentions of entities in text to their corresponding records in a knowledge base. Coherence models for ER jointly disambiguate all mentions in the document, and encourage a solution in which entities are related to each other. 
-In this work, we propose a novel coherence model with multi-focal attention. Rather than aggregating information for an entity over the entire document (which may dilute evidence for entities with few relations), we select a small set of relevant relations for each candidate. 
-Our approach enjoys tractable inference and relies on a novel differentiable multi-focus attention function which generalizes softmax. 
-Applying our approach to the output of an existing system improves its performance to beat the state-of-the-art on three standard benchmarks: CoNLL, TAC KBP 2011, and TAC KBP 2012.
+Entity resolution is the task of linking each mention of an entity in
+text to the corresponding record in a knowledge base (KB).  Coherence
+models for entity resolution encourage all referring expressions in a
+document to resolve to entities that are related in the KB.
+Effectively, such models seek evidence in favor of a candidate entity
+from \emph{all} other mentions in the document.  Such document-wide
+support may simply not exist for non-salient entities that are not
+densely connected in the KG.  The result is that valuable signals in
+favor of non-salient entities get diluted in the all-pairs coherence
+objective.  Inspired by attention models in deep learning, here we
+explore attention-like mechanisms for coherence that focus on a small
+set of most relevant relations for each candidate.  Integrating our
+approach with an existing competitive baseline system improves its
+performance on three (out of three) benchmarks, yielding
+state-of-the-art results on the TAC KBP 2011 and 2012 tasks.
 \end{abstract}
 
 \input{macros}
