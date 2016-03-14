@@ -1,0 +1,45 @@
+
+
+\begin{figure*}[!ht]
+\begin{tikzpicture}[node distance=1.3cm and 2cm,>=stealth',auto]
+  \tikzstyle{candidate}=[align=left,rectangle,rounded corners=2mm,thick,draw=black,fill=gray!10,minimum size=6mm,text width=52,font=\small]
+  \tikzstyle{var}=[rectangle,thick,minimum size=6mm,font=\large]
+  \tikzstyle{every label}=[black]
+
+ \begin{scope}[-,line width=1pt]
+    % First mention.
+   \node [candidate] (c11){Beirut \\(city in Leb.)};
+   \node [candidate] (c12) [below of=c11]  {Beirut \\(band)};
+   \node [candidate] (c13)  [below of=c12] {Beirut \\(game)};
+   \node [var] (y1) [above=0.2cm of c11] {$y_1$};
+
+   % Second mention.
+    \node [candidate] (c21) [right= of c11] {Santa Fe \\(city in NM)};
+        \node [candidate] (c22) [below of=c21]  {Santa Fe \\ (film)};
+    \node [candidate] (c23)  [below of=c22] {Santa Fe \\(city in Cuba)};
+       \node [var] (y2) [above=0.2cm of c21] {$y_2$};
+     
+     % Third mention.
+    \node [candidate] (c31) [right=of c21] {New Mexico \\(state)};
+    \node [candidate] (c32)  [below of=c31] {New Mexico \\(university)};
+    \node [candidate] (c33)  [below of=c32] {New Mexico\\ (ship)};
+    \node [var] (y3) [above=0.2cm of c31] {$y_3$};
+ 
+   \path (c12.east) edge (c21.west);
+   \path (c12.east) edge [bend left=45] (c31.west);
+   \path (c21.east) edge (c31.west);
+   \path (c22.east) edge (c31.west);
+   
+  \end{scope}
+  
+  \begin{pgfonlayer}{background}
+  \filldraw [fill=black!10,draw=black!10,line width=4mm]% [line width=4mm,black!10]
+      (c11.north  -| c11.east)  rectangle (c13.south  -| c13.west)
+      (c21.north -| c21.east) rectangle (c23.south -| c23.west)
+      (c31.north  -| c31.east)  rectangle (c33.south  -| c33.west);
+  \end{pgfonlayer}
+\end{tikzpicture}
+\caption{Illustration of the ER problem for three mentions ``Beirut'', ``New Mexico'' and ``Santa Fe''. each mention has three possible disambiguations. Edges link disambiguations that have Wikipedia links between their respective pages.}
+\label{fig:ereg}
+\end{figure*}
+

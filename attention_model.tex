@@ -8,31 +8,30 @@ As noted earlier, the global score function in \eqref{eq:global_obj} is hard to 
 Here we simplify inference by decomposing the task over mentions. 
 We choose this approach since integrating attention into it is simple in terms of both inference and learning.
 
+%\begin{figure*}
+%\begin{subfigure}[t]{.3\textwidth}
+%\includegraphics[width=\linewidth]{./complete_graph.pdf}
+%\label{fig:fig_complete}
+%\end{subfigure}
+%\begin{subfigure}[t]{.3\textwidth}
+%\includegraphics[width=\linewidth]{./y2_graph.pdf}
+%\label{fig:fig_y2}
+%\end{subfigure}
+%\begin{subfigure}[t]{.3\textwidth}
+%\includegraphics[width=\linewidth]{./y3_graph.pdf}
+%\label{fig:fig_y3}
+%\end{subfigure}
+%%\includegraphics[width=2in]{./y2_graph.pdf}
+%%\includegraphics[width=2in]{./y3_graph.pdf}
+%%\subfloat[The complete graph corresponding to \eqref{eq:global_obj}]
+%%\subfloat[A star shaped subgraph corresponding to $y_2$. This will be used to obtaining the label $y_2$]
+%\begin{minipage}[t]{\textwidth}
+%\caption{{\bf Left:} The complete graph corresponding to \eqref{eq:global_obj}. {\bf Middle:}  A star shaped subgraph corresponding to $y_2$. This will be used to obtaining the label $y_2$. {\bf Right: } The star graph for $y_3$.}
+%\label{fig:star}
+%\end{minipage}
+%\end{figure*}
 
-\begin{figure*}
-\begin{subfigure}[t]{.3\textwidth}
-\includegraphics[width=\linewidth]{./complete_graph.pdf}
-\label{fig:fig_complete}
-\end{subfigure}
-\begin{subfigure}[t]{.3\textwidth}
-\includegraphics[width=\linewidth]{./y2_graph.pdf}
-\label{fig:fig_y2}
-\end{subfigure}
-\begin{subfigure}[t]{.3\textwidth}
-\includegraphics[width=\linewidth]{./y3_graph.pdf}
-\label{fig:fig_y3}
-\end{subfigure}
-%\includegraphics[width=2in]{./y2_graph.pdf}
-%\includegraphics[width=2in]{./y3_graph.pdf}
-%\subfloat[The complete graph corresponding to \eqref{eq:global_obj}]
-%\subfloat[A star shaped subgraph corresponding to $y_2$. This will be used to obtaining the label $y_2$]
-\begin{minipage}[t]{\textwidth}
-\caption{{\bf Left:} The complete graph corresponding to \eqref{eq:global_obj}. {\bf Middle:}  A star shaped subgraph corresponding to $y_2$. This will be used to obtaining the label $y_2$. {\bf Right: } The star graph for $y_3$.}
-\label{fig:star}
-\end{minipage}
-\end{figure*}
-
-
+\input{example-graphs}
 
 \subsubsection{Star model}
 

@@ -1,0 +1,42 @@
+
+\begin{figure}[t!]
+\label{fig:model}
+\begin{tikzpicture}[node distance=0.8cm and 1cm,>=stealth',auto]
+\tikzstyle{candidate}=[circle,draw=black,fill=gray!10,font=\large]
+  \tikzstyle{section}=[rectangle,minimum size=6mm,font=\large]
+\begin{scope}[-,thick]
+
+  \node[candidate]  (x1)      {$y_1$} ;
+  \node[candidate, right=of x1] (x2) {$y_2$} ; 
+  \node[candidate, right=of x2] (x3) {$y_3$} ; 
+  \node[candidate, right=of x3] (x4) {$y_4$} ; 
+  \node[section, left=0.1cm of x1] (a) {(a)};
+  \path(x1.east) edge (x2.west);
+  \path(x2.east) edge (x3.west);
+  \path(x3.east) edge (x4.west);
+  \path(x1.east) edge [bend left=45] (x3.west);
+  \path(x2.east) edge [bend left=45] (x4.west);
+    \path(x1.east) edge [bend left=45] (x4.west);
+
+  \node[candidate, below=of x1]  (y1)      {$y_1$} ;
+  \node[candidate, right=of y1] (y2) {$y_2$} ; 
+  \node[candidate, right=of y2] (y3) {$y_3$} ; 
+  \node[candidate, right=of y3] (y4) {$y_4$} ; 
+    \node[section, left=0.1cm of y1] (b) {(b)};
+  \path(y1.east) edge (y2.west);
+  \path(y2.east) edge (y3.west);
+  \path(y2.east) edge [bend left=45] (y4.west);
+  
+    \node[candidate, below=of y1]  (z1)      {$y_1$} ;
+  \node[candidate, right=of z1] (z2) {$y_2$} ; 
+  \node[candidate, right=of z2] (z3) {$y_3$} ; 
+  \node[candidate, right=of z3] (z4) {$y_4$} ; 
+    \node[section, left=0.1cm of z1] (c) {(c)};
+  \path(z2.east) edge (z3.west);
+  \path(z3.east) edge (z4.west);
+  \path(z1.east) edge [bend left=45] (z3.west);
+\end{scope}
+\end{tikzpicture}
+\caption{(a) The complete graph corresponding to \eqref{eq:global_obj}. (b) A star shaped subgraph corresponding to $y_2$. This will be used to obtaining the label $y_2$. (c) The star graph for $y_3$.}
+\label{fig:star}
+\end{figure}
