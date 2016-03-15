@@ -56,13 +56,13 @@ To summarize, we replace the hard problem of maximizing  \eqref{eq:global_obj} w
  
 
 \subsubsection{Adding attention \label{sec:add_attention}}
-The score function in \eqref{eq:star_obj} aggregates scores from all other mentions $j\neq i$, in order to label mention $i$. If the document has many mentions, this can introduce noise into the decision process. To reduce this effect, we introduce attention into the star model, and allow it to only use scores from mentions that have high coherence with $y_i$. We next define this notion more formally. 
+The score function in \eqref{eq:star_obj} aggregates scores from all other mentions $j\neq i$, in order to label mention $i$. If the document has many mentions, this may be disadvantageous for entities with only few supporting related mentions. To reduce this effect, we introduce attention into the star model, and allow it to only use scores from mentions that have high coherence with $y_i$. We next define this notion more formally. 
 
 We specify a parameter $K$ that denotes the number of related entities
 from which to collect evidence in favor of a candidate for
-mention~$i$.  (We will later \todo{where?} relax this to allow {\em up
-  to} $K$ related entities.)  Next, define the function
-$\amax(z_1,\ldots,z_n)$ to be the sum of the top $K$ values in
+mention~$i$.\footnote{It is possible to relax this to allow {\em up
+  to} $K$ related entities. For simplicity, we focus on case where exactly $K$ entities are used.}  Next, define the function
+$\amax(z_1,\ldots,z_n)$ to be the sum of the largest $K$ values in
 $z_1,\ldots,z_n$.  For each $j\neq i$, we define the coherence between
 label $y_i$ and mention $j$ to be:
 \be

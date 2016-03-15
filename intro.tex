@@ -31,7 +31,7 @@ Most ER systems consist of a \emph{mention model}, a \emph{context
   model}, and a \emph{coherence
   model}~\cite{Milne2008,Cucerzan07,Ratinov11,Hoffart2011,Hachey2013130}
 The mention model associates each entity with its possible textual
-representations, also called aliases or surface forms.  The context
+representations (also known as aliases or surface forms).  The context
 model helps resolve an ambiguous mention using textual features
 extracted from the surrounding context, such as the enclosing sentence
 and salient noun phrases in the document. The coherence model, which
@@ -42,12 +42,12 @@ via the KB, Web links, embeddings, or other resources.
 Coherence models often define an objective function that includes
 local and pairwise candidate scores, where the pairwise scores
 correspond to some notion of coherence or relation
-strength\footnote{An exception to this framework are topic models in
+strength.\footnote{An exception to this framework are topic models in
   which a topic may generate both entities and words, e.g.,
-  \cite{kataria2011,HanS12,houlsby2014scalable}.}. Finding an entity
+  \cite{kataria2011,HanS12,houlsby2014scalable}.} Finding an entity
 labeling that maximizes the objective is usually intractable and
 tackled via various approximations, which we discuss in more detail in
-Section~\ref{sec:related}.
+Section~\ref{sec:related}. 
 
 %\begin{figure*}[t]
 %\centering\includegraphics[width=0.5\linewidth]{beirut.pdf}
@@ -60,7 +60,8 @@ Section~\ref{sec:related}.
 %\end{figure*}
 \input{example-beirut}
 
-All-pairs coherence objectives aggregate over salient, well-connected
+The above coherence objectives consider the sum over all pairwise terms. Such
+``all-pairs'' coherence objectives aggregate over salient, well-connected
 entities and less prominent entities that are not so well-connected.
 In effect, all-pairs objectives seek evidence in favor of a candidate
 entity from \emph{all} other mentions in the document, evidence that
