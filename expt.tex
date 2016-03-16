@@ -22,11 +22,10 @@ metric $B^{3+} F_1$.
 
 \subsection{Experimental setup}
 
-
-
 \subsubsection{Mention prior}
+
 Our KB is derived from the Wikipedia subset of Freebase \todo{cite, download date?}, with about 4M entities. 
-We use it to obtain a baseline prior for an entity given a mention. As sources of alias counts, we use
+We use the KB to obtain a baseline prior over entities given a mention. As sources of alias counts, we use
 Wikipedia page titles (including redirects and disambiguation pages), Freebase aliases, 
 Wikipedia anchor text \todo{is this true -- we use wikilinks?},  and
 \todo{CHECK} filtered anchor text from Web links into Wikipedia pages
@@ -50,7 +49,7 @@ and 69 in YAGO. Unsurprisingly, using only this source of aliases results in
 high accuracy on CoNLL  \cite{Pershina2015,YamadaS0T16}.  
 
 Table~\ref{tab:AliasTable} lists the statistics of the three alias-entity mappings
- and some of their combinations on the CoNLL test-b dataset.
+ and some of their combinations on the CoNLL test-b dataset. \todo{need mention recall and/or similar stats for TAC}
 
 \begin{table}
   \centering
@@ -69,7 +68,7 @@ Table~\ref{tab:AliasTable} lists the statistics of the three alias-entity mappin
     mentions with at least one known entity; gold recall is the number
     of cases where the gold entity was included in the candidates.
     Unique aliases map to exactly one entity.  Ambiguity is averaged over
-    mentions with at least one candidate.}
+    mentions with at least one candidate. }
   \label{tab:AliasTable}
   % old KG
 \end{table}
@@ -78,24 +77,29 @@ Table~\ref{tab:AliasTable} lists the statistics of the three alias-entity mappin
 \subsubsection{Local and pairwise scores}
 \label{sec:expt:features}
 
-Our baseline system is similar to Plato \cite{Lazic2015} in terms of
-design and accuracy.  For each candidate $c$ for mention $i$, it emits
-a posterior distribution $p_i(c)$.  The baseline system does not have
-an explicit coherence model; however, it does capture some coherence
-information indirectly, because referrent phrases are included as
-string features.  For standardized comparison we limit ourselves to
-candidates proposed by the baseline system.
+Our baseline system is similar in design and accuracy to Plato \cite{Lazic2015}.
+Given the referrent phrase $m_i$ and textual context features ${\bf b}_i$, it computes
+the probability of a candidate entity as $p_i(c) \propto p(c|m_i)p({\bf b}_i|c)$. 
+The system resolves mentions independently and does not have an explicit coherence model;
+however, it does capture some coherence information indirectly as referrent phrases are
+included as string context features. We experiment with several versions of the
+mention prior $p(c|m_i)$ as described in the previous section. \todo{But the system is 
+retrained on different name priors, and so the context portion may change... do we say this / mention that it's semisupervised?}
+
+% For standardized comparison we limit ourselves to
+% candidates proposed by the baseline system.
 
 \paragraph*{Scores for single-link model:}
 In the \emph{single link} model, we simply set the local score for
 mention $i$ and candidate $c$ to $s_i(c) = \ln p_i(c) - \ln (1 -
 p_i(c))$ (i.e., log-odds), so that likely candidates get positive
-scores.  We set the pairwise score between two candidates deterministically
-$s_{ij}(c, c') = \ln n_{cc'} + 0.7$, where $n_{cc'}$ is the number of
-outlinks from the Wikipedia page of $c$ to the page of $c'$.  We
+scores.  We set the pairwise score between two candidates heuristically to
+$s_{ij}(y_i, y_j) = \ln o(y_i, y_j) + 0.7$, where $o(y_i, y_j)$ is the number of
+outlinks from the Wikipedia page of $y_i$ to the page of $y_j$.  We
 consider up to three candidates for each mention; if the baseline
 probability of the top candidate exceeds $0.9$, we only consider the top
-candidate.
+candidate.\footnote{We have tried including more candidates, but the single link
+almost never changes the decision for candidates with baseline score $p_i(c)>0.9$.}
 
 \paragraph*{Scores for attention model:}
 Local scores $s_i(y_i)$ for the attention model are derived from
@@ -106,7 +110,8 @@ interpretation, we inject these local feature values:
 \item $\log p_i(c)$ if $p_i(c)>0$, and $1$ otherwise
 \item $\log(1-p_i(c))$ if $p_i(c)<1$, and $1$ otherwise
 \end{itemize}
-and we let $\ws$ learn their best linear combination.  
+and we let $\ws$ learn their best linear combination.  \todo{as Rajhans pointed out these are not monotonic, why this choice?}
+
 %Edge scores $s_{ij}(y_i, y_j)$ are computed using the edge model $\wp$ and edge features between entity pairs:
 \input{edge_features}
 
@@ -161,31 +166,30 @@ Table~\ref{table:tac_results} shows results for TAC-KBP \todo{2010},
 
 \begin{table*}
 \centering
-\begin{tabular}{|l|l|l|c|c|c|}
-\hline 
-Data & Candidate & System/paper & In-KB & Overall & ${B^{3+}F_1}$ \\ 
-& recall &  & accuracy & accuracy & \\
+\begin{tabular}{l|l|c|c|c}
+
+Data &  System/paper & In-KB & Overall & ${B^{3+}F_1}$ \\ 
+&  & accuracy & accuracy & \\
 \hline
-TAC \todo{2010} & & \newcite{Chisholm2015} & & & \\
-& & Baseline & & & \\
-& & Single link & & & \\
-& & Attention & & & \\
+TAC \todo{2010} &  \newcite{Chisholm2015} & & & \\
+&  Baseline & & & \\
+&  Single link & & & \\
+&  Attention & & & \\
 \hline \hline
-TAC 2011 & & \newcite{Cucerzan2011} & - & 86.8 &  {84.1} \\
-& 84.8 & Plato \cite{Lazic2015} & 79.3 & 86.5 & 84.0 \\
-&& Single link & {\bf 81.2} & {\bf 87.0} & {\bf 84.5} \\
-&& Attention & & & \\
+TAC 2011 &  \newcite{Cucerzan2011} & - & 86.8 &  {84.1} \\
+&  Plato \cite{Lazic2015} & 79.3 & 86.5 & 84.0 \\
+& Single link & {\bf 81.2} & {\bf 87.0} & {\bf 84.5} \\
+& Attention & & & \\
 \hline
 \hline
-TAC 2012 & &\newcite{Cucerzan2012}  Run 1 & 72.0 & 76.2 & 72.1  \\
-&&\newcite{Cucerzan2012} Run 3 & 71.2 & {76.6} & {\bf 73.0} \\
-& 83.2 & Plato \cite{Lazic2015} & {74.2} & {76.6} & 71.2 \\
-&& Single link & {\bf 75.1} & {\bf 77.3} & {72.2} \\
-&& Attention & & & \\
-\hline
+TAC 2012 & \newcite{Cucerzan2012}  Run 1 & 72.0 & 76.2 & 72.1  \\
+&\newcite{Cucerzan2012} Run 3 & 71.2 & {76.6} & {\bf 73.0} \\
+&  Plato \cite{Lazic2015} & {74.2} & {76.6} & 71.2 \\
+& Single link & {\bf 75.1} & {\bf 77.3} & {72.2} \\
+& Attention & & & \\
 \end{tabular}
 \caption{TAC KBP evaluation.  (All numbers are in
-  percents.)  \label{table:tac_results} }
+  percents.)  \todo{make this table smaller} \label{table:tac_results} }
 \end{table*}
 \comment{
 \section{Conclusion}
