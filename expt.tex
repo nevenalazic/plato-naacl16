@@ -1,19 +1,17 @@
 \section{Experiments}
 \label{sec:expt}
 
-\subsection{Testbed}
+\subsection{Evaluation data}
 
-\subsubsection{CoNLL benchmark}
-
+\paragraph{CoNLL} 
 The CoNLL dataset ~\cite{Hoffart2011} contains 1,393 articles with
 about 34K mentions, and the standard performance metric is
 mention-averaged accuracy.  The documents are partitioned into train,
 test-a and test-b.  Most authors report performance on the subset of
 231 test-b documents with 4,483 linkable mentions.
 
-\subsubsection{TAC-KBP benchmark}
-
-The TAC KBP datasets \cite{TAC2011,TAC2012} include 2,226 mentions
+\paragraph{TAC KBP} 
+The TAC KBP datasets \cite{TAC2010,TAC2011,TAC2012} include 2,226 mentions
 (2012) and 2,250 mentions (2011), of which roughly half are linkable
 to the reference KB.  The competition evaluation includes $\NIL$
 entities; participants are required to cluster $\NIL$ mentions across
@@ -22,52 +20,59 @@ unique identifier.  For these datasets, we report in-KB accuracy,
 overall accuracy (including $\NIL$ mentions), and the competition
 metric $B^{3+} F_1$.
 
+\subsection{Experimental setup}
 
-\begin{table*}
+
+
+\subsubsection{Mention prior}
+Our KB is derived from the Wikipedia subset of Freebase \todo{cite, download date?}, with about 4M entities. 
+We use it to obtain a baseline prior for an entity given a mention. As sources of alias counts, we use
+Wikipedia page titles (including redirects and disambiguation pages), Freebase aliases, 
+Wikipedia anchor text \todo{is this true -- we use wikilinks?},  and
+\todo{CHECK} filtered anchor text from Web links into Wikipedia pages
+\cite{singh12:wiki-links}.
+
+As an optional additional source of aliases, we use the alias-entity mapping released
+by \newcite{Hoffart2011}, obtained by extending the extending the
+``means'' tables of YAGO \cite{hoffart2013yago2}. This mapping was released alonside
+CoNLL gold entity annotations. When it was
+published, it had 100\% mention recall on CoNLL, i.e. every annotated mention
+could be mapped to at least one entity, and the set of entities included the gold entity. 
+However, changes in canonical Wikipedia URLs, accented characters and
+unicode usually result in mention losses over time, as not all URLs can be mapped to the KB.
+
+For CoNLL only, we experiment with a third alias-entity mapping derived 
+from \cite{Hoffart2011} by \newcite{Pershina2015}; we call it ``HP''.  
+It is not known how candidates were pruned, but it has 100\% mention recall
+and low ambiguity. For example, in the HP mapping the average ambiguity (number of
+entities per alias) on CoNLL is only 13.3, compared to 55 in our KB mapping
+and 69 in YAGO. Unsurprisingly, using only this source of aliases results in
+high accuracy on CoNLL  \cite{Pershina2015,YamadaS0T16}.  
+
+Table~\ref{tab:AliasTable} lists the statistics of the three alias-entity mappings
+ and some of their combinations on the CoNLL test-b dataset.
+
+\begin{table}
   \centering
-  \begin{tabular}{l|l|r}
-    System                 &  Alias-entity mapping  & In-KB accuracy \\
+  \begin{tabular}{l|l|l|l|l}
+    Alias & Mention &   Gold & Unique & Avg.  \\
+    map          & recall  & recall &        & ambig. \\
     \hline
-    \newcite{Chisholm2015} & YAGO                   & 88.7\% \\
-    Plato \cite{Lazic2015} & (Proprietary)          & 86.4\% \\
-    Single link            & Base                   & \todo{87.1\%} \\
-    Our baseline           & Base+HP                & 90.2\% \\
-    Attention              & Base+HP                & 91.5\% \\
-    \hline
-    Attention              & Only HP                & *92.84\% \\
-    \newcite{Pershina2015} & Only HP                & *91.77\%
+    KB     & 4318 & 4095 & 1055   & 55.7  \\
+    YAGO & & & & \\
+    *HP & 4477 & 4476   & 1224   & 13.3   \\
+    KB+HP  & 4477 &  4477 & 955    & 60.9   \\
+    all three& 4477    & 4477   & 879    & 79.4       
   \end{tabular}
-\caption{CoNLL test-b evaluation for recent competitive systems and
-  our models.  Accuracies obtained with alias-entity maps having very
-  low average ambiguity are marked with `*'.  For details of
-  alias-entity maps, see Table~\ref{tab:AliasTable} and text.}
- \label{table:conll_results} 
-\end{table*}
-
-
-\begin{table*}
-  \centering
-  \begin{tabular}{l|r|r|r|r|r|r}
-    Alias-entity & Mention &   Gold & Unique & Average   & Baseline & Attention \\
-    map          & recall  & recall &        & ambiguity & accuracy & accuracy \\
-    \hline
-    Base     & 4318 & 91.3\%, 4095 & 1055   & 55.7      & 88.29\%   & 89.49\%  \\
-    Base+HP  & 4477 & 99.9\%, 4477 & 955    & 60.9      & 90.23\%   & 91.50\%  \\
-    *Only HP & 4477 & 4476   & 1224   & 13.3      & 92.10\%   & 92.84\%  \\
-    Base+HP+YAGO & 4477    & 4477   & 879    & 79.4      &          &           
-  \end{tabular}
-  \caption{Effect of alias-entity mapping tables.  CoNLL, test-b
+  \caption{Alias-entity map statistics on CoNLL, test-b
     fold, 4483 gold mentions.  Mention recall is the number of
     mentions with at least one known entity; gold recall is the number
     of cases where the gold entity was included in the candidates.
-    Unique cases have only one candidate.  Ambiguity is averaged over
+    Unique aliases map to exactly one entity.  Ambiguity is averaged over
     mentions with at least one candidate.}
   \label{tab:AliasTable}
   % old KG
-\end{table*}
-
-
-
+\end{table}
 
 
 \subsubsection{Local and pairwise scores}
@@ -85,11 +90,11 @@ candidates proposed by the baseline system.
 In the \emph{single link} model, we simply set the local score for
 mention $i$ and candidate $c$ to $s_i(c) = \ln p_i(c) - \ln (1 -
 p_i(c))$ (i.e., log-odds), so that likely candidates get positive
-scores.  We set the pairwise score between two candidates as
+scores.  We set the pairwise score between two candidates deterministically
 $s_{ij}(c, c') = \ln n_{cc'} + 0.7$, where $n_{cc'}$ is the number of
 outlinks from the Wikipedia page of $c$ to the page of $c'$.  We
 consider up to three candidates for each mention; if the baseline
-score for the top candidate exceeds $0.9$, we only consider the top
+probability of the top candidate exceeds $0.9$, we only consider the top
 candidate.
 
 \paragraph*{Scores for attention model:}
@@ -106,6 +111,29 @@ and we let $\ws$ learn their best linear combination.
 \input{edge_features}
 
 
+\begin{table}
+  \centering
+  \begin{tabular}{l|l|r}
+    System                 &  Alias map  & In-KB  \\
+    & & accuracy \\
+    \hline
+    \newcite{Lazic2015} & N/A          & 86.4\% \\
+    Chisholm et al. (2015) & YAGO                   & 88.7\% \\
+    Our baseline           & KB+HP                & 90.2\% \\
+    Single link            & KB                   & \todo{87.1\%} \\
+    Attention              & KB+HP                & 91.5\% \\
+    \hline
+    Attention              & Only HP                & *92.84\% \\
+    \newcite{Pershina2015} & Only HP                & *91.77\%
+  \end{tabular}
+\caption{CoNLL test-b evaluation for recent competitive systems and
+  our models.  Accuracies obtained with alias-entity maps having very
+  low average ambiguity are marked with `*'.  For details of
+  alias-entity maps, see Table~\ref{tab:AliasTable} and text.}
+ \label{table:conll_results} 
+\end{table}
+
+
 \subsection{CoNLL results}
 
 Table~\ref{table:conll_results} compares the performance of recent
@@ -115,33 +143,21 @@ entities and their aliases.  ER algorithms are usually quite sensitive
 to the coverage of and noise in these mappings.  Here we use three
 sources of alias-entity mappings, described below.
 
-Our (``base'') KB is derived from the Wikipedia
-subset of Freebase \todo{download date?}, with about 4~M entities.
-Its alias-entity mapping is derived from Wikipedia anchor text and
-\todo{CHECK} filtered anchor text from Web links into Wikipedia pages
-\cite{singh12:wiki-links}.  The number of candidates per mention is
-over 55.
 
-Along with CoNLL gold entity annotations,
-\newcite{Hoffart2011} released a name-entity mapping by extending the
-``means'' tables of YAGO \cite{hoffart2013yago2}.  When it was
-published, it had 100\% mention recall, i.e., every gold annotation
-can be mapped to one or more entities, including the gold entity.
-However, changes in canonical Wikipedia URLs, accented characters and
-unicode usually result in mention losses.
+\subsection{TAC-KBP results}
 
-A third source of alias-entity mapping, also derived from
-\newcite{Hoffart2011} is by \newcite{Pershina2015}; we call it ``HP''.
-It is not known how candidates were pruned, but its average ambiguity
-is only 13.3 (compared to 69 for YAGO), with the gold entity always
-included.  Using ``only HP'' results in higher apparent ER accuracy
-being reported \cite{Pershina2015,YamadaS0T16}.  The union of all the
-above maps has average ambiguity of almost 80.
-Table~\ref{tab:AliasTable} shows accuracy for some combinations of
-alias-entity tables.
+Table~\ref{table:tac_results} shows results for TAC-KBP \todo{2010},
+2011 and 2012.  \hl{TODO: complete discussion of results}
 
 
+\subsection{Discussion of results}
 
+\subsubsection{Attention vs.\ single-link}
+
+\subsubsection{Effect of $K$ on Attention Model}
+\input{dep_on_k}
+
+\subsubsection{Examples of gains (and losses)}
 
 \begin{table*}
 \centering
@@ -171,24 +187,6 @@ TAC 2012 & &\newcite{Cucerzan2012}  Run 1 & 72.0 & 76.2 & 72.1  \\
 \caption{TAC KBP evaluation.  (All numbers are in
   percents.)  \label{table:tac_results} }
 \end{table*}
-
-
-\subsection{TAC-KBP results}
-
-Table~\ref{table:tac_results} shows results for TAC-KBP \todo{2010},
-2011 and 2012.  \hl{TODO: complete discussion of results}
-
-
-\subsection{Discussion of results}
-
-\subsubsection{Attention vs.\ single-link}
-
-\subsubsection{Effect of $K$ on Attention Model}
-\input{dep_on_k}
-
-\subsubsection{Examples of gains (and losses)}
-
-
 \comment{
 \section{Conclusion}
 \label{sec:End}
