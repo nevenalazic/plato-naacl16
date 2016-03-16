@@ -9,18 +9,28 @@ Wikipedia also provides direct evidence of relatedness between a pair of of enti
 
 \subsection{Collective inference for ER}
 
-As discussed earlier, optimizing most reasonable coherence objectives is intractable. \newcite{Milne2008} and \newcite{Ferragina10} decompose the problem over mentions and select the candidate that maximizes their relatedness score, but that involves extending attention to \emph{all} other mentions ($K=n-1$).  \newcite{Hoffart2011} extract a dense subgraph from the original graph by using an iterative heuristic to remove unpromising mention-entity edges. \newcite{Cucerzan07} creates a relation vector for each candidate, and disambiguates each entity to the candidate whose vector was most similar to the aggregate (which includes both correct and incorrect labels). \newcite{KulkarniSRC09} formulate the task as an integer linear program and find solutions via a convex relaxation, while \newcite{ChengR13} directly use an integer linear program solver. A shortcoming of these approaches is that they may be too slow \hl{check} for Web-scale ER. \newcite{Ratinov11} use relation scores as features in a ranking support vector machine.
+As discussed earlier, optimizing most global coherence objectives is intractable. \newcite{Milne2008} and \newcite{Ferragina10} decompose the problem over mentions and select the candidate that maximizes their relatedness score, which includes relations to all other mentions. % but that involves extending attention to \emph{all} other mentions ($K=n-1$). 
+\newcite{Hoffart2011} extract a dense subgraph from the original graph by using an iterative heuristic to remove unpromising mention-entity edges. \newcite{Cucerzan07} creates a relation vector for each candidate, and disambiguates each entity to the candidate whose vector is most similar to the aggregate (which includes both correct and incorrect labels). \newcite{KulkarniSRC09} formulate the task as an integer linear program and find solutions via a convex relaxation, while \newcite{ChengR13} directly use an integer linear program solver. 
+%A shortcoming of these approaches is that they may be too slow \hl{check} for Web-scale ER.
+\newcite{Ratinov11} use relation scores as features in a ranking support vector machine.
  
-Personalized PageRank (PPR) \cite{jeh2003scaling} is another tractable alternative to collective inference, adopted by several recent systems \cite{Han2011,He13,Alhelbawy14,Pershina2015}. A closely related approach is Laplacian smoothing \cite{Huang2014}.  In most applications of PPR to ER, the graph and edge weights are fixed a-priori, and there is no dynamic association between $y_i$ and the best supporting mentions~$j$.
+Personalized PageRank (PPR) \cite{jeh2003scaling} is another tractable alternative to collective inference, adopted by several recent systems \cite{Han2011,He13,Alhelbawy14,Pershina2015}. A closely related approach is Laplacian smoothing \cite{Huang2014}. 
+% In most applications of PPR to entity resolution, the graph edges and weights are fixed (not learned).
+% and there is no dynamic association between $y_i$ and the best supporting mentions~$j$.
 
 %Common shortcomings of these systems include the absence of a convincing generative or discriminative story that integrates local and coherence signals.  Typically, there is no training for the PPR part of the score; it is hardwired into the final labeling process. 
 
 \subsection{Attention models}
-Attention based models have recently shown great promise in several applications, such as machine translation \cite{bahdanau2014neural} and image caption generation \cite{xu2015show}.  In both these domains, attention is used to choose which information is relevant for producing the next work. Our work introduces a significantly different attention mechanism, which considers multiple foci of attention, and generalizes previous soft attention approach to handle those. Furthermore, we optimize
-over the attention foci and the predicted label jointly, and not in a feed-forward manner as done in previous works.
+Attention based models have recently shown great promise in several applications, including machine translation \cite{bahdanau2014neural} and image caption generation \cite{xu2015show}.  
+%In both these domains, attention is used to choose which information is relevant for producing the next work. \todo{I don't understand this sentence}
+Our work introduces a significantly different attention mechanism, which allows each variable can focus on multiple objects. 
+We develop a novel smooth version of the multi-focus attention function which generalizes the single focus softmax-function.
+%Our work introduces a significantly different attention mechanism, which considers multiple foci of attention, and generalizes previous soft attention approach to handle those. 
+%Furthermore, we optimize
+% over the attention foci and the predicted label jointly, and not in a feed-forward manner as done in previous works.
 
-Here we consider attending to different mentions in a document. We note that systems such as \newcite{Jin:2014} and \newcite{Lazic2015} may be viewed as
-attending to single context features, via a model that is very different from ours, and not readily extendible to attention to mentions.
+We apply the developed attention mechanism to coherence modeling for entity resolution, and we base the score for each candidate entity on relations to a small subset of mentions. While some existing entity resolution systems such as \newcite{Jin:2014} and \newcite{Lazic2015} may be viewed as having attention mechanisms, these are intended for single textual features and not readily extendible to mentions and structured inference.
+
 
 %which perform per-instance feature selection and argue that many context features of a mention can be unnecessary or even detrimental. 
 

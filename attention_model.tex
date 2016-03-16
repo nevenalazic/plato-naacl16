@@ -151,7 +151,7 @@ s_{ij}(y_i,y_j;\wp) &=& \wp\cdot\fp ~,
 where we have explicitly denoted the dependence of the scores on the weight vectors.  See \secref{sec:expt:features} for details on how the features are chosen. It is of course possible to consider non-linear alternatives for the score function, as in recent deep learning parsing models \cite{chen2014fast,neurosis}, but we focus on the linear case for simplicity.
 
 \subsection{Parameter learning \label{sec:learning}}
-The parameters $\ws,\wp$ are learned from labeled data, as explained next. Since inference decomposes over mentions, we use a simple hinge loss for each mention. The loss is defined as follows. Denote by $y^*_i$ the ground
+The parameters $\ws,\wp$ are learned from labeled data, as explained next. Since inference decomposes over mentions, we use a simple hinge loss for each mention.  Denote by $y^*_i$ the ground
 truth label for mention $i$, and let ${\bf s}_{i}(y_i) \equiv (s_{i1}(y_i), \ldots, s_{in}(y_i))$. 
 Then the hinge loss for mention $i$ is:
 \bea
@@ -161,7 +161,7 @@ L_i &=& \max_{y_i}[ s_i(y_i) + \samax_K({\bf s}_{i}(y_i))  \\
 \eea
 where $\Delta(y_i,y^*_i)$ is zero if $y_i=y^*_i$ and one otherwise.
 
-The overall loss is simply the sum of losses for all the mentions, plus $\ell_2$ regularization over $\ws,\wp$. To minimize the loss we use AdaGrad \cite{adagrad} with learning rate $\eta=0.1$.
+The overall loss is simply the sum of losses for all the mentions, plus $\ell_2$ regularization over $\ws,\wp$.   We minimize the loss using AdaGrad \cite{adagrad} with learning rate $\eta=0.1$.
 
 
 %%% Local Variables: ***
