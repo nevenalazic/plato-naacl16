@@ -101,10 +101,9 @@ interpretation, we inject these local feature values:
 \item $\log p_i(c)$ if $p_i(c)>0$, and $1$ otherwise
 \item $\log(1-p_i(c))$ if $p_i(c)<1$, and $1$ otherwise
 \end{itemize}
-and we let $\ws$ learn their best linear combination.  Edge scores
-$s_{ij}(y_i, y_j)$ are computed using the edge model $\wp$ and edge
-features between entity pairs:
-\todo{amirg@ COMPLETE THIS}.
+and we let $\ws$ learn their best linear combination.  
+%Edge scores $s_{ij}(y_i, y_j)$ are computed using the edge model $\wp$ and edge features between entity pairs:
+\input{edge_features}
 
 
 \subsection{CoNLL results}
@@ -184,12 +183,13 @@ Table~\ref{table:tac_results} shows results for TAC-KBP \todo{2010},
 
 \subsubsection{Attention vs.\ single-link}
 
-\subsubsection{Effect of $K$ on attention model}
+\subsubsection{Effect of $K$ on Attention Model}
+\input{dep_on_k}
 
 \subsubsection{Examples of gains (and losses)}
 
 
-
+\comment{
 \section{Conclusion}
 \label{sec:End}
 
@@ -203,7 +203,7 @@ Our models improve the performance of a baseline system on three
 evaluation benchmarks, and our best multi-focal attention model
 achieves state-of-the-art results on standard benchmarks against
 highly competitive recently built systems.
-
+}
 
 
 %%% Local Variables: ***

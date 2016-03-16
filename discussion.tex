@@ -1,0 +1,40 @@
+\section{Conclusion}
+\label{sec:End}
+
+We have described an attention based approach to entity linking. Two implementation
+of the approach were described: one which uses inference on star shaped graphs, and one
+which does global inference using belief propagation.
+
+Our empirical results show that the methods results in significant performance gains
+across several benchmarks. 
+
+Our single links model attends to a single entity. It is possible to extend it to the 
+multi-focal case, by changing the factors and corresponding message updates. For simplicity, 
+we present the single link case. It is likely that the multi-focal version will improve performance. However,
+the simplicity of the star-shaped model and its empirical effectiveness make it an attractive
+approach for easily incorporating attention into existing linking models.
+
+Deep learning has recently been used to in mutliple NLP applications, such as parsing \cite{chen2014fast} and translation \cite{bahdanau2014neural}.
+It is possible to change the linear scores used here with ones derived from a deep architecture, likely resulting
+in performance improvements. The star-shaped model is particularly amenable to this architecture, as it can be implemented via
+a feed-forward sequence of operations (including sorting, which can be implemented with soft-max gates).
+
+Finally, one may consider a more elaborate attention model, where the attention depends on a the current state of the system.
+For example, this can allow the attention to change according to context. The dynamics of the underlying state can be modeled by
+recurrent neural networks or LSTMs \cite{bahdanau2014neural}. 
+
+In conclusion, we have shown that attention is an effective mechanism for improving entity linking models, and that it can be implemented
+via a simple inference mechanism, where model parameters can be easily learned.
+
+\comment{
+ two new approaches to modeling coherence for entity
+resolution.  While most existing systems consider all relations
+between entity candidates for a document to assign a coherence score
+to a candidate, we use a novel attention mechanism to select the most
+relevant relations.  Our experimental results support \hl{do they?}
+the premise that the inclusion of all relations can hurt performance.
+Our models improve the performance of a baseline system on three
+evaluation benchmarks, and our best multi-focal attention model
+achieves state-of-the-art results on standard benchmarks against
+highly competitive recently built systems.
+}

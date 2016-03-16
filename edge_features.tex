@@ -1,0 +1,9 @@
+The  edge features $\fp$ are set as follows:
+\begin{itemize}
+\item {\bf Relation Feature:} A feature that is set to $1$ if $y_i$ and $y_j$ are related in the knowledge base (FreeBase), and $0$ otherwise.
+\item {\bf Gold link Feature:} Denote by $l(y_i,y_j)$ the number of links between $y_i$ and $y_j$ in Wikipedia, capped to the value $15$. We introduce a set of $15$ features where the $j^{th}$ feature is set to $1$ if $l(y_i,y_j) = j$, and $0$ otherwise. This is meant to capture non-linear dependencies of coherence
+on the number of links.
+\item {\bf Self trained link Feature:} Since Wikipedia links are quite sparse, we augment them by labeling all of Wikipedia with a baseline entity tagger from
+\cite{Lazic2015}. Denote $r(y_i,y_j)$ the number of links in this labeled dataset. Then we add as features $\log{r(y_i,y_j)}$ and $\delta_{r(y_i,y_j),0}$. We use a log scale here since there are more links than in the gold case. 
+\end{itemize}
+We chose this relatively small set of features, so that it can be trained from the small training sets of Conll and TAC (both have a few thousand ground truth mentions).
