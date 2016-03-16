@@ -10,7 +10,7 @@ Similarly to previous work, our approach to disambiguation relies on local and p
 Coherence models typically attempt to maximize a {\em global} objective function that assigns a score to each complete labeling ${\bf y} = (y_1,\ldots, y_n)$, given the local and pairwise scores. An example of such a function is the sum of all singleton and pairwise scores for the label:
  %A common example of such a function $g(y_1,\ldots,y_n)$ is:
 \be
-g({\bf y}) = \sum_i s_i(y_i) + \sum_i \sum_{j | j \neq i} s_{ij}(y_i,y_j).
+g({\bf y}) = \sum_i s_i(y_i) + \sum_i \sum_{j :  j \neq i} s_{ij}(y_i,y_j).
 \label{eq:global_obj}
 \ee 
 One disadvantage of this approach is that maximizing $g$ corresponds to finding the maximum-a-posteriori (MAP) assignment of a general pairwise Markov random field, and is hence
