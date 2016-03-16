@@ -110,7 +110,7 @@ x_1,\ldots,x_n: \\
  \label{prop:softkmax}
 Assume $i_1,\ldots,i_n$ are such that $z_{i_1}\geq \ldots \geq z_{i_n}$. Then:
 \be
-\samax_K(z_1,\ldots,z_n) = \sum_{j=1}^{K-1} z_{i_j} + \beta^{-1} \log\sum_{j=K}^n \expo{\beta z_{i_j}}  
+\samax_K({\bf z}) = \sum_{j=1}^{K-1} z_{i_j} + \beta^{-1} \log\sum_{j=K}^n \expo{\beta z_{i_j}}  
 \ee
 The function $\samax_K(z_1,\ldots,z_n)$ is differentiable. Denote its gradient with respect to $z_i$ by $v_i$. Also, define:
 \bea
@@ -146,7 +146,7 @@ Thus far we assumed the singelton and pairwise scores were given. As in other st
 s_i(y_i;\ws) &=& \ws\cdot\fs  \\
 s_{ij}(y_i,y_j;\wp) &=& \wp\cdot\fp ~,
 \eea
-where we have expicitly denoted the dependence of the scores on the weight vectors.  See \secref{sec:expt:features} for details on how the features are chosen. It is of course possible to consider non-linear alternatives for the score function, as in recent deep learning parsing models \cite{chen2014fast,neurosis}, but we focus on the linear case for simplicity.
+where we have explicitly denoted the dependence of the scores on the weight vectors.  See \secref{sec:expt:features} for details on how the features are chosen. It is of course possible to consider non-linear alternatives for the score function, as in recent deep learning parsing models \cite{chen2014fast,neurosis}, but we focus on the linear case for simplicity.
 
 \subsection{Parameter learning \label{sec:learning}}
 The parameters $\ws,\wp$ are learned from labeled data, as explained next. Since prediction is performed for each mention separately, we use a simple hinge loss for that mention. The loss is defined as follows. Denote by $y^*_i$ the ground

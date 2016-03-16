@@ -1,10 +1,11 @@
 \section{Single-link model}
 \label{sec:maxsum}
 
-To motivate our modeling choices of using multi-focal attention and decomposed inference, we additionally consider a simple baseline model with single-focus attention and global inference. In this approach, which we name \emph{single link}, each mention $i$ attends to exactly one other mention that maximizes the pairwise relation score. The corresponding objective can be written as
+To motivate our modeling choices of using multi-focal attention and decomposed inference, we additionally consider a simple baseline model with single-focus attention and global inference. In this approach, which we name \emph{single-link}, each mention $i$ attends to exactly one other mention that maximizes the pairwise relation score. The corresponding objective can be written as
 \begin{align}
-g^{SL}({\bf y}) &= \sum_i \bigg( s_i(y_i) + \max_{ j | j \neq i} s_{ij}(y_i, y_j) \bigg).
+g^{SL}({\bf y}) &= \sum_i \big( s_i(y_i) + \max_{j} s_{ij}(y_i, y_j) \big)
 \end{align}
+where $s_{ij}(y_i, y_j) = -\infty$ if there is no relation between $y_i$ and $y_j$, and we set $s_{ii}(y_i, y_i)=0$.
 
 While exact inference in this model remains intractable, we can find approximate solutions using max-sum belief propagation \cite{Kschischang2001}. 
 As a reminder, max-sum is an iterative algorithm for MAP inference which can be described in terms of messages sent from model factors $g_a({\bf y}_a)$ to each of their variables $y \in {\bf y}_a$. At convergence, each variable is assigned to the value that maximizes \emph{belief} $b(y)$, defined as the sum of incoming messages. The message updates have the following form:
@@ -13,7 +14,7 @@ As a reminder, max-sum is an iterative algorithm for MAP inference which can be 
 \label{eq:damping}
 \end{align}
 \noindent where $q_j^{\setminus a}(y_j)$ is the sum of all messages to $y_j$ except the one from factor $g_a$. 
-While the single-link model contains global factors $\max_{ j | j \neq i} s_{ij}(y_i, y_j)$ over $n$ variables, computing the messages from these factors is tractable and requires sorting.
+While the single-link model contains high-order factors over $n$ variables, computing the messages from these factors is tractable and requires sorting.
 
 
 %%% Local Variables: ***
