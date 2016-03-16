@@ -4,37 +4,28 @@
 Entity resolution (ER) is the task of mapping mentions of entities in
 text to corresponding records in a knowledge base (KB)
 \cite{BunescuP06,Cucerzan07,KulkarniSRC09,Dredze2010,Hoffart2011,Hachey2013130}.
-%with numerous applications
-%\cite{Gabrilovich2007,Lin2012,Kwiatkowski2011,finin2009Coreference,mayfield2009cross}.
-%Key applications are to information extraction and grounded semantic
-%parsing. %text classification~\cite{Gabrilovich2007}, information
-%extraction~\cite{Lin2012} and grounded semantic
-%parsing~\cite{Kwiatkowski2011}.  It can also provide a valuable
-%signal to other language-processing tasks, including part-of-speech
-%tagging, parsing, and coreference
-%resolution~\cite{finin2009Coreference,mayfield2009cross}.  Entity
-%resolution
-ER is a challenging problem, because mentions are often ambiguous on
+ER is a challenging problem because mentions are often ambiguous on
 their own, and can only be resolved given appropriate context.  For
 example, the mention \qtext{Beirut} may refer to the capital of
 Lebanon, the band from New Mexico, or a drinking game
-(Figure~\ref{fig:ereg}.)
-% Names may also refer to entities that are not in the KB, a problem
-% known as \emph{{\NIL} detection}.
-ER can improve text classification \cite{Gabrilovich2007}, information
-extraction \cite{Lin2012}, coreference resolution
-\cite{finin2009Coreference,mayfield2009cross} and other
-language-processing tasks.
+(Figure~\ref{fig:ereg}).
+Names may also refer to entities that are not in the KB, a problem
+ known as \emph{{\NIL} detection}.
+% ER can improve text classification \cite{Gabrilovich2007}, information
+% extraction \cite{Lin2012}, coreference resolution
+% \cite{finin2009Coreference,mayfield2009cross} and other
+% language-processing tasks.
 %Kwiatkowski2011groundedsemparsing
 
 Most ER systems consist of a \emph{mention model}, a \emph{context
   model}, and a \emph{coherence
-  model}~\cite{Milne2008,Cucerzan07,Ratinov11,Hoffart2011,Hachey2013130}
+  model}~\cite{Milne2008,Cucerzan07,Ratinov11,Hoffart2011,Hachey2013130}.
 The mention model associates each entity with its possible textual
 representations (also known as aliases or surface forms).  The context
 model helps resolve an ambiguous mention using textual features
-extracted from the surrounding context, such as the enclosing sentence
-and salient noun phrases in the document. The coherence model, which
+extracted from the surrounding context. 
+%, such as the enclosing sentence and salient noun phrases in the document. 
+The coherence model, which
 is our focus in this work, encourages all mentions to resolve to
 entities that are related to each other.  Relations may be established
 via the KB, Web links, embeddings, or other resources.
@@ -44,59 +35,62 @@ local and pairwise candidate scores, where the pairwise scores
 correspond to some notion of coherence or relation
 strength.\footnote{An exception to this framework are topic models in
   which a topic may generate both entities and words, e.g.,
-  \cite{kataria2011,HanS12,houlsby2014scalable}.} Finding an entity
-labeling that maximizes the objective is usually intractable and
-tackled via various approximations, which we discuss in more detail in
-Section~\ref{sec:related}. 
+  \cite{kataria2011,HanS12,houlsby2014scalable}.} 
+  Support for a candidate is typically aggregated over
+relations to all other entities in the document. One problem with this approach is that it may
+dilute evidence for entities that are not salient in the document, or
+not well-connected in the KB. This is an issue we aim to address.
+%Finding an entity
+% labeling that maximizes the objective is usually intractable and
+% tackled via various approximations, which we discuss in more detail in
+% Section~\ref{sec:related}. 
 
-%\begin{figure*}[t]
-%\centering\includegraphics[width=0.5\linewidth]{beirut.pdf}
-%\caption{Illustration of the ER problem for three mentions
-%  ``Beirut'', ``New Mexico'' and ``Santa Fe''. Each mention has three
-%  possible disambiguations. The links indicate disambiguations that
-%  have wikipedia links between their respective pages.
-%\todo{show sample text?}}
-%\label{fig:ereg}
-%\end{figure*}
 \input{example-beirut}
 
-The above coherence objectives consider the sum over all pairwise terms. Such
-``all-pairs'' coherence objectives aggregate over salient, well-connected
-entities and less prominent entities that are not so well-connected.
-In effect, all-pairs objectives seek evidence in favor of a candidate
-entity from \emph{all} other mentions in the document, evidence that
-may simply not exist for non-salient entities.  However, valuable
-support in favor of a candidate entity may be provided by a small
-number of entities chosen for other mentions.  Thus, all-pairs
-objectives risk losing these delicate signals.  Our primary goal is to
-fix this problem.
+%The above coherence objectives consider the sum over all pairwise terms. Such
+%``all-pairs'' coherence objectives aggregate over salient, well-connected
+%entities and less prominent entities that are not so well-connected.
+%In effect, all-pairs objectives seek evidence in favor of a candidate
+%entity from \emph{all} other mentions in the document, evidence that
+%may simply not exist for non-salient entities.  However, valuable
+%support in favor of a candidate entity may be provided by a small
+%number of entities chosen for other mentions.  Thus, all-pairs
+%objectives risk losing these delicate signals.  Our primary goal is to
+%fix this problem.
 
-In this work, we introduce a novel coherence model with a multi-focal
-attention mechanism. In our model, the coherence score for each
-candidate entity depends on a small set of mentions it attends to,
-rather than all mentions in the document. Attention has recently been
+In this work, we introduce a novel coherence model with an attention mechanism, where the 
+score for each candidate only depends on a small subset of mentions.
+ Attention has recently been
 used with considerable empirical success in tasks such as translation
 \cite{bahdanau2014neural} and image caption generation
 \cite{xu2015show}. We argue that attention is also desirable for
 collective ER due to the discussed imbalance in the number of
 relations for different entities.
 
-Our model relies on a novel smooth version of the multi-focus
-attention function, which generalizes the single-focus softmax
-function. We use a simple and efficient inference procedure, and show
-how the model parameters can be learned from data.
+Attention models typically have a single focus, implemented using the
+ softmax function. Our model allows each candidate to
+ focus on multiple mentions, and to implement it we introduce a 
+ novel smooth version of the
+ multi-focus attention function, which generalizes softmax.
+%Our model relies on a novel smooth version of the multi-focus
+%attention function, which generalizes the single-focus softmax
+%function. 
+%We use a simple and efficient inference procedure, and show
+%how the model parameters can be learned from data.
 
-We augment a competitive local context model (which does not use a
-coherence model) similar to \cite{Lazic2015} with our new coherence
-formulations.  We see performance improvements on three benchmarks.
-On the CoNLL 2003 dataset \cite{Hoffart2011}, we see a relative
-reduction in error (RRIE) of \todo{FILL\%}.  On the TAC KBP 2010--2012
-datasets, we get a RRIE of in-KG entities around \todo{FILL\%}.
+We augment a competitive local context model (which does not use
+coherence) similar to \cite{Lazic2015} with our coherence
+framework, leading to performance improvements on three \todo{or four} evaluation benchmarks:
+CoNLL 2003 \cite{Hoffart2011} and TAC KBP 2010--2012.
+%On the CoNLL 2003 dataset \cite{Hoffart2011}, we see a relative
+%reduction in error (RRIE) of \todo{FILL\%}.  On the TAC KBP 2010--2012
+% datasets, we get a RRIE of in-KG entities around \todo{FILL\%}.
 
 Our contributions thus consist of defining a novel multi-focal
-attention based model, where inference is efficient, and applying it
-successfully to an entity resolution system.  Our model can be applied
-to other structured prediction problems in NLP.  \todo{Drop or elaborate}
+attention model and applying it
+successfully to an entity resolution system.  The approach can also be applied
+to other structured prediction problems in language processing (such as
+selecting antecedents in coreference resolution).  \todo{Move last sentence to conclusion?}
 
 %Our premise is that this may also hold for entity relations:
 %aggregating support for an entity label over the whole document may
@@ -111,13 +105,6 @@ to other structured prediction problems in NLP.  \todo{Drop or elaborate}
 \comment{
 \subsection{Our contributions}
 \label{sec:intro:our}
-
-
-In the first approach, which we name \emph{single link}, we formulate inference as finding the highest-weight subgraph in which each candidate has a directed edge to \emph{at most} one other candidate. This can roughly be seen as maximizing over relations as opposed to averaging. In this model we perform inference using max-sum belief propagation \cite{Kschischang2001}.
-
-%; however, it is slightly more computationally involved since an edge between two entities is allowed only if the corresponding mentions resolve to them. 
-%We specify the objective and constraints using binary edge-indicator variables, and find the maximum-a-posteriori solution using the max-sum algorithm \cite{Kschischang2001}. 
-Our
 
 In the second \emph{attention} model, we allow each mention to have up to $K$ relations to other mentions. In this case, inference is tractable, and we also learn mention and edge scores from a small set of simple features.   %In other words,  each mention is labeled by (tractable) inference in a star graph, but one where most edges are (dynamically) ignored.
 
