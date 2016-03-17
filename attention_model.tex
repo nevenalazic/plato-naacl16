@@ -114,18 +114,15 @@ Assume $i_1,\ldots,i_n$ are such that $z_{i_1}\geq \ldots \geq z_{i_n}$. Then:
 \be
 \samax_K({\bf z}) = \sum_{j=1}^{K-1} z_{i_j} + \beta^{-1} \log\sum_{j=K}^n \expo{\beta z_{i_j}}  
 \ee
-The function $\samax_K({\bf z})$ is differentiable. Denote its gradient with respect to $z_i$ by $v_i$. Also, define:
-\bea
-c &=& \beta^{-1} \log\sum_{j=K}^n \expo{\beta z_{i_j}} \\
-d &=& (K-1) \expo{\beta c} + \sum_{j=K}^n \expo{\beta z_{i_j}}
-\eea
-Then $v_i$ is given by:
+%The function $\samax_K({\bf z})$ is differentiable. 
+The function $\samax_K({\bf z})$ has a subgradient $\vv$ given by:
 \be
 v_{i_j} =
 \left\{
 \begin{array}{ll}
-\frac{\expo{\beta c}}{d} & j = 1,\ldots,K-1 \\
-\frac{\expo{\beta z_{i_j}}}{d} & j = K,\ldots,n 
+%\frac{\expo{\beta c}}{d} & j = 1,\ldots,K-1 \\
+1 & j = 1,\ldots,K-1 \\
+\frac{\expo{\beta z_{i_j}}}{ \sum_{j=K}^n \expo{\beta z_{i_j}}} & j = K,\ldots,n 
 \end{array} 
 \right\}
 \ee
