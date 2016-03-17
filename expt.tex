@@ -195,7 +195,13 @@ results to date on TAC 2011 and TAC 2012.
 \subsection{Effect of $K$ on the attention model}
 \input{dep_on_k}
 
-\subsection{Examples of gains (and losses)}
+\subsection{Effect of smoothing}
+In \secref{sec:soft_attention} we proposed an extension of softmax smoothing to the $K$ attention case. In our experiments 
+we cross-validated over a wide range of $\beta$ values, including $\beta=\infty$ which corresponds to taking
+the exact sum of $K$ largest values. We found that the optimal value in most cases was  $\beta=\infty$ or large values
+such as $\beta=10$ and $\beta=100$. This suggests that a {\em hard} attention model, where exactly $K$ mentions are picked is adequate in the current settings.
+
+%\subsection{Examples of gains (and losses)}
 
 
 %
