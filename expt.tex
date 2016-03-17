@@ -109,8 +109,8 @@ interpretation, we inject these local feature values:
 \item $1$ if $p_i(c)\ne 0$, and 0 otherwise
 \item $\log p_i(c)$ if $p_i(c)>0$, and $0$ otherwise
 \item $1$ if $p_i(c)=0$, and $0$ otherwise
-\item $\log(1-p_i(c))$ if $p_i(c)<1$, and $1$ otherwise
-\item $1$ if $p_i(c)=0$ and $0$ otherwise.
+\item $\log(1-p_i(c))$ if $p_i(c)<1$, and $0$ otherwise
+\item $1$ if $p_i(c)=1$ and $0$ otherwise.
 \end{itemize}
 %
 The third and fifth feature above address the case where the $\log$ is undefined. They effectively let us learn the value of $\log{0}$ for the
@@ -185,9 +185,12 @@ Tables~\ref{table:conll_results} compares the performance of our model
 and recent competitive systems on the CoNLL test-b benchmark
  in terms of mention-averaged accuracy. We also note the alias-entity
  mapping used in each system, as the corresponding gold recall is
- an upper bound on accuracy. Both the single-link and multi-focus attention models
- improve the performance over baseline system. In addition, the multi-focus model
- outperforms recent state-of-the-art models given the same candidate recall.
+ an upper bound on accuracy, and alias ambiguity determines the difficulty of the task.
+ In particular, the HP mapping seems to make the task too easy, and should probably
+ not be considered in benchmarking algorithms.
+ Both the single-link and multi-focus attention models
+ improve the performance over baseline system. The multi-focus model with the KB
+ mention prior outperforms recently published state-of-the-art models
 
 Table~\ref{table:tac_results} shows our results for the TAC KBP 2010, 2011, and 2012
 evaluation datasets, where we used the KB+YAGO entity-alias map for all our experiments. 
