@@ -77,18 +77,25 @@ Attention models typically have a single focus, implemented using the
 %We use a simple and efficient inference procedure, and show
 %how the model parameters can be learned from data.
 
-We augment a competitive local context model (which does not use
-coherence) similar to \cite{Lazic2015} with our coherence
-framework, leading to performance improvements on three \todo{or four} evaluation benchmarks:
-CoNLL 2003 \cite{Hoffart2011} and TAC KBP 2010--2012 \cite{TAC2010,TAC2011,TAC2012}.
+Our system uses mention and context models similar to  
+\newcite{Lazic2015} (which do not use coherence) along with our novel 
+multi-focal attention model to 
+enforce coherence, leading to significant performance improvements 
+on the CoNLL 20013 \cite{Hoffart2011} and TAC KBP 2010--2012 tasks 
+\cite{TAC2010,TAC2011,TAC2012}.
+
+%We augment a competitive local context model (which does not use
+%coherence) similar to \cite{Lazic2015} with our coherence
+%framework, leading to performance improvements on three \todo{or four} evaluation benchmarks:
+%CoNLL 2003 \cite{Hoffart2011} and TAC KBP 2010--2012 \cite{TAC2010,TAC2011,TAC2012}.
 %On the CoNLL 2003 dataset \cite{Hoffart2011}, we see a relative
 %reduction in error (RRIE) of \todo{FILL\%}.  On the TAC KBP 2010--2012
 % datasets, we get a RRIE of in-KG entities around \todo{FILL\%}.
 
-%Our contributions thus consist of defining a novel multi-focal
-%attention model and applying it
-%successfully to an entity resolution system.  
-\secref{sec:notation} introduces notation.
+Our contributions thus consist of defining a novel multi-focal
+attention model and applying it
+successfully to an entity resolution system.  
+The rest of the paper is organized as follows: \secref{sec:notation} introduces notation.
 \secref{sec:attention} presents the new multi-focus attention
 model.  \secref{sec:maxsum} discusses a baseline model with
 single focus.  \secref{sec:related} reviews related work.
