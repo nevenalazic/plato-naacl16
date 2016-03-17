@@ -1,14 +1,18 @@
-%\subsection{Effect of Attention Width}
-%Our model has a parameter $K$ that specifies the number of entities to attend to. 
-We investigated the effect of the multi-focus attention beam size $K$ by evaluating performance
-on the CoNLL test-a dataset for different values of $K$. Results 
-are shown in \figref{fig:k_effect}. It can be seen that performance peaks at $K=3$, with a sharp decrease after $K=10$. 
+\subsection{Effect of $K$ on the attention model}
+
+We investigated the effect of the multi-focus attention beam size $K$
+by evaluating performance on the CoNLL test-a dataset for different
+values of $K$. Results are shown in \figref{fig:k_effect}.
+Performance peaks for $K \in [3,5]$, with a sharp decrease after
+$K=10$.  This validates our central premise: all-pairs label coupling
+may hurt accuracy.
+
 
 \comment{
 \begin{figure}[t!]
 \includegraphics[width=\linewidth]{./k_effect.png}
-\caption{Effect of parameter $K$ on entity linking accuracy. Results shown for the testa Conll dataset, where the model
-is trained on Conll training data. }
+\caption{Effect of parameter $K$ on entity linking accuracy.
+Trained on CoNLL train and tested on CoNLL test-a.}
 \label{fig:k_effect}
 \end{figure}
 }
@@ -51,8 +55,8 @@ is trained on Conll training data. }
   \end{axis}
 \end{tikzpicture}
 }
-\caption{Effect of parameter $K$ on entity linking accuracy. Results shown for the CoNLL test-a dataset, where the model
-is trained on CoNLL training data. }
+\caption{Effect of parameter $K$ on entity linking accuracy.
+Trained on CoNLL train and tested on CoNLL test-a. \label{fig:k_effect}}
 \end{figure}
 }
 

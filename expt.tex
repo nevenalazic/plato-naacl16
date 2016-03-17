@@ -3,14 +3,14 @@
 
 \subsection{Evaluation data}
 
-\paragraph{CoNLL} 
+\paragraph*{CoNLL:} 
 The CoNLL dataset ~\cite{Hoffart2011} contains 1,393 articles with
 about 34K mentions, and the standard performance metric is
 mention-averaged accuracy.  The documents are partitioned into train,
-test-a and test-b.  Most authors report performance on the subset of
+test-a and test-b.  Like most authors, we report performance on the
 231 test-b documents with 4,483 linkable mentions.
 
-\paragraph{TAC KBP} 
+\paragraph*{TAC KBP:} 
 The TAC KBP datasets \cite{TAC2010,TAC2011,TAC2012} include 2,250 mentions (2010),
 2,250 mentions (2011), and 2,226 mentions (2012), 
 of which roughly half are linkable
@@ -23,53 +23,58 @@ metric $B^{3+} F_1$ which evaluates $\NIL$ clustering.
 
 \subsection{Experimental setup}
 
-\subsubsection{Mention prior}
+\subsubsection{KB and entity aliases}
 
-Our KB is derived from the Wikipedia subset of Freebase \cite{BollackerEPST08}, with about 4M entities. 
-We use the KB to obtain a baseline prior over entities given a mention. As sources of alias counts, we use
-Wikipedia page titles (including redirects and disambiguation pages), Freebase aliases, 
-Wikipedia anchor text \todo{is this true -- we use wikilinks?},  and
- filtered anchor text from Web links into Wikipedia pages
-\cite{singh12:wiki-links}.
+Our KB is derived from the Wikipedia subset of Freebase
+\cite{BollackerEPST08}, with about 4M entities.  We collect aliases
+from Wikipedia page titles (including redirects and disambiguation
+pages), Freebase aliases, and Wikipedia anchor text.  \todo{wikilinks?}
+99.31\% of CoNLL test-b mentions are included, and 96.19\% map to the gold entity.
 
-As an optional additional source of aliases, we use the alias-entity mapping released
-by \newcite{Hoffart2011}, obtained by extending the extending the
-``means'' tables of YAGO \cite{hoffart2013yago2}. This mapping was released alonside
-CoNLL gold entity annotations. When it was
-published, it had 100\% mention recall on CoNLL, i.e. every annotated mention
+We optionally use the mapping (as distinct from the
+CoNLL gold entity annotations) from aliases to candidate entities released
+by \newcite{Hoffart2011}, obtained by extending the
+``means'' tables of YAGO \cite{hoffart2013yago2}.  When released,
+it had 100\% mention and gold recall on CoNLL, i.e. every annotated mention
 could be mapped to at least one entity, and the set of entities included the gold entity. 
 However, changes in canonical Wikipedia URLs, accented characters and
 unicode usually result in mention losses over time, as not all URLs can be mapped to the KB.
+At present its mention and gold recall on CoNLL test-b are 97.17\% and 96.30\%.
 
 For CoNLL only, we experiment with a third alias-entity mapping derived 
-from \cite{Hoffart2011} by \newcite{Pershina2015}; we call it ``HP''.  
+from \newcite{Hoffart2011} by \newcite{Pershina2015}; we call it ``HP''.  
 It is not known how candidates were pruned, but it has 100\% mention recall
-and low ambiguity. For example, in the HP mapping the average ambiguity (number of
-entities per alias) on CoNLL is only 13.3, compared to 55 in our KB mapping
-and 69 in YAGO. Unsurprisingly, using only this source of aliases results in
-high accuracy on CoNLL  \cite{Pershina2015,YamadaS0T16}.  
+and low ambiguity (number of entities per alias).
+On CoNLL test-b mentions, its average ambiguity is only 12.6, compared to 22.34 in our KB
+and 65.9 in YAGO.  Unsurprisingly, using only this source of aliases results in
+high accuracy on CoNLL \cite{Pershina2015,YamadaS0T16}.
 
 Table~\ref{tab:AliasTable} lists the statistics of the three alias-entity mappings
- and some of their combinations on the CoNLL test-b dataset. \todo{need mention recall and/or similar stats for TAC}
+and some of their combinations on the CoNLL test-b dataset.
+
 
 \begin{table}
   \centering
   \begin{tabular}{l|l|l|l|l}
-    Alias & Mention &   Gold & Unique & Avg.  \\
-    map          & recall  & recall &        & ambig. \\
+    Alias  & Mention &   Gold  & Uniq.  & Avg.  \\
+    map    & recall  & recall  & \%     & ambig. \\
     \hline
-    KB     & 4318 & 4095 & 1055   & 55.7  \\
-    YAGO & & & & \\
-    *HP & 4477 & 4476   & 1224   & 13.3   \\
-    KB+HP  & 4477 &  4477 & 955    & 60.9   \\
-    all three& 4477    & 4477   & 879    & 79.4       
+    KB     & 99.31 & 96.19 & 17.93 & 22.3 \\
+    \hline
+    YAGO   & 97.17 & 96.30 & 15.50 & 65.9 \\
+    ~~+KB  & 99.84 & 99.51 & 16.28 & 73.6 \\
+    \hline
+    HP     & 99.87 & 99.84 & 17.98 & 12.6 \\
+    ~~+KB  & 99.87 & 99.87 & 16.40 & 28.7 \\
+    \hline
+    All    & 99.87 & 99.87 & 15.37 & 78.7
   \end{tabular}
   \caption{Alias-entity map statistics on CoNLL, test-b
-    fold, 4483 gold mentions.  Mention recall is the number of
-    mentions with at least one known entity; gold recall is the number
-    of cases where the gold entity was included in the candidates.
-    Unique aliases map to exactly one entity.  Ambiguity is averaged over
-    mentions with at least one candidate. }
+    fold, 4483 gold mentions.  Mention recall is the percentage of
+    mentions with at least one known entity; gold recall is the percentage
+    of mentions where the gold entity was included in the candidates.
+    Unique aliases map to exactly one entity.  The last column
+    shows the number of candidates averaged over mentions.}
   \label{tab:AliasTable}
   % old KG
 \end{table}
@@ -101,54 +106,55 @@ probability of the top candidate exceeds $0.9$, we only consider the top
 candidate.\footnote{We have tried including more candidates, but the single link
 almost never changes the decision for candidates with baseline score $p_i(c)>0.9$.}
 
-\paragraph*{Scores for attention model:}
-Local scores $s_i(y_i)$ for the attention model are derived from
-$p_i(c)$.  As the attention models have no probabilistic
-interpretation, we inject these local feature values:
-\begin{itemize}
-\item $1$ if $p_i(c)\ne 0$, and 0 otherwise
-\item $\log p_i(c)$ if $p_i(c)>0$, and $0$ otherwise
-\item $1$ if $p_i(c)=0$, and $0$ otherwise
-\item $\log(1-p_i(c))$ if $p_i(c)<1$, and $0$ otherwise
-\item $1$ if $p_i(c)=1$ and $0$ otherwise.
-\end{itemize}
-%
-The third and fifth feature above address the case where the $\log$ is undefined. They effectively let us learn the value of $\log{0}$ for the
-cases where $p_i(c)=0$ or $p_i(c)=1$.
-%The weight vector $\ws$ is then learned to find best linear combination.  
 
-%Edge scores $s_{ij}(y_i, y_j)$ are computed using the edge model $\wp$ and edge features between entity pairs:
+\def\ind#1{[\![ #1 ]\!]}
+
+
+\paragraph*{Scores for attention model:}
+\textbf{Local scores} $s_i(y_i)$ for the attention model are derived
+from $p_i(c)$.  As the attention models have no probabilistic
+interpretation, we inject the following local feature values.
+($\log0=0$ by convention and indicator $\ind{I}=1$ if predicate $I$ is
+true and 0 otherwise.)  $\ind{p_i(c)\ne 0}$, $\ind{p_i(c)=0}$,
+$\ind{p_i(c)=1}$, $\log p_i(c)$, $\log(1-p_i(c))$.  The indicator
+features address the cases where $\log$ is undefined.  They
+effectively let us learn the value of $\log{0}$ for the cases where
+$p_i(c)=0$ or $p_i(c)=1$.
+
+
 \input{edge_features}
 
 
 \begin{table}[ht!]
   \centering
-  \begin{tabular}{l|l|l}
-    System                 &  Alias map  & In-KB  \\
-    & & acc.(\%)\\
+  \begin{tabular}{l|l|r}
+    System                 &  Alias map  & In-KB\,acc  \\
     \hline
-    Lazic (2015) & N/A          & 86.4 \\
-    Chisholm (2015) & YAGO                   & 88.7 \\ 
+    Lazic (2015)    & N/A          & 86.4 \\
     \hline
-    Our baseline           & KB               &  87.5  \\
-    Single link            & KB                   &  88.2 \\
-    Attention              & KB                & \\
+    Our baseline    & KB           & 87.9  \\
+    Single link     & KB           & 88.2 \\
+    Attention       & KB           & \todo{?}\textbf{89.5} \\
     \hline
-     Our baseline           & KB+YAGO              &  85.3  \\
-    Single link            & KB+YAGO                & 86.6 \\
-    Attention              & KB +YAGO             & \\
+    Our baseline    & KB+YAGO      & 86.4 \\
+    Single link     & KB+YAGO      & 86.6 \\
+    Attention       & KB+YAGO      & \todo{?}\textbf{90.63} \\
+    Chisholm (2015) & YAGO         & 88.7 \\ 
     \hline
-     Our baseline           & KB+HP*            &  91.9  \\
-    Single link            & KB+HP*              & 92.1 \\
-    Attention              & KB+HP*               & 92.8 \\
-    \hline
-   Pershina (2015) & HP  & 91.8
+    Our baseline    & KB+HP        & 89.85 \\
+    Attention       & KB+HP        & 91.52 \\
+    Single link     & KB+HP*       & \todo{?}\textbf{92.1} \\
+    Attention       & KB+HP*       & \todo{?}\textbf{92.51} \\
+    Pershina (2015) & HP           & 91.8
   \end{tabular}
 \caption{CoNLL test-b evaluation for recent competitive systems and
-  our models, trained with different alias-entity maps. In the ``KB+HP*'' setting, we train on KB+HP aliases, but restrict the candidates to only those in the HP map.  For details of
-  alias-entity maps, see Table~\ref{tab:AliasTable} and text.}
+  our models, using different alias-entity maps.  In the ``KB+HP*''
+  setting, we train on KB+HP aliases, but restrict test candidates to
+  only those in the HP map.  Accuracy is in \%.}
  \label{table:conll_results} 
 \end{table}
+
+
 
 \begin{table}[ht!]
 \centering
@@ -179,19 +185,31 @@ Baseline &78.8 & 80.3 & 76.9\\
 \caption{Results on the TAC 2010 (top), TAC 2011 (middle), and TAC 2012 (bottom) evaluation datasets. \label{table:tac_results} }
 \end{table}
 
+
 \subsection{Results}
 
-Tables~\ref{table:conll_results} compares the performance of our model
-and recent competitive systems on the CoNLL test-b benchmark
- in terms of mention-averaged accuracy. We also note the alias-entity
- mapping used in each system, as the corresponding gold recall is
- an upper bound on accuracy, and alias ambiguity determines the difficulty of the task.
- In particular, the HP mapping seems to make the task too easy, and should probably
- not be considered in benchmarking algorithms.
- Both the single-link and multi-focus attention models
- improve the performance over baseline system. The multi-focus model with the KB
- mention prior outperforms recently published state-of-the-art models
+\paragraph*{CoNLL:}
+Table~\ref{table:conll_results} compares our models to recent
+competitive systems on CoNLL test-b in terms of mention- (micro-)
+averaged accuracy.  We also note the alias-entity mapping used in each
+system, as the corresponding gold recall is an upper bound on
+accuracy, and alias ambiguity determines the difficulty of the task.
 
+We start with a baseline slightly better than \newcite{Lazic2015}.
+YAGO introduces many noisy aliases without sufficient gold recall
+gains.  Our baseline degrades when YAGO is added to KB, but the
+attention model is resilient and beats \newcite{Chisholm2015} by over
+1.9\% absolute accuracy, or a 17\% relative reduction in error.
+
+The bottom block concerns HP aliases.  Low ambiguity, coupled with
+guaranteed gold recall, seems to make the task too easy to be
+considered a realistic benchmark.  KB's added (legitimate) ambiguity
+keeps our accuracy below \newcite{Pershina2015}, but, to restore
+fairness, when we limit our output entities to only those possible
+from HP aliases, both single-link and attention models beat them.
+
+
+\paragraph*{TAC KBP:}
 Table~\ref{table:tac_results} shows our results for the TAC KBP 2010, 2011, and 2012
 evaluation datasets, where we used the KB+YAGO entity-alias map for all our experiments. 
 To compute $\NIL$ clusters required for the overall accuracy
@@ -202,10 +220,12 @@ Once again, our attention models improve the performance over the baseline
 system in almost all experiments, with multi-focus attention outperforming single-link. In comparison to
 prior work, we achieve competitive performance on TAC 2010 and the best
 results to date on TAC 2011 and TAC 2012.
+\todo{COMPLETE table}
+\todo{ADD mention recall and ambiguity for TAC?}
 
 
-\subsection{Effect of $K$ on the attention model}
 \input{dep_on_k}
+
 
 \subsection{Effect of smoothing}
 In \secref{sec:soft_attention} we proposed an extension of softmax smoothing to the $K$ attention case. In our experiments 
