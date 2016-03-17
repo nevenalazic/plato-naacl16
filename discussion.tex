@@ -1,30 +1,47 @@
 \section{Conclusion}
 \label{sec:End}
 
-We have described an attention based approach to entity linking. Two implementation
-of the approach were described: one which uses inference on star shaped graphs, and one
-which does global inference using belief propagation.
-
+We have described an attention-based approach to collective entity resolution,
+motivated by the observation that a non-salient entity in a long document may
+ only have relations to a small subset of other entities. 
+ We explored two approaches to attention: a multi-focus attention model
+ with tractable inference decomposed over mentions, and a single-focus
+model with global inference implemented using belief propagation.
+%Two implementation
+%of the approach were described: one which uses inference on star shaped graphs, and one
+% which does global inference using belief propagation.
 Our empirical results show that the methods results in significant performance gains
 across several benchmarks. 
 
-Our single links model attends to a single entity. It is possible to extend it to the 
-multi-focal case, by changing the factors and corresponding message updates. For simplicity, 
-we present the single link case. It is likely that the multi-focal version will improve performance. However,
-the simplicity of the star-shaped model and its empirical effectiveness make it an attractive
-approach for easily incorporating attention into existing linking models.
+Experiments in varying the size of the attention beam $K$ in the star-shaped model suggest that
+ multi-focus attention is beneficial.
+ % and performs well when coupled with
+ % simple tractable inference, decomposed over mentions. 
+ It is of course possible to extend the global
+ single-link model to the multi-focus case, by modifying the model
+ factors and resulting messages. 
+ However, the simplicity of the star-shaped model, its empirical effectiveness, and ease of learning parameters make it an attractive approach for easily incorporating attention into existing resolution models. The model can also readily be applied 
+to other structured prediction problems in language processing, such as
+selecting antecedents in coreference resolution.
 
-Deep learning has recently been used to in mutliple NLP applications, such as parsing \cite{chen2014fast} and translation \cite{bahdanau2014neural}.
-It is possible to change the linear scores used here with ones derived from a deep architecture, likely resulting
-in performance improvements. The star-shaped model is particularly amenable to this architecture, as it can be implemented via
+
+Deep learning has recently been used in mutliple NLP applications, including parsing \cite{chen2014fast} and translation \cite{bahdanau2014neural}. 
+Learning the local and pairwise scores in our model using a deep architecture rather
+than a linear model would likely lead to performance improvements.
+The star-shaped model is particularly amenable to this architecture, as it can be implemented via
 a feed-forward sequence of operations (including sorting, which can be implemented with soft-max gates).
 
-Finally, one may consider a more elaborate attention model, where the attention depends on a the current state of the system.
-For example, this can allow the attention to change according to context. The dynamics of the underlying state can be modeled by
+Finally, one may consider a more elaborate model in which the attention
+ depends on a the current state of the system; 
+ for example, the state can summarize the mention context.
+%For example, this can allow the attention to change according to context. 
+The dynamics of the underlying state can be modeled by
 recurrent neural networks or LSTMs \cite{bahdanau2014neural}. 
 
-In conclusion, we have shown that attention is an effective mechanism for improving entity linking models, and that it can be implemented
-via a simple inference mechanism, where model parameters can be easily learned.
+In conclusion, we have shown that attention is an effective mechanism for improving entity resolution models, and that it can be implemented
+via a simple inference mechanism, where model parameters can be easily learned. 
+ 
+
 
 \comment{
  two new approaches to modeling coherence for entity

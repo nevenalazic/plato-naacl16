@@ -12,8 +12,8 @@ Wikipedia also provides direct evidence of relatedness between a pair of of enti
 As discussed earlier, optimizing most global coherence objectives is intractable. \newcite{Milne2008} and \newcite{Ferragina10} decompose the problem over mentions and select the candidate that maximizes their relatedness score, which includes relations to all other mentions. % but that involves extending attention to \emph{all} other mentions ($K=n-1$). 
 \newcite{Hoffart2011} extract a dense subgraph from the original graph by using an iterative heuristic to remove unpromising mention-entity edges. \newcite{Cucerzan07} creates a relation vector for each candidate, and disambiguates each entity to the candidate whose vector is most similar to the aggregate (which includes both correct and incorrect labels). \newcite{KulkarniSRC09} formulate the task as an integer linear program and find solutions via a convex relaxation, while \newcite{ChengR13} directly use an integer linear program solver. 
 %A shortcoming of these approaches is that they may be too slow \hl{check} for Web-scale ER.
-\newcite{Ratinov11} use relation scores as features in a ranking support vector machine.
- 
+\newcite{Ratinov11} use relation scores as features in a ranking support vector machine. 
+
 Personalized PageRank (PPR) \cite{jeh2003scaling} is another tractable alternative to collective inference, adopted by several recent systems \cite{Han2011,He13,Alhelbawy14,Pershina2015}. A closely related approach is Laplacian smoothing \cite{Huang2014}. 
 % In most applications of PPR to entity resolution, the graph edges and weights are fixed (not learned).
 % and there is no dynamic association between $y_i$ and the best supporting mentions~$j$.
@@ -31,25 +31,3 @@ We develop a novel smooth version of the multi-focus attention function which ge
 
 We apply the developed attention mechanism to coherence modeling for entity resolution, and we base the score for each candidate entity on relations to a small subset of mentions. While some existing entity resolution systems such as \newcite{Jin:2014} and \newcite{Lazic2015} may be viewed as having attention mechanisms, these are intended for single textual features and not readily extendible to mentions and structured inference.
 
-
-%which perform per-instance feature selection and argue that many context features of a mention can be unnecessary or even detrimental. 
-
-%\paragraph*{Heuristics:}
-%\cite{Cucerzan07} avoided the combinatorial explosion by aggregating profile vectors representing all candidates for all mentions other than the one being labeled, and then choosing the entity label whose profile vector was most similar to the aggregate.   But the aggregates were therefore superpositions of profiles of correct and incorrect labels.  \cite{KulkarniSRC09} used hill-climbing.  \cite{Hoffart2011} also used an iterative heuristic to remove unpromising mention-entity edges and thus extract a dense subgraph from the original graph.
-
-%\paragraph*{Optimization/learning:}
-%\newcite{KulkarniSRC09} formulated the task as an integer linear program and found solutions via a convex relaxation, while \newcite{ChengR13} directly used an integer linear program solver.  These approaches worked in practical amounts of time, but were too slow \hl{check} for Web-scale NERD \cite{Lazic2015}.  \newcite{Ratinov11} use relation scores as features in a ranking support vector machine.
-
-%\paragraph*{Personalized PageRank (PPR):}
-%Personalized PageRank (PPR) \cite{jeh2003scaling} is another tractable alternative to (combinatorial) collective inference, adopted by several recent systems \cite{Han2011,He13,Alhelbawy14,Pershina2015}. A closely related approach is Laplacian smoothing \cite{Huang2014}.  Common shortcomings of these systems include the absence of a convincing generative or discriminative story that integrates local and coherence signals.  Typically, there is no training for the PPR part of the score; it is hardwired into the final labeling process. 
-
-
-
-%Our approach to coherence is partly inspired by the systems reported by \cite{Jin:2014} and \cite{Lazic2015}, which perform per-instance feature selection and argue that many context features of a mention can be unnecessary or even detrimental.
-
-
-%%% Local Variables: ***
-%%% mode:latex ***
-%%% TeX-master: "main.tex"  ***
-%%% tex-main-file: "main.tex"  ***
-%%% End: ***
