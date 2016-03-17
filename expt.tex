@@ -107,10 +107,15 @@ $p_i(c)$.  As the attention models have no probabilistic
 interpretation, we inject these local feature values:
 \begin{itemize}
 \item $1$ if $p_i(c)\ne 0$, and 0 otherwise
-\item $\log p_i(c)$ if $p_i(c)>0$, and $1$ otherwise
+\item $\log p_i(c)$ if $p_i(c)>0$, and $0$ otherwise
+\item $1$ if $p_i(c)=0$, and $0$ otherwise
 \item $\log(1-p_i(c))$ if $p_i(c)<1$, and $1$ otherwise
+\item $1$ if $p_i(c)=0$ and $0$ otherwise.
 \end{itemize}
-and we let $\ws$ learn their best linear combination.  \todo{as Rajhans pointed out these are not monotonic, why this choice?}
+%
+The third and fifth feature above address the case where the $\log$ is undefined. They effectively let us learn the value of $\log{0}$ for the
+cases where $p_i(c)=0$ or $p_i(c)=1$.
+%The weight vector $\ws$ is then learned to find best linear combination.  
 
 %Edge scores $s_{ij}(y_i, y_j)$ are computed using the edge model $\wp$ and edge features between entity pairs:
 \input{edge_features}
