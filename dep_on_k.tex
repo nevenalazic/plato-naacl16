@@ -1,9 +1,10 @@
 %\subsection{Effect of Attention Width}
-Our model has a parameter $K$ that specifies the number of entities to attend to. To illustrate
-the effect of $K$, we evaluated performance on the testa Conll datasets, for several values of $K$. Results 
+%Our model has a parameter $K$ that specifies the number of entities to attend to. 
+We investigated the effect of the multi-focus attention beam size $K$ by evaluating performance
+on the CoNLL test-a dataset for different values of $K$. Results 
 are shown in \figref{fig:k_effect}. It can be seen that performance peaks at $K=3$, with a sharp decrease after $K=10$. 
 
-\begin{figure}
+\begin{figure}[t!]
 \includegraphics[width=\linewidth]{./k_effect.png}
 \caption{Effect of parameter $K$ on entity linking accuracy. Results shown for the testa Conll dataset, where the model
 is trained on Conll training data. }
@@ -37,8 +38,10 @@ is trained on Conll training data. }
    % enlarge y limits  = 0.2,
     xtick = data,
   ]
-  \addplot [fill=blue!60,draw=blue!30] coordinates { (1,89.72) (2, 89.77) (3, 90.39) (4, 90.39) (5, 90.52)
-  (6,90) (7,90) (8,90) (9,90) (10,90) (11,90) (12,90) (13,90) (14,90) (15,90)};
+  \addplot [fill=blue!60,draw=blue!50] coordinates { 
+  (1,89.72) (2, 89.77) (3, 90.39) (4, 90.39) (5, 90.52)
+  (6,90) (7,90) (8,90) (9,90) (10,90) 
+  (11,90) (12,90) (13,90) (14,90) (15,90)};
   \pgfresetboundingbox
   %\addplot coordinates { (20,1)         (15,2)
    %                      (60,3)   (75,4)  };

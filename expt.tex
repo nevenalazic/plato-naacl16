@@ -17,8 +17,8 @@ to the reference KB.  The competition evaluation includes $\NIL$
 entities; participants are required to cluster $\NIL$ mentions across
 documents so that all mentions of each unknown entity are assigned a
 unique identifier.  For these datasets, we report in-KB accuracy,
-overall accuracy (including $\NIL$ mentions), and the competition
-metric $B^{3+} F_1$.
+overall accuracy (with all $\NIL$s in one cluster), and the competition
+metric $B^{3+} F_1$ which evaluates $\NIL$ clustering.
 
 \subsection{Experimental setup}
 
@@ -116,7 +116,7 @@ and we let $\ws$ learn their best linear combination.  \todo{as Rajhans pointed 
 \input{edge_features}
 
 
-\begin{table}
+\begin{table}[ht!]
   \centering
   \begin{tabular}{l|l|r}
     System                 &  Alias map  & In-KB  \\
@@ -137,32 +137,6 @@ and we let $\ws$ learn their best linear combination.  \todo{as Rajhans pointed 
   alias-entity maps, see Table~\ref{tab:AliasTable} and text.}
  \label{table:conll_results} 
 \end{table}
-
-
-\subsection{CoNLL results}
-
-Table~\ref{table:conll_results} compares the performance of recent
-competitive systems and our models.  Experiments reported in the
-literature vary widely with regard to the many-to-many mapping between
-entities and their aliases.  ER algorithms are usually quite sensitive
-to the coverage of and noise in these mappings.  Here we use three
-sources of alias-entity mappings, described below.
-
-
-\subsection{TAC-KBP results}
-
-Table~\ref{table:tac_results} shows results for TAC-KBP \todo{2010},
-2011 and 2012.  \hl{TODO: complete discussion of results}
-
-
-\subsection{Discussion of results}
-
-\subsubsection{Attention vs.\ single-link}
-
-\subsubsection{Effect of $K$ on Attention Model}
-\input{dep_on_k}
-
-\subsubsection{Examples of gains (and losses)}
 
 \begin{table}
 \centering
@@ -191,6 +165,34 @@ Single link & {\bf 81.2} & {\bf 87.0} & {\bf 84.5} \\
 \caption{Results on the TAC 2010 (top), TAC 2011 (middle), and TAC 2012 (bottom) evaluation datasets. All numbers are in
   percents. \label{table:tac_results} }
 \end{table}
+
+\subsection{Results}
+
+Tables~\ref{table:conll_results} compares the performance of our model
+and recent competitive systems on the CoNLL test-b benchmark
+ in terms of mention-averaged accuracy. We also note the alias-entity
+ mapping used in each system, as the corresponding gold recall is
+ an upper bound on accuracy. Both the single-link and multi-focus attention models
+ improve the performance over baseline system. In addition, the multi-focus model
+ outperforms recent state-of-the-art models given the same candidate recall.
+
+Table~\ref{table:tac_results} shows our results for the TAC KBP 2010, 2011, and 2012
+evaluation datasets. To compute $\NIL$ clusters required for the overall accuracy
+and $B^3+F1$, we simply rely on the fact that our KB is larger than the TAC
+reference KB, similarly to previous work. We assign a unique $\NIL$ label to
+all mentions of an entity that is in our KB but not in TAC. 
+Once again, our attention models improve the performance over the baseline
+system, with multi-focus attention outperforming single-link. In comparison to
+prior work, we achieve competitive performance on TAC 2010 and the best
+results to date on TAC 2011 and TAC 2012.
+
+
+\subsection{Effect of $K$ on the attention model}
+\input{dep_on_k}
+
+\subsection{Examples of gains (and losses)}
+
+
 %
 %\section{Conclusion}
 %\label{sec:End}
