@@ -11,8 +11,9 @@ test-a and test-b.  Most authors report performance on the subset of
 231 test-b documents with 4,483 linkable mentions.
 
 \paragraph{TAC KBP} 
-The TAC KBP datasets \cite{TAC2010,TAC2011,TAC2012} include 2,226 mentions
-(2012) and 2,250 mentions (2011), of which roughly half are linkable
+The TAC KBP datasets \cite{TAC2010,TAC2011,TAC2012} include 2,250 mentions (2010),
+2,250 mentions (2011), and 2,226 mentions (2012), 
+of which roughly half are linkable
 to the reference KB.  The competition evaluation includes $\NIL$
 entities; participants are required to cluster $\NIL$ mentions across
 documents so that all mentions of each unknown entity are assigned a
@@ -24,11 +25,11 @@ metric $B^{3+} F_1$ which evaluates $\NIL$ clustering.
 
 \subsubsection{Mention prior}
 
-Our KB is derived from the Wikipedia subset of Freebase \todo{cite, download date?}, with about 4M entities. 
+Our KB is derived from the Wikipedia subset of Freebase \cite{BollackerEPST08}, with about 4M entities. 
 We use the KB to obtain a baseline prior over entities given a mention. As sources of alias counts, we use
 Wikipedia page titles (including redirects and disambiguation pages), Freebase aliases, 
 Wikipedia anchor text \todo{is this true -- we use wikilinks?},  and
-\todo{CHECK} filtered anchor text from Web links into Wikipedia pages
+ filtered anchor text from Web links into Wikipedia pages
 \cite{singh12:wiki-links}.
 
 As an optional additional source of aliases, we use the alias-entity mapping released
