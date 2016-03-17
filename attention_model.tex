@@ -82,15 +82,18 @@ The inference rule is again $y_i = \arg\max_y f_i(y)$, and the computational cos
 
 Several works on attention have shown that it is better to use a soft form of attention, where the level of attention is not zero or one, but can rather take intermediate values. In current attention models, the attention is to a single object, such as a single word \cite{bahdanau2014neural} or a single image window \cite{xu2015show}. In these cases, it is natural to change the max function in the attention operator to a soft-max. In our case, the attention beam contains $K$ elements, and we require a different notion of a soft-max, which we develop below.
 
-Our goal is to obtain a soft version of the function  $\amax_K({\bf z})$. To do so, we first use an alternative definition of this function, as the solution 
-to the optimization problem:
+\newcommand{\cS}{{\cal S}}
+\newcommand{\xx}{{\mathbf{x}}}
+Our goal is to obtain a soft version of the function  $\amax_K({\bf z})$. To do so, we first use an alternative definition of this function. Denote by $\cS$
+the set of $x_1,\ldots,x_n$ such that $0\leq x_i \leq 1$ and $\sum_i x_i = K$. Then $\amax_K({\bf z})$ is equivalent to the optimization problem:
 \be
  \max_{ 
-\begin{array}{l}
-x_1,\ldots,x_n: \\
-0 \leq x_i \leq 1\\
- \sum_i x_i = K
- \end{array}
+ \xx \in \cS
+%\begin{array}{l}
+%x_1,\ldots,x_n: \\
+%0 \leq x_i \leq 1\\
+ %\sum_i x_i = K
+ %\end{array}
  } \sum_i z_i x_i
 \ee
 The optimization problem above is a linear program, whose solution is the sum of top $K$ elements of ${\bf z}$ as required. This follows since optimal $x_i$ can easily be shown to attain only integral values (otherwise the objective can be improved). Alternatively, it can be shown that the vertices of the constraining polytope are integral.
@@ -98,11 +101,12 @@ The optimization problem above is a linear program, whose solution is the sum of
 Given this optimization view of $\amax_K({\bf z})$ it is natural to smooth it \cite{nesterov2005smooth} by adding a non-linearity to the optimization. Since the variables are non-negative, one possible choice is an entropy-like regularizer\footnote{Note that $-\sum_i x_i \log x_i$ is different from the entropy function since variables $x_i$ sum to $K$ and not to 1.}. We shall see that this choice results in a closed form solution, and also recovers the standard soft-max case for $K=1$.  Consider the optimization problem:
 \be
  \max_{ 
-\begin{array}{l}
-x_1,\ldots,x_n: \\
-0 \leq x_i \leq 1\\
- \sum_i x_i = K
- \end{array}
+ \xx \in \cS
+%\begin{array}{l}
+%x_1,\ldots,x_n: \\
+%0 \leq x_i \leq 1\\
+ %\sum_i x_i = K
+ %\end{array}
  } \sum_i z_i x_i - \beta^{-1} \sum_i x_i \log{x_i},
  \label{eq:softkmax_opt}
  \ee
