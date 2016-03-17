@@ -164,48 +164,48 @@ Table~\ref{table:tac_results} shows results for TAC-KBP \todo{2010},
 
 \subsubsection{Examples of gains (and losses)}
 
-\begin{table*}
+\begin{table}
 \centering
-\begin{tabular}{l|l|c|c|c}
-
-Data &  System/paper & In-KB & Overall & ${B^{3+}F_1}$ \\ 
-&  & accuracy & accuracy & \\
+%\small
+\begin{tabular}{l|c|c|c}
+ System/paper & In-KB & Overall & ${B^{3+}F_1}$ \\ 
+ & acc. & acc. & \\
 \hline
-TAC \todo{2010} &  \newcite{Chisholm2015} & & & \\
-&  Baseline & & & \\
-&  Single link & & & \\
-&  Attention & & & \\
+{Chisholm et al. 2015} & & & \\
+  Baseline & & & \\
+ Single link & & & \\
+ Attention & & & \\
 \hline \hline
-TAC 2011 &  \newcite{Cucerzan2011} & - & 86.8 &  {84.1} \\
-&  Plato \cite{Lazic2015} & 79.3 & 86.5 & 84.0 \\
-& Single link & {\bf 81.2} & {\bf 87.0} & {\bf 84.5} \\
-& Attention & & & \\
+\newcite{Cucerzan2011} & - & 86.8 &  {84.1} \\
+\newcite{Lazic2015} & 79.3 & 86.5 & 84.0 \\
+Single link & {\bf 81.2} & {\bf 87.0} & {\bf 84.5} \\
+ Attention & & & \\
 \hline
 \hline
-TAC 2012 & \newcite{Cucerzan2012}  Run 1 & 72.0 & 76.2 & 72.1  \\
-&\newcite{Cucerzan2012} Run 3 & 71.2 & {76.6} & {\bf 73.0} \\
-&  Plato \cite{Lazic2015} & {74.2} & {76.6} & 71.2 \\
-& Single link & {\bf 75.1} & {\bf 77.3} & {72.2} \\
-& Attention & & & \\
+\newcite{Cucerzan2012}  R1 & 72.0 & 76.2 & 72.1  \\
+\newcite{Cucerzan2012} R3 & 71.2 & {76.6} & {\bf 73.0} \\
+\newcite{Lazic2015} & {74.2} & {76.6} & 71.2 \\
+ Single link & {\bf 75.1} & {\bf 77.3} & {72.2} \\
+ Attention & & & \\
 \end{tabular}
-\caption{TAC KBP evaluation.  (All numbers are in
-  percents.)  \todo{make this table smaller} \label{table:tac_results} }
-\end{table*}
-\comment{
-\section{Conclusion}
-\label{sec:End}
+\caption{Results on the TAC 2010 (top), TAC 2011 (middle), and TAC 2012 (bottom) evaluation datasets. All numbers are in
+  percents. \label{table:tac_results} }
+\end{table}
+%
+%\section{Conclusion}
+%\label{sec:End}
+%
+%We have described two new approaches to modeling coherence for entity
+%resolution.  While most existing systems consider all relations
+%between entity candidates for a document to assign a coherence score
+%to a candidate, we use a novel attention mechanism to select the most
+%relevant relations.  Our experimental results support \hl{do they?}
+%the premise that the inclusion of all relations can hurt performance.
+%Our models improve the performance of a baseline system on three
+%evaluation benchmarks, and our best multi-focal attention model
+%achieves state-of-the-art results on standard benchmarks against
+%highly competitive recently built systems.
 
-We have described two new approaches to modeling coherence for entity
-resolution.  While most existing systems consider all relations
-between entity candidates for a document to assign a coherence score
-to a candidate, we use a novel attention mechanism to select the most
-relevant relations.  Our experimental results support \hl{do they?}
-the premise that the inclusion of all relations can hurt performance.
-Our models improve the performance of a baseline system on three
-evaluation benchmarks, and our best multi-focal attention model
-achieves state-of-the-art results on standard benchmarks against
-highly competitive recently built systems.
-}
 
 
 %%% Local Variables: ***
