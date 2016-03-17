@@ -15,35 +15,37 @@ From this we can obtain the convex dual:
 \be
 g(\lambda,\alpha) = -\lambda K  + \beta^{-1} \sum_i   e^{\beta z_i -1 + \beta \lambda - \beta \alpha_i}  + \sum_i \alpha_i 
 \ee
-Maximizing this with respect to $\lambda$ yields the maximizing $\lambda^*$:
-\be
-\lambda^* = \beta^{-1}  \log{\frac{K}{ \sum_i e^{\beta z_i -1-\beta \alpha_i}} }
-\ee
-We can now express $g$ as a function of only $\alpha$
+%Maximizing this with respect to $\lambda$ yields the maximizing $\lambda^*$:
+%\be
+%\lambda^* = \beta^{-1}  \log{\frac{K}{ \sum_i e^{\beta z_i -1-\beta \alpha_i}} }
+%\ee
+The maximizing $\lambda$ can be found in closed form, leaving only dependence on $\alpha$:
+%We can now express $g$ as a function of only $\alpha$
 \be
 g(\alpha) =  K\beta^{-1}   \log{\frac{ \sum_i e^{\beta z_i-\beta \alpha_i}}{K}} + \sum_i \alpha_i
 \ee
 Next, we maximize the above with respect to $\alpha\geq 0 $. Introduce Lagrange multipliers 
-$\gamma_i$ for the constraint $\alpha_i \geq 0$ and the corresponding Lagrangian $\bar{L}(\alpha,\gamma)$. We next propose
+$\gamma_i$ for the constraint $\alpha_i \geq 0$ and the corresponding Lagrangian $\bar{L}(\alpha,\gamma)$. We propose
 a solution for $\alpha,\gamma$ and show that it satisfies the KKT conditions. Minimizing $\bar{L}$ wrt $\alpha$ we can characterize
 the optimal $\gamma$ as:
 \be
 \gamma_i = -K \frac{e^{\beta z_i -\beta \alpha_i}}{\sum_i e^{\beta z_i-\beta \alpha_i}} + 1 
 \label{eq:opt_gamma}
 \ee
-Define: 
-\be
-c ={1\over \beta} \log{\sum_{i=K}^n e^{\beta z_i}}
-\ee
+%Define: 
+%\be
+%c ={1\over \beta} \log{\sum_{i=K}^n e^{\beta z_i}}
+%\ee
 Set $\alpha_i$ as follows:
 \be
 \alpha_i = 
 \left\{
 \begin{array}{ll}
-z_i - c & i=1,\ldots, K -1  \\
+z_i - {1\over \beta} \log{\sum_{i=K}^n e^{\beta z_i}} & i=1,\ldots, K -1  \\
 0 & i = K,\ldots, n
 \end{array}
 \right.
 \label{eq:opt_alpha}
 \ee
-It can now be confirmed that the $\alpha,\gamma$ from Equations \ref{eq:opt_alpha} and \ref{eq:opt_gamma} satisfy the KKT conditions. Plugging the $\alpha $ value into $g(\alpha)$ yields the solution in the proposition. The subgradient follows from the fact that $L(\mu,\lambda,\alpha)$ is minimized by \eqref{eq:opt_mu}, and a standard result on subgradient of pointwise supermum functions.
+It can now be confirmed that the $\alpha,\gamma$ from Equations \ref{eq:opt_alpha} and \ref{eq:opt_gamma} satisfy the KKT conditions. Plugging the $\alpha $ value into $g(\alpha)$ yields the solution in the proposition. The subgradient follows from standard results on subgradients of pointwise supermum functions.
+%The subgradient follows from the fact that $L(\mu,\lambda,\alpha)$ is minimized by \eqref{eq:opt_mu}, and a standard result on subgradient of pointwise supermum functions.
