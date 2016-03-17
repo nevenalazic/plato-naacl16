@@ -144,7 +144,7 @@ cases where $p_i(c)=0$ or $p_i(c)=1$.
  \label{table:conll_results} 
 \end{table}
 
-\begin{table}
+\begin{table}[ht!]
 \centering
 %\small
 \begin{tabular}{l|c|c|c}
@@ -152,20 +152,22 @@ cases where $p_i(c)=0$ or $p_i(c)=1$.
  & acc. & acc. & \\
 \hline
 {Chisholm et al. 2015} & & & \\
-  Baseline & & & \\
- Single link & & & \\
+  Baseline & 84.5 & 87.6 & 83.0 \\
+ Single link & 84.2 & 87.5 & 82.7\\
  Attention & & & \\
 \hline \hline
 \newcite{Cucerzan2011} & - & 86.8 &  {84.1} \\
 \newcite{Lazic2015} & 79.3 & 86.5 & 84.0 \\
-Single link & {\bf 81.2} & {\bf 87.0} & {\bf 84.5} \\
+Baseline & 81.5 & 86.8 & 84.3 \\
+Single link & 82.6 & 87.3 & 84.8 \\
  Attention & & & \\
 \hline
 \hline
 \newcite{Cucerzan2012}  R1 & 72.0 & 76.2 & 72.1  \\
-\newcite{Cucerzan2012} R3 & 71.2 & {76.6} & {\bf 73.0} \\
+\newcite{Cucerzan2012} R3 & 71.2 & {76.6} & { 73.0} \\
 \newcite{Lazic2015} & {74.2} & {76.6} & 71.2 \\
- Single link & {\bf 75.1} & {\bf 77.3} & {72.2} \\
+Baseline &78.8 & 80.3 & 76.9\\
+ Single link & 79.7 & 80.8 & 77.4  \\
  Attention & & & \\
 \end{tabular}
 \caption{Results on the TAC 2010 (top), TAC 2011 (middle), and TAC 2012 (bottom) evaluation datasets. All numbers are in
@@ -183,12 +185,13 @@ and recent competitive systems on the CoNLL test-b benchmark
  outperforms recent state-of-the-art models given the same candidate recall.
 
 Table~\ref{table:tac_results} shows our results for the TAC KBP 2010, 2011, and 2012
-evaluation datasets. To compute $\NIL$ clusters required for the overall accuracy
+evaluation datasets, where we used the KB+YAGO entity-alias map for all our experiments. 
+To compute $\NIL$ clusters required for the overall accuracy
 and $B^3+F1$, we simply rely on the fact that our KB is larger than the TAC
 reference KB, similarly to previous work. We assign a unique $\NIL$ label to
 all mentions of an entity that is in our KB but not in TAC. 
 Once again, our attention models improve the performance over the baseline
-system, with multi-focus attention outperforming single-link. In comparison to
+system in almost all experiments, with multi-focus attention outperforming single-link. In comparison to
 prior work, we achieve competitive performance on TAC 2010 and the best
 results to date on TAC 2011 and TAC 2012.
 
