@@ -84,8 +84,7 @@ the probability of a candidate entity as $p_i(c) \propto p(c|m_i)p({\bf b}_i|c)$
 The system resolves mentions independently and does not have an explicit coherence model;
 however, it does capture some coherence information indirectly as referrent phrases are
 included as string context features. We experiment with several versions of the
-mention prior $p(c|m_i)$ as described in the previous section. \todo{But the system is 
-retrained on different name priors, and so the context portion may change... do we say this / mention that it's semisupervised?}
+mention prior $p(c|m_i)$ as described in the previous section.
 
 % For standardized comparison we limit ourselves to
 % candidates proposed by the baseline system.
@@ -124,22 +123,29 @@ cases where $p_i(c)=0$ or $p_i(c)=1$.
 
 \begin{table}[ht!]
   \centering
-  \begin{tabular}{l|l|r}
+  \begin{tabular}{l|l|l}
     System                 &  Alias map  & In-KB  \\
-    & & accuracy \\
+    & & acc.(\%)\\
     \hline
-    \newcite{Lazic2015} & N/A          & 86.4\% \\
-    Chisholm et al. (2015) & YAGO                   & 88.7\% \\
-    Our baseline           & KB+HP                & 90.2\% \\
-    Single link            & KB                   & \todo{87.1\%} \\
-    Attention              & KB+HP                & 91.5\% \\
+    Lazic (2015) & N/A          & 86.4 \\
+    Chisholm (2015) & YAGO                   & 88.7 \\ 
     \hline
-    Attention              & Only HP                & *92.84\% \\
-    \newcite{Pershina2015} & Only HP                & *91.77\%
+    Our baseline           & KB               &  87.5  \\
+    Single link            & KB                   &  88.2 \\
+    Attention              & KB                & \\
+    \hline
+     Our baseline           & KB+YAGO              &  85.3  \\
+    Single link            & KB+YAGO                & 86.6 \\
+    Attention              & KB +YAGO             & \\
+    \hline
+     Our baseline           & KB+HP*            &  91.9  \\
+    Single link            & KB+HP*              & 92.1 \\
+    Attention              & KB+HP*               & 92.8 \\
+    \hline
+   Pershina (2015) & HP  & 91.8
   \end{tabular}
 \caption{CoNLL test-b evaluation for recent competitive systems and
-  our models.  Accuracies obtained with alias-entity maps having very
-  low average ambiguity are marked with `*'.  For details of
+  our models, trained with different alias-entity maps. In the ``KB+HP*'' setting, we train on KB+HP aliases, but restrict the candidates to only those in the HP map.  For details of
   alias-entity maps, see Table~\ref{tab:AliasTable} and text.}
  \label{table:conll_results} 
 \end{table}
@@ -147,31 +153,30 @@ cases where $p_i(c)=0$ or $p_i(c)=1$.
 \begin{table}[ht!]
 \centering
 %\small
-\begin{tabular}{l|c|c|c}
- System/paper & In-KB & Overall & ${B^{3+}F_1}$ \\ 
- & acc. & acc. & \\
+\begin{tabular}{l|l|l|l}
+ System & In-KB & Overall & {\small ${B^{3+}F_1}$} \\ 
+ & acc.(\%) & acc.(\%) & \\
 \hline
-{Chisholm et al. 2015} & & & \\
+{Chisholm (2015)} & & & \\
   Baseline & 84.5 & 87.6 & 83.0 \\
  Single link & 84.2 & 87.5 & 82.7\\
  Attention & & & \\
 \hline \hline
-\newcite{Cucerzan2011} & - & 86.8 &  {84.1} \\
-\newcite{Lazic2015} & 79.3 & 86.5 & 84.0 \\
+Cucerzan (2011) & - & 86.8 &  {84.1} \\
+Lazic (2015) & 79.3 & 86.5 & 84.0 \\
 Baseline & 81.5 & 86.8 & 84.3 \\
 Single link & 82.6 & 87.3 & 84.8 \\
  Attention & & & \\
 \hline
 \hline
-\newcite{Cucerzan2012}  R1 & 72.0 & 76.2 & 72.1  \\
-\newcite{Cucerzan2012} R3 & 71.2 & {76.6} & { 73.0} \\
-\newcite{Lazic2015} & {74.2} & {76.6} & 71.2 \\
+Cucerzan (2012) R1 & 72.0 & 76.2 & 72.1  \\
+Cucerzan (2012) R3 & 71.2 & {76.6} & { 73.0} \\
+Lazic (2015) & {74.2} & {76.6} & 71.2 \\
 Baseline &78.8 & 80.3 & 76.9\\
  Single link & 79.7 & 80.8 & 77.4  \\
  Attention & & & \\
 \end{tabular}
-\caption{Results on the TAC 2010 (top), TAC 2011 (middle), and TAC 2012 (bottom) evaluation datasets. All numbers are in
-  percents. \label{table:tac_results} }
+\caption{Results on the TAC 2010 (top), TAC 2011 (middle), and TAC 2012 (bottom) evaluation datasets. \label{table:tac_results} }
 \end{table}
 
 \subsection{Results}
