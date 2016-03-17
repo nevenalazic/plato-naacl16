@@ -35,11 +35,13 @@ is trained on Conll training data. }
     x label style={at={(axis description cs:0.5,0.1)},anchor=north},
     y label style={at={(axis description cs:0.1,.5)},anchor=south},
     xlabel={\small $K$},
-    ylabel={\small Micro (\%)},
+    ylabel={\small Accuracy (\%)},
+    mark size=2.0pt,
+    line width=1.0pt,
    % enlarge y limits  = 0.2,
     xtick = data,
   ]
-  \addplot [line width=0.4mm, red] coordinates { 
+  \addplot [line width=0.4mm, red, mark=*, mark options=solid] coordinates { 
     (1,89.49) (2,89.91)  (3,90.18) (4,90.25) (5,90.08) (6,90.12) (10,88.99) (15,88.64) (20,88.72)
   };
   \pgfresetboundingbox
@@ -49,8 +51,8 @@ is trained on Conll training data. }
   \end{axis}
 \end{tikzpicture}
 }
-\caption{Effect of parameter $K$ on entity linking accuracy. Results shown for the testa Conll dataset, where the model
-is trained on Conll training data. }
+\caption{Effect of parameter $K$ on entity linking accuracy. Results shown for the CoNLL test-a dataset, where the model
+is trained on CoNLL training data. }
 \end{figure}
 }
 
