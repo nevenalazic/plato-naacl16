@@ -14,7 +14,7 @@ g({\bf y}) = \sum_i s_i(y_i) + \sum_i \sum_{j :  j \neq i} s_{ij}(y_i,y_j).
 \label{eq:global_obj}
 \ee 
 One disadvantage of this approach is that maximizing $g$ corresponds to finding the maximum-a-posteriori (MAP) assignment of a general pairwise Markov random field, and is hence
-NP hard for the general case \cite{wainwright2008graphical}. Another limitation, as we discuss later, is that it sums information across all entities and can introduce noise in the process \todo{too vague?}. In this paper we explore alternative optimization objectives that address both these issues.
+NP hard for the general case \cite{wainwright2008graphical}. Another limitation is that non-salient entities may only have a few relations in a document, and summing over all mentions may dilute the evidence for such entities. In this paper we explore alternative optimization objectives, relying on attention and tractable inference.
 
 
 
