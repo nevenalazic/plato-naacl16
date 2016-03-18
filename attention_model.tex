@@ -61,7 +61,7 @@ Several works on attention have shown that it is better to use a soft form of at
 \newcommand{\cS}{{\cal S}}
 \newcommand{\xx}{{\mathbf{x}}}
 Our goal is to obtain a soft version of the function  $\amax_K({\bf z})$. To do so, we first use an alternative definition of this function. Denote by $\cS$
-the set of $x_1,\ldots,x_n$ such that $0\leq x_i \leq 1$ and $\sum_i x_i = K$. Then $\amax_K({\bf z})$ is equivalent to the optimization problem:
+the set ${\bf x} = (x_1,\ldots,x_n)$ such that $0\leq x_i \leq 1$ and $\sum_i x_i = K$. Then $\amax_K({\bf z})$ is equivalent to the optimization problem:
 \be
  \max_{ 
  \xx \in \cS
@@ -70,7 +70,7 @@ the set of $x_1,\ldots,x_n$ such that $0\leq x_i \leq 1$ and $\sum_i x_i = K$. T
 %0 \leq x_i \leq 1\\
  %\sum_i x_i = K
  %\end{array}
- } \sum_i z_i x_i
+ } \;{\bf z} \cdot {\bf x}
 \ee
 The optimization problem above is a linear program, whose solution is the sum of top $K$ elements of ${\bf z}$ as required. This follows since optimal $x_i$ can easily be shown to attain only integral values (otherwise the objective can be improved). Alternatively, it can be shown that the vertices of the constraining polytope are integral.
 
@@ -101,8 +101,8 @@ v_{i_j} =
 \left\{
 \begin{array}{ll}
 %\frac{\expo{\beta c}}{d} & j = 1,\ldots,K-1 \\
-1 & j = 1,\ldots,K-1 \\
-\frac{\expo{\beta z_{i_j}}}{ \sum_{j=K}^n \expo{\beta z_{i_j}}} & j = K,\ldots,n 
+1 & 1 \leq j < K \\
+\frac{\expo{\beta z_{i_j}}}{ \sum_{j=K}^n \expo{\beta z_{i_j}}} & K \leq j \leq n
 \end{array} 
 \right\}
 \ee
