@@ -40,8 +40,8 @@ by \newcite{Hoffart2011}, obtained by extending the
 it had 100\% mention and gold recall on CoNLL, i.e. every annotated mention
 could be mapped to at least one entity, and the set of entities included the gold entity. 
 However, changes in canonical Wikipedia URLs, accented characters and
-unicode usually result in mention losses over time, as not all URLs can be mapped to the KB.
-At present its mention and gold recall on CoNLL test-b are 97.17\% and 96.30\%.
+unicode usually result in mention losses over time, as not all URLs can be mapped to the
+KB \cite[Sec.~4]{hasibi2016reproducibility}.
 
 For CoNLL only, we experiment with a third alias-entity mapping derived 
 from \newcite{Hoffart2011} by \newcite{Pershina2015}; we call it ``HP''.  
@@ -71,12 +71,12 @@ and some of their combinations on the CoNLL test-b dataset.
     \hline
     All    & 99.87 & 99.87 & 15.37 & 78.7
   \end{tabular}
-  \caption{Alias-entity map statistics on CoNLL, test-b
-    fold, 4483 gold mentions.  Mention recall is the percentage of
+  \caption{Alias-entity map statistics on CoNLL test-b,
+    4483 gold mentions.  Mention recall is the percentage of
     mentions with at least one known entity; gold recall is the percentage
     of mentions where the gold entity was included in the candidates.
     Unique aliases map to exactly one entity.  The last column
-    shows the number of candidates averaged over mentions.}
+    shows the number of candidates averaged over test-b mentions.}
   \label{tab:AliasTable}
   % old KG
 \end{table}
@@ -128,8 +128,7 @@ We train the scores for the attention model on the 946 CoNLL train documents for
 \begin{table}[t!]
   \centering
   \begin{tabular}{l|l|l}
-    System                 &  Alias map  & In-KB  \\
-    & & acc.(\%) \\
+    System                 &  Alias map  & In-KB acc. \% \\
     \hline
     Lazic (2015)    & N/A          & 86.4 \\
     \hline
@@ -145,19 +144,20 @@ We train the scores for the attention model on the 946 CoNLL train documents for
     Our baseline    & KB+HP        & 89.9 \\
     Single link & KB+HP & 89.9 \\
     Attention       & KB+HP        & {\bf 91.8} \\
-    \hline
-        Pershina (2015) & HP           & 91.8 \\
-        Yamada (2016) & HP & {\bf 93.1} \\
+    \hline \hline
     Our baseline &KB+HP* & 91.9 \\
     Single link     & KB+HP*       & 92.1 \\
     Attention       & KB+HP*       & {92.7} \\ \hline
+    Pershina (2015) & HP           & 91.8 \\
+    Yamada (2016) & HP & {\bf 93.1}
   \end{tabular}
 \caption{CoNLL test-b evaluation for recent competitive systems and
-  our models, using different alias-entity maps.  In the ``KB+HP*''
-  setting, we train on KB+HP aliases, but restrict test candidates to
-  only those in HP.}
+  our models, using different alias-entity maps.  ``KB+HP*'' means we
+  train and score entities using KB+HP, but output entities only in
+  HP.}
  \label{table:conll_results} 
 \end{table}
+
 \paragraph*{CoNLL:}
 Table~\ref{table:conll_results} compares our models to recent
 competitive systems on CoNLL test-b in terms of mention-averaged (micro)
@@ -167,21 +167,21 @@ accuracy, and alias ambiguity determines the difficulty of the task.
 Therefore performance is not strictly comparable between maps.
 
 Our baseline is slightly better than \newcite{Lazic2015}, but degrades
-after adding YAGO aliases which introduce high ambiguity. %without sufficient ogld recall gains
+after adding YAGO aliases which increase ambiguity.
 The attention model provides a substantial gain over
 the baseline, and outperforms \newcite{Chisholm2015} by
 2.3\% in absolute accuracy.
 
-The low ambiguity of the HP alias mapping, coupled with
-guaranteed gold recall, seems to make the task too easy to be
-considered a realistic benchmark. For completeness, we provide
-the performance of our system with candidate entities restricted to those in HP
-(setting KB+HP*). 
-The best reported results using only HP aliases 
-are in a recent (unpublished) work by \newcite{YamadaS0T16},
-which uses entity embeddings. Our attention model achieves
-performance close to \newcite{YamadaS0T16}; adding entity embeddings
-to our local and pairwise features would likely lead to further gains.
+The extremely low ambiguity (Tab.~\ref{tab:AliasTable}) of the HP
+alias mapping, coupled with guaranteed gold recall, makes the task too
+easy to be considered a realistic benchmark.  Although we match
+\newcite{Pershina2015} using KB+HP, for completeness, we provide the
+performance of our system with candidate entities restricted to those
+in HP (KB+HP*), but this is not equivalent to using only HP during
+training and inference.  With KB+HP*, we beat \newcite{Pershina2015},
+and are close to recent unpublished work by \newcite{YamadaS0T16},
+which uses entity and word embeddings.  Adding these to our system may
+lead to further gains.
 
 
 \paragraph*{TAC KBP:}
