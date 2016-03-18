@@ -156,7 +156,7 @@ where the $j^{th}$ feature is set to $1$ if the count is $j$ and $0$ otherwise.
         Yamada (2016) & HP & {\bf 93.1} \\
     Our baseline &KB+HP* & 91.9 \\
     Single link     & KB+HP*       & 92.1 \\
-    Attention       & KB+HP*       & {92.7} 
+    Attention       & KB+HP*       & {92.7} \\ \hline
   \end{tabular}
 \caption{CoNLL test-b evaluation for recent competitive systems and
   our models, using different alias-entity maps.  In the ``KB+HP*''
@@ -182,12 +182,13 @@ the baseline, and outperforms \newcite{Chisholm2015} by over
 
 The low ambiguity of the HP alias mapping, coupled with
 guaranteed gold recall, seems to make the task too easy to be
-considered a realistic benchmark. Using a combination of KB and HP
-aliases improves the performance of all our models. When we limit
-the candidate entities for each mention to only those in HP,
-all our methods outperform \newcite{Pershina2015} and the
-attention model comes close to the recently published approach by
-\newcite{YamadaS0T16}.
+considered a realistic benchmark. 
+The best reported results using only HP aliases 
+are in a recent (not yet published) work by \newcite{YamadaS0T16},
+which uses entity embeddings. Our attention model achieves
+performance close to \newcite{YamadaS0T16}, and adding entity embeddings
+to our local and pairwise features would likely lead to further gains.
+
 
 \begin{table}[t!]
 \centering
