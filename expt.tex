@@ -4,15 +4,15 @@
 \subsection{Evaluation data}
 
 \paragraph*{CoNLL:} 
-The CoNLL dataset ~\cite{Hoffart2011} contains 1,393 articles with
+The CoNLL dataset ~\cite{Hoffart2011} contains 1393 articles with
 about 34K mentions, and the standard performance metric is
 mention-averaged accuracy.  The documents are partitioned into train,
 test-a and test-b.  Like most authors, we report performance on the
-231 test-b documents with 4,483 linkable mentions.
+231 test-b documents with 4483 linkable mentions.
 
 \paragraph*{TAC KBP:} 
-The TAC KBP datasets \cite{TAC2010,TAC2011,TAC2012} include 2,250 mentions (2010),
-2,250 mentions (2011), and 2,226 mentions (2012), 
+The TAC KBP 2010, 2011, and 2012 datasets \cite{TAC2010,TAC2011,TAC2012} include 2250,
+2250, and 2226 mentions (2012) respectively,
 of which roughly half are linkable
 to the reference KB.  The competition evaluation includes $\NIL$
 entities; participants are required to cluster $\NIL$ mentions across
@@ -26,8 +26,10 @@ metric $B^{3+} F_1$ which evaluates $\NIL$ clustering.
 \subsubsection{KB and entity aliases}
 
 Our KB is derived from the Wikipedia subset of Freebase
-\cite{BollackerEPST08}, with about 4M entities.  We collect aliases
-from Wikipedia page titles (including redirects and disambiguation
+\cite{BollackerEPST08}, with about 4M entities. For
+our mention prior (the probability of candidate entities given a mention), we
+collect alias counts from 
+Wikipedia page titles (including redirects and disambiguation
 pages), Freebase aliases, and Wikipedia anchor text.
 99.31\% of CoNLL test-b mentions are included, and 96.19\% map to the gold entity.
 
@@ -94,7 +96,7 @@ mention prior $p(c|m_i)$ as described in the previous section.
 % candidates proposed by the baseline system.
 
 \paragraph*{Scores for single-link model:}
-In the {single link} model, we simply set the local score for
+In the single-link model, we simply set the local score for
 mention $i$ and candidate $c$ to $s_i(c) = \ln \frac{p_i(c )}{1 -
 p_i(c)}$, so that likely candidates get positive
 scores.  We set the pairwise score between two candidates heuristically to
@@ -146,9 +148,10 @@ where the $j^{th}$ feature is set to $1$ if the count is $j$ and $0$ otherwise.
     Attention       & KB+HP        & {\bf 91.8} \\
     \hline
         Pershina (2015) & HP           & 91.8 \\
+        Yamada (2016) & HP & {\bf 93.1} \\
     Our baseline &KB+HP* & 91.9 \\
     Single link     & KB+HP*       & 92.1 \\
-    Attention       & KB+HP*       & {\bf 92.7} 
+    Attention       & KB+HP*       & {92.7} 
   \end{tabular}
 \caption{CoNLL test-b evaluation for recent competitive systems and
   our models, using different alias-entity maps.  In the ``KB+HP*''
@@ -161,25 +164,25 @@ where the $j^{th}$ feature is set to $1$ if the count is $j$ and $0$ otherwise.
 
 \paragraph*{CoNLL:}
 Table~\ref{table:conll_results} compares our models to recent
-competitive systems on CoNLL test-b in terms of mention- (micro-)
-averaged accuracy.  We also note the alias-entity mapping used in each
+competitive systems on CoNLL test-b in terms of mention-averaged (micro)
+accuracy.  We also note the alias-entity mapping used in each
 system, as the corresponding gold recall is an upper bound on
 accuracy, and alias ambiguity determines the difficulty of the task.
 
 Our baseline is slightly better than \newcite{Lazic2015}, but degrades
 after adding YAGO aliases, which introduce high ambiguity without sufficient
 gold recall gains. The attention model provides a substantial gain over
-the baseline, and is better than \newcite{Chisholm2015} by over
+the baseline, and outperforms \newcite{Chisholm2015} by over
 1.9\% absolute accuracy, or a 17\% relative reduction in error.
 
 The low ambiguity of the HP alias mapping, coupled with
 guaranteed gold recall, seems to make the task too easy to be
-considered a realistic benchmark.  KB's added (legitimate) ambiguity
-keeps our accuracy below \newcite{Pershina2015}, but, to restore
-fairness, when we limit our output entities to only those possible
-from HP aliases, both single-link and attention models beat them.
-
-
+considered a realistic benchmark. Using a combination of KB and HP
+aliases improves the performance of all our models. When we limit
+the candidate entities for each mention to only those in HP,
+all our methods outperform \newcite{Pershina2015} and the
+attention model comes close to the recently published approach by
+\newcite{YamadaS0T16}.
 
 \begin{table}[t!]
 \centering
@@ -222,7 +225,7 @@ and $B^3+F_1$, we simply rely on the fact that our KB is larger than the TAC
 reference KB, similarly to previous work. We assign a unique $\NIL$ label to
 all mentions of an entity that is in our KB but not in TAC. 
 Once again, our attention models improve the performance over the baseline
-system in almost all experiments, with multi-focus attention outperforming single-link. In comparison to
+system in nearly all experiments, with multi-focus attention outperforming single-link. In comparison to
 prior work, we achieve competitive performance on TAC 2010 and the best
 results to date on TAC 2011 and TAC 2012.
 %\todo{COMPLETE table}
