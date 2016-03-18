@@ -1,12 +1,12 @@
 \section{Proof of Proposition \ref{prop:softkmax}}
-Assume w.l.o.g. that $z_i$ are sorted in decreasing order. 
+%Assume w.l.o.g. that $z_i$ are sorted in decreasing order. 
 Begin with the optimization problem in \eqref{eq:softkmax_opt}. Introduce the following Lagrange multipliers: $\lambda$ 
 for the $\sum_i\mu_i=K$ constraint, and $\alpha_i\geq 0 $ for the $\mu_i \leq 1$ constraint. We can ignore the $\mu_i \geq 0 $
 constraint, as it will turn out to be satisfied. Denote the corresponding Lagrangian by $L(\mu,\lambda,\alpha)$. We will show the result
-by using the convex dual  $g(\lambda,\alpha) = \min_{\mu} L(\mu,\lambda,\alpha)$ and the fact that the solution of  \eqref{eq:softkmax_opt}
-is $\max_{\lambda,\alpha} g(\lambda,\alpha)$.
+by using the dual  $g(\lambda,\alpha) = \max_{\mu} L(\mu,\lambda,\alpha)$ and the fact that the solution of  \eqref{eq:softkmax_opt}
+is $\min_{\lambda,\alpha} g(\lambda,\alpha)$.
 
-Minimizing $L$ with respect to $\mu_i$ yields:
+Maximizing $L$ with respect to $\mu_i$ yields:
 \be
 \mu_i = e^{\beta z_i -1 + \beta \lambda - \beta \alpha_i}
 \label{eq:opt_mu}
@@ -42,11 +42,13 @@ Set $\alpha_i$ as follows:
 \alpha_i = 
 \left\{
 \begin{array}{ll}
-z_i - {1\over \beta} \log{\sum_{i=K}^n e^{\beta z_i}} & 1 \leq i < K  \\
-0 & K \leq i \leq n
+z_i - {1\over \beta} \log\frac{{\sum_{i=R + 1}^n e^{\beta z_i}}}{K - R} & 1 \leq i \leq  R  \\
+0 & R < i \leq n
 \end{array}
 \right.
 \label{eq:opt_alpha}
 \ee
-It can now be confirmed that the $\alpha,\gamma$ from Equations \ref{eq:opt_alpha} and \ref{eq:opt_gamma} satisfy the KKT conditions. Plugging the $\alpha $ value into $g(\alpha)$ yields the solution in the proposition. The subgradient follows from standard results on subgradients of pointwise supermum functions.
+It can now be confirmed that the $\alpha,\gamma$ from Equations \ref{eq:opt_alpha} and \ref{eq:opt_gamma} satisfy the KKT conditions. Plugging the $\alpha $ value into $g(\alpha)$ yields the solution in the proposition. Differentiability follows from \newcite{nesterov2005smooth} and the gradient is $\mu_i$ in 
+\eqref{eq:opt_mu}.
+%subgradient follows from standard results on subgradients of pointwise supermum functions.
 %The subgradient follows from the fact that $L(\mu,\lambda,\alpha)$ is minimized by \eqref{eq:opt_mu}, and a standard result on subgradient of pointwise supermum functions.

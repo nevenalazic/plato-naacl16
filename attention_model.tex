@@ -1,7 +1,7 @@
 \section{Attention model}
 \label{sec:attention}
 
-We now describe the our multi-focal attention model. We first introduce the optimization objective and inference, and then provide details on how scores are calculated and learned.
+We now describe our multi-focal attention model. We first introduce the optimization objective and inference, and then provide details on how scores are calculated and learned.
 
 \subsection{Inference}
 As noted earlier, the global score function in \eqref{eq:global_obj} is hard to maximize.
@@ -60,6 +60,7 @@ Several works on attention have shown that it is better to use a soft form of at
 
 \newcommand{\cS}{{\cal S}}
 \newcommand{\xx}{{\mathbf{x}}}
+\newcommand{\zz}{{\mathbf{z}}}
 Our goal is to obtain a soft version of the function  $\amax_K({\bf z})$. To do so, we first use an alternative definition of this function. Denote by $\cS$
 the set ${\bf x} = (x_1,\ldots,x_n)$ such that $0\leq x_i \leq 1$ and $\sum_i x_i = K$. Then $\amax_K({\bf z})$ is equivalent to the optimization problem:
 \be
@@ -72,9 +73,9 @@ the set ${\bf x} = (x_1,\ldots,x_n)$ such that $0\leq x_i \leq 1$ and $\sum_i x_
  %\end{array}
  } \;{\bf z} \cdot {\bf x}
 \ee
-The optimization problem above is a linear program, whose solution is the sum of top $K$ elements of ${\bf z}$ as required. This follows since optimal $x_i$ can easily be shown to attain only integral values (otherwise the objective can be improved). Alternatively, it can be shown that the vertices of the constraining polytope are integral.
+The optimization problem above is a linear program, whose solution is the sum of top $K$ elements of ${\bf z}$ as required. This follows since the optimal $x_i$ can easily be shown to attain only integral values. % Alternatively, it can be shown that the vertices of the constraining polytope are integral.
 
-Given this optimization view of $\amax_K({\bf z})$ it is natural to smooth it \cite{nesterov2005smooth} by adding a non-linearity to the optimization. Since the variables are non-negative, one possible choice is an entropy-like regularizer\footnote{Note that $-\sum_i x_i \log x_i$ is different from the entropy function since variables $x_i$ sum to $K$ and not to 1.}. We shall see that this choice results in a closed form solution, and also recovers the standard soft-max case for $K=1$.  Consider the optimization problem:
+Given this optimization view of $\amax_K({\bf z})$ it is natural to smooth it \cite{nesterov2005smooth} by adding a non-linearity to the optimization. Since the variables are non-negative, one possible choice is an entropy-like regularizer.\footnote{Note that $-\sum_i x_i \log x_i$ is different from the entropy function since variables $x_i$ sum to $K$ and not to 1.} We shall see that this choice results in a closed form solution, and also recovers the standard soft-max case for $K=1$.  Consider the optimization problem:
 \be
  \max_{ 
  \xx \in \cS
@@ -90,19 +91,24 @@ Given this optimization view of $\amax_K({\bf z})$ it is natural to smooth it \c
 
 \begin{proposition}
  \label{prop:softkmax}
-Assume $i_1,\ldots,i_n$ are such that $z_{i_1}\geq \ldots \geq z_{i_n}$. Then:
+Assume w.l.o.g. that $\zz$ is sorted such that $z_{1}\geq \ldots \geq z_{n}$. Denote by $R$ the maximum index $r\in \{1,\ldots, K-1\}$ such that:
 \be
-\samax_K({\bf z}) = \sum_{j=1}^{K-1} z_{i_j} + \beta^{-1} \log\sum_{j=K}^n \expo{\beta z_{i_j}}  
+z_r \geq \beta^{-1} \log \frac{\sum_{j= r +1}^n \expo{\beta z_j}}{K - r}
+\ee
+If this doesn't hold for any $r$, set $R=0$.
+Then:
+\be
+\samax_K({\bf z}) = \sum_{j=1}^{R} z_{j} + \frac{K - R}{\beta} \log\frac{\sum_{j=R+1}^n \expo{\beta z_{j}} }{K-R}
 \ee
 %The function $\samax_K({\bf z})$ is differentiable. 
-The function $\samax_K({\bf z})$ has a subgradient $\vv$ given by:
+The function $\samax_K({\bf z})$ is differentiable with a gradient $\vv$ given by:
 \be
-v_{i_j} =
+v_{i} =
 \left\{
 \begin{array}{ll}
 %\frac{\expo{\beta c}}{d} & j = 1,\ldots,K-1 \\
-1 & 1 \leq j < K \\
-\frac{\expo{\beta z_{i_j}}}{ \sum_{j=K}^n \expo{\beta z_{i_j}}} & K \leq j \leq n
+1 & 1 \leq i \leq R \\
+(K - R) \frac{\expo{\beta z_{i}}}{ \sum_{j=R+1}^n \expo{\beta z_{j}}} & R < i \leq n
 \end{array} 
 \right\}
 \ee
@@ -110,7 +116,9 @@ v_{i_j} =
 \noindent Proof is provided in the appendix.
 
 As noted, $K=1$ recovers the standard soft-max function.\footnote{When we refer to the {\em soft-max function}, we mean the function $\beta^{-1}\log\sum \expo{\beta a_i}$, which is an often used differentiable convex upper bound of the max function (e.g., see \cite{gimpel2010softmax}). Soft-max sometimes
-also refers to the activation function $\frac{\expo{a_i}}{\sum_{j} \expo{a_j}}$. The latter is in fact the gradient of the former (for $\beta=1$). } For other values of $K$, the function $\samax_K$ has an intuitive interpretation: take the sum of the top $K-1$ elements of $z_1,\ldots,z_n$, and add the soft-max of all other elements. As $\beta \to \infty$, this soft-max will approach the true max and therefore the soft-max of the suffix will be exactly the $K^{th}$ top element, and $\samax_K$ will therefore be the sum of the top $K$ elements as expected. For  finite $\beta$ we have a soft version of $\amax_K$.
+also refers to the activation function $\frac{\expo{a_i}}{\sum_{j} \expo{a_j}}$. The latter is in fact the gradient of the former (for $\beta=1$). }
+% For other values of $K$,  $\samax_K$ has an intuitive interpretation: take the sum of the top $R$ elements of $z_1,\ldots,z_n$, and add the soft-max of all other elements. 
+As $\beta \to \infty$, the function $\samax_K$ will approach the sum of the top $K$ elements as expected. For  finite $\beta$ we have a soft version of $\amax_K$.
 
 Our soft attention based model will therefore consider the soft-variant of \eqref{eq:amax_obj}:
 \be
