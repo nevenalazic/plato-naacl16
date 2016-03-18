@@ -7,11 +7,14 @@
 The CoNLL dataset ~\cite{Hoffart2011} contains 1393 articles with
 about 34K mentions, and the standard performance metric is
 mention-averaged accuracy.  The documents are partitioned into train,
-test-a and test-b.  Like most authors, we report performance on the
-231 test-b documents with 4483 linkable mentions.
+test-a and test-b.  For the attention model, we use the 946 train documents to train the
+local and pairwise scores, and we set the attention parameter $K$ based
+on error on test-a.  Like most authors, we report performance on the
+231 test-b documents with 4483 linkable mentions.  
+
 
 \paragraph*{TAC KBP:} 
-The TAC KBP 2010, 2011, and 2012 datasets \cite{TAC2010,TAC2011,TAC2012} include 2250,
+The TAC KBP 2010, 2011, and 2012 evaluation datasets \cite{TAC2010,TAC2011,TAC2012} include 2250,
 2250, and 2226 mentions (2012) respectively,
 of which roughly half are linkable
 to the reference KB.  The competition evaluation includes $\NIL$
@@ -19,7 +22,9 @@ entities; participants are required to cluster $\NIL$ mentions across
 documents so that all mentions of each unknown entity are assigned a
 unique identifier.  For these datasets, we report in-KB accuracy,
 overall accuracy (with all $\NIL$s in one cluster), and the competition
-metric $B^{3+} F_1$ which evaluates $\NIL$ clustering.
+metric $B^{3+} F_1$ which evaluates $\NIL$ clustering. 
+For the attention model, we use the TAC 2009 evaluation and TAC 2010 training datasets to
+train local and pairwise scores and set $K$.
 
 \subsection{Experimental setup}
 
@@ -191,6 +196,9 @@ attention model comes close to the recently published approach by
  System & In-KB & Overall & {\small ${B^{3+}F_1}$} \\ 
  & acc.(\%) & acc.(\%) & \\
 \hline
+\hline
+{\bf TAC 2010} \\
+\hline
 Chisholm (2015) & 80.7& - & - \\
 Ling (2015) & - & {\bf 88.8} & - \\
 Yamada (2016)&  85.2 & - & - \\
@@ -198,6 +206,8 @@ Yamada (2016)&  85.2 & - & - \\
  Single link & 84.2 & 87.5 & 82.7\\
  Attention & {\bf 87.2} & {\bf 88.8} & {\bf 84.6} \\
 \hline \hline
+{\bf TAC 2011} \\
+\hline
 Cucerzan (2011) & - & 86.8 &  84.1 \\
 Lazic (2015) & 79.3 & 86.5 & 84.0 \\
 Ling (2015) &- & - & 81.6 \\
@@ -206,15 +216,17 @@ Single link & 82.6 & 87.3 & 84.8 \\
  Attention & {\bf 84.3} & {\bf 88.8} & {\bf 85.7} \\
 \hline
 \hline
+{\bf TAC2012}\\
+\hline
 Cucerzan (2012) R1 & 72.0 & 76.2 & 72.1  \\
 Cucerzan (2012) R3 & 71.2 & 76.6 & 73.0 \\
 Lazic (2015) & {74.2} & {76.6} & 71.2 \\
 Ling (2015) & - & - & 66.7 \\
 Our baseline &78.8 & 80.3 & 76.9\\
  Single link & 79.7 & {\bf 80.8} & {\bf 77.4}  \\
- Attention &{\bf 82.3} & 80.3 & 76.3 \\
+ Attention &{\bf 82.3} & 80.3 & 76.3 \\ \hline
 \end{tabular}
-\caption{Results on the TAC 2010 (top), TAC 2011 (middle), and TAC 2012 (bottom) evaluation datasets. \label{table:tac_results} }
+\caption{Results on the TAC 2010--2012 evaluation datasets. \label{table:tac_results} }
 \end{table}
 
 \paragraph*{TAC KBP:}
