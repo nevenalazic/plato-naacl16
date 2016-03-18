@@ -7,9 +7,7 @@
 The CoNLL dataset ~\cite{Hoffart2011} contains 1393 articles with
 about 34K mentions, and the standard performance metric is
 mention-averaged accuracy.  The documents are partitioned into train,
-test-a and test-b.  For the attention model, we use the 946 train documents to train the
-local and pairwise scores, and we set the attention parameter $K$ based
-on error on test-a.  Like most authors, we report performance on the
+test-a and test-b. Like most authors, we report performance on the
 231 test-b documents with 4483 linkable mentions.  
 
 
@@ -23,8 +21,6 @@ documents so that all mentions of each unknown entity are assigned a
 unique identifier.  For these datasets, we report in-KB accuracy,
 overall accuracy (with all $\NIL$s in one cluster), and the competition
 metric $B^{3+} F_1$ which evaluates $\NIL$ clustering. 
-For the attention model, we use the TAC 2009 evaluation and TAC 2010 training datasets to
-train local and pairwise scores and set $K$.
 
 \subsection{Experimental setup}
 
@@ -112,12 +108,8 @@ probability of the top candidate exceeds $0.9$, we only consider the top
 candidate.\footnote{We have tried including more candidates, but the single link
 almost never changes the decision for candidates with baseline score $p_i(c)>0.9$.}
 
-
-\def\ind#1{[\![ #1 ]\!]}
-
-
 \paragraph*{Scores for attention model:}
-{Local scores} $s_i(y_i)$ for the attention model are derived
+{Local features} $s_i(y_i)$ for the attention model are derived
 from $p_i(c)$.  As the attention models have no probabilistic
 interpretation, we inject as features
 $\log p_i(c)$ and $\log(1-p_i(c))$. We set $\log0=0$ by convention,
@@ -130,7 +122,9 @@ annotating  Wikipedia with our baseline resolver.
 We cap each count to 15 and encode it using 15 binary indicator features,
 where the $j^{th}$ feature is set to $1$ if the count is $j$ and $0$ otherwise.
 
+We train the scores for the attention model on the 946 CoNLL train documents for CoNLL, and on the TAC 2009 evaluation and TAC 2010 training documents for TAC.  
 
+\subsection{Results}
 \begin{table}[t!]
   \centering
   \begin{tabular}{l|l|l}
@@ -161,34 +155,47 @@ where the $j^{th}$ feature is set to $1$ if the count is $j$ and $0$ otherwise.
 \caption{CoNLL test-b evaluation for recent competitive systems and
   our models, using different alias-entity maps.  In the ``KB+HP*''
   setting, we train on KB+HP aliases, but restrict test candidates to
-  only those in the HP map.}
+  only those in HP.}
  \label{table:conll_results} 
 \end{table}
-
-\subsection{Results}
-
 \paragraph*{CoNLL:}
 Table~\ref{table:conll_results} compares our models to recent
 competitive systems on CoNLL test-b in terms of mention-averaged (micro)
-accuracy.  We also note the alias-entity mapping used in each
+accuracy.  We also note the alias-entity map used in each
 system, as the corresponding gold recall is an upper bound on
 accuracy, and alias ambiguity determines the difficulty of the task.
+Therefore performance is not strictly comparable between maps.
 
 Our baseline is slightly better than \newcite{Lazic2015}, but degrades
-after adding YAGO aliases, which introduce high ambiguity without sufficient
-gold recall gains. The attention model provides a substantial gain over
-the baseline, and outperforms \newcite{Chisholm2015} by over
-1.9\% absolute accuracy, or a 17\% relative reduction in error.
+after adding YAGO aliases which introduce high ambiguity. %without sufficient ogld recall gains
+The attention model provides a substantial gain over
+the baseline, and outperforms \newcite{Chisholm2015} by
+2.3\% in absolute accuracy.
 
 The low ambiguity of the HP alias mapping, coupled with
 guaranteed gold recall, seems to make the task too easy to be
-considered a realistic benchmark. 
+considered a realistic benchmark. For completeness, we provide
+the performance of our system with candidate entities restricted to those in HP
+(setting KB+HP*). 
 The best reported results using only HP aliases 
-are in a recent (not yet published) work by \newcite{YamadaS0T16},
+are in a recent (unpublished) work by \newcite{YamadaS0T16},
 which uses entity embeddings. Our attention model achieves
-performance close to \newcite{YamadaS0T16}, and adding entity embeddings
+performance close to \newcite{YamadaS0T16}; adding entity embeddings
 to our local and pairwise features would likely lead to further gains.
 
+
+\paragraph*{TAC KBP:}
+Table~\ref{table:tac_results} shows our results for the TAC KBP 2010, 2011, and 2012
+evaluation datasets, where we used the KB+YAGO entity-alias map for all our experiments. 
+To compute $\NIL$ clusters required for $B^3+F_1$, we simply rely on the fact that our KB is larger than the TAC
+reference KB, similarly to previous work. We assign a unique $\NIL$ label to
+all mentions of an entity that is in our KB but not in TAC. 
+Once again, our attention models improve the performance over the baseline
+system in nearly all experiments, with multi-focus attention outperforming single-link. Compared to
+prior work, we achieve competitive performance on TAC 2010 and the best
+results to date on TAC 2011 and TAC 2012.
+%\todo{COMPLETE table}
+%\todo{ADD mention recall and ambiguity for TAC?}
 
 \begin{table}[t!]
 \centering
@@ -198,8 +205,6 @@ to our local and pairwise features would likely lead to further gains.
  & acc.(\%) & acc.(\%) & \\
 \hline
 \hline
-{\bf TAC 2010} \\
-\hline
 Chisholm (2015) & 80.7& - & - \\
 Ling (2015) & - & {\bf 88.8} & - \\
 Yamada (2016)&  85.2 & - & - \\
@@ -207,8 +212,6 @@ Yamada (2016)&  85.2 & - & - \\
  Single link & 84.2 & 87.5 & 82.7\\
  Attention & {\bf 87.2} & {\bf 88.8} & {\bf 84.6} \\
 \hline \hline
-{\bf TAC 2011} \\
-\hline
 Cucerzan (2011) & - & 86.8 &  84.1 \\
 Lazic (2015) & 79.3 & 86.5 & 84.0 \\
 Ling (2015) &- & - & 81.6 \\
@@ -216,8 +219,6 @@ Our baseline & 81.5 & 86.8 & 84.3 \\
 Single link & 82.6 & 87.3 & 84.8 \\
  Attention & {\bf 84.3} & {\bf 88.8} & {\bf 85.7} \\
 \hline
-\hline
-{\bf TAC2012}\\
 \hline
 Cucerzan (2012) R1 & 72.0 & 76.2 & 72.1  \\
 Cucerzan (2012) R3 & 71.2 & 76.6 & 73.0 \\
@@ -227,24 +228,19 @@ Our baseline &78.8 & 80.3 & 76.9\\
  Single link & 79.7 & {\bf 80.8} & {\bf 77.4}  \\
  Attention &{\bf 82.3} & 80.3 & 76.3 \\ \hline
 \end{tabular}
-\caption{Results on the TAC 2010--2012 evaluation datasets. \label{table:tac_results} }
+\caption{Results on the TAC 2010 (top), TAC 2011 (middle), and TAC 2012 bottom evaluation datasets. \label{table:tac_results} }
 \end{table}
 
-\paragraph*{TAC KBP:}
-Table~\ref{table:tac_results} shows our results for the TAC KBP 2010, 2011, and 2012
-evaluation datasets, where we used the KB+YAGO entity-alias map for all our experiments. 
-To compute $\NIL$ clusters required for the overall accuracy
-and $B^3+F_1$, we simply rely on the fact that our KB is larger than the TAC
-reference KB, similarly to previous work. We assign a unique $\NIL$ label to
-all mentions of an entity that is in our KB but not in TAC. 
-Once again, our attention models improve the performance over the baseline
-system in nearly all experiments, with multi-focus attention outperforming single-link. In comparison to
-prior work, we achieve competitive performance on TAC 2010 and the best
-results to date on TAC 2011 and TAC 2012.
-%\todo{COMPLETE table}
-%\todo{ADD mention recall and ambiguity for TAC?}
 
 \subsection{Effect of $K$ and $\beta$ on attention}
+
+We set the size of the multi-focus attention beam $K$ based on accuracy on
+CoNLL test-a (for CoNLL) and training accuracy (for TAC). 
+\figref{fig:k_effect} shows the effect of $K$ on the performance on 
+CoNLL test-a dataset. 
+Performance peaks for $K \in [3,5]$, with a sharp decrease after
+$K=10$.  This validates our central premise: all-pairs label coupling
+may hurt accuracy.
 
 \input{dep_on_k}
 
