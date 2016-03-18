@@ -41,8 +41,8 @@ Set $\alpha_i$ as follows:
 \alpha_i = 
 \left\{
 \begin{array}{ll}
-z_i - {1\over \beta} \log{\sum_{i=K}^n e^{\beta z_i}} & i=1,\ldots, K -1  \\
-0 & i = K,\ldots, n
+z_i - {1\over \beta} \log{\sum_{i=K}^n e^{\beta z_i}} & 1 \leq i < K  \\
+0 & K \leq i \leq n
 \end{array}
 \right.
 \label{eq:opt_alpha}
