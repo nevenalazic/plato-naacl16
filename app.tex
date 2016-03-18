@@ -11,16 +11,16 @@ Maximizing $L$ with respect to $\mu_i$ yields:
 \mu_i = e^{\beta z_i -1 + \beta \lambda - \beta \alpha_i}
 \label{eq:opt_mu}
 \ee
-From this we can obtain the convex dual:
-\be
-\nonumber
-g(\lambda,\alpha) = -\lambda K  + \beta^{-1} \sum_i   e^{\beta z_i -1 + \beta \lambda - \beta \alpha_i}  + \sum_i \alpha_i 
-\ee
+From this we can obtain the convex dual $g(\lambda,\alpha) $, and after minimizing over $\lambda$ we arrive at:
+%\be
+%\nonumber
+%g(\lambda,\alpha) = -\lambda K  + \beta^{-1} \sum_i   e^{\beta z_i -1 + \beta \lambda - \beta \alpha_i}  + \sum_i \alpha_i 
+%\ee
 %Maximizing this with respect to $\lambda$ yields the maximizing $\lambda^*$:
 %\be
 %\lambda^* = \beta^{-1}  \log{\frac{K}{ \sum_i e^{\beta z_i -1-\beta \alpha_i}} }
 %\ee
-The maximizing $\lambda$ can be found in closed form, leaving only dependence on $\alpha$:
+%The maximizing $\lambda$ can be found in closed form, leaving only dependence on $\alpha$:
 %We can now express $g$ as a function of only $\alpha$
 \be
 g(\alpha) =  K\beta^{-1}   \log{\frac{ \sum_i e^{\beta z_i-\beta \alpha_i}}{K}} + \sum_i \alpha_i

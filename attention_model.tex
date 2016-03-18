@@ -61,7 +61,7 @@ Several works on attention have shown that it is better to use a soft form of at
 \newcommand{\cS}{{\cal S}}
 \newcommand{\xx}{{\mathbf{x}}}
 \newcommand{\zz}{{\mathbf{z}}}
-Our goal is to obtain a soft version of the function  $\amax_K({\bf z})$. To do so, we first use an alternative definition of this function. Denote by $\cS$
+To obtain a soft version of the function  $\amax_K({\bf z})$, we first use an alternative definition. Denote by $\cS$
 the set ${\bf x} = (x_1,\ldots,x_n)$ such that $0\leq x_i \leq 1$ and $\sum_i x_i = K$. Then $\amax_K({\bf z})$ is equivalent to the optimization problem:
 \be
  \max_{ 
@@ -118,7 +118,7 @@ v_{i} =
 As noted, $K=1$ recovers the standard soft-max function.\footnote{When we refer to the {\em soft-max function}, we mean the function $\beta^{-1}\log\sum \expo{\beta a_i}$, which is an often used differentiable convex upper bound of the max function (e.g., see \cite{gimpel2010softmax}). Soft-max sometimes
 also refers to the activation function $\frac{\expo{a_i}}{\sum_{j} \expo{a_j}}$. The latter is in fact the gradient of the former (for $\beta=1$). }
 % For other values of $K$,  $\samax_K$ has an intuitive interpretation: take the sum of the top $R$ elements of $z_1,\ldots,z_n$, and add the soft-max of all other elements. 
-As $\beta \to \infty$, the function $\samax_K$ will approach the sum of the top $K$ elements as expected. For  finite $\beta$ we have a soft version of $\amax_K$.
+As $\beta \to \infty$, $\samax_K$ will approach the sum of the top $K$ elements as expected. For  finite $\beta$ we have a soft version of $\amax_K$.
 
 Our soft attention based model will therefore consider the soft-variant of \eqref{eq:amax_obj}:
 \be
@@ -144,8 +144,7 @@ L_i &=& \max_{y_i}[ s_i(y_i) + \samax_K({\bf s}_{i}(y_i))  \\
        && - s_i(y^*_i) - \samax_K({\bf s}_i(y^*_i))  
        + \Delta(y_i,y^*_i) ]
 \eea
-where $\Delta(y_i,y^*_i)$ is zero if $y_i=y^*_i$ and one otherwise.
-The overall loss is simply the sum of losses for all the mentions, plus $\ell_2$ regularization over $\ws,\wp$.   We minimize the loss using AdaGrad \cite{adagrad} with learning rate $\eta=0.1$.
+where $\Delta(y_i,y^*_i)$ is zero if $y_i=y^*_i$ and one otherwise. If there are unlabeled mentions in the training data, we add those to the star graph, and maximize over the unknown labels in the positive and negative part of the hinge loss. The overall loss is simply the sum of losses for all the mentions, plus $\ell_2$ regularization over $\ws,\wp$.   We minimize the loss using AdaGrad \cite{adagrad} with learning rate $\eta=0.1$.
 
 
 %%% Local Variables: ***
