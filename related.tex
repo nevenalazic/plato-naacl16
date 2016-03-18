@@ -18,32 +18,29 @@ Wikipedia also provide direct evidence of relatedness between them.
 Another (possibly more noisy) source of information are Web pages
 containing links \cite{singh12:wiki-links} to Wikipedia pages of both
 entities.  Such links have been used in several recent systems
-\cite{ChengR13,Chisholm2015}.  \newcite{YamadaS0T16} build continuous
-vector representations of entities, and use those to define pairwise
-similarities. 
+\cite{ChengR13,Chisholm2015}.  \newcite{YamadaS0T16} train embedding
+vectors for entities, and use them to define similarities.
 
 
 \subsection{Collective inference for ER}
 
-As discussed earlier, optimizing most global coherence objectives is
+Optimizing most global coherence objectives is
 intractable. \newcite{Milne2008} and \newcite{Ferragina10} decompose
 the problem over mentions and select the candidate that maximizes
 their relatedness score, which includes relations to all other
-mentions.  \newcite{Hoffart2011} extract a dense subgraph from the
-original graph by using an iterative heuristic to remove unpromising
-mention-entity edges. \newcite{Cucerzan07} creates a relation vector
+mentions.  \newcite{Hoffart2011} use
+an iterative heuristic to remove unpromising
+mention-entity edges.  \newcite{Cucerzan07} creates a relation vector
 for each candidate, and disambiguates each entity to the candidate
 whose vector is most similar to the aggregate (which includes both
-correct and incorrect labels). \newcite{KulkarniSRC09} formulate the
-task as an integer linear program (ILP) and find solutions via convex
-relaxation, while \newcite{ChengR13} directly use an ILP solver.
-\newcite{Ratinov11} use relation scores as features in a ranking
-support vector machine.
-
+correct and incorrect labels).  \newcite{ChengR13} use an integer
+linear program solver and \newcite{KulkarniSRC09} use a convex
+relaxation.  \newcite{Ratinov11} use relation scores as features in a
+ranking SVM.
 Personalized PageRank (PPR) \cite{jeh2003scaling} is another tractable
-alternative to collective inference, adopted by several recent systems
-\cite{Han2011,He13,Alhelbawy14,Pershina2015}.  A closely related
-approach is Laplacian smoothing \cite{Huang2014}.
+alternative, adopted by several recent systems
+\cite{Han2011,He13,Alhelbawy14,Pershina2015}.
+Laplacian smoothing \cite{Huang2014} is closely related.
 
 % In most applications of PPR to entity resolution, the graph edges
 % and weights are hardwired (not learned), and there is no dynamic
