@@ -104,8 +104,9 @@ $s_{ij}(y_i, y_j) = \ln o(y_i, y_j) + 0.7$, where $o(y_i, y_j)$ is the number of
 outlinks from the Wikipedia page of $y_i$ to the page of $y_j$.  We
 consider up to three candidates for each mention; if the baseline
 probability of the top candidate exceeds $0.9$, we only consider the top
-candidate.\footnote{We have tried including more candidates, but the single link
-almost never changes the decision for candidates with baseline score $p_i(c)>0.9$.}
+candidate. Including more candidates did not make a difference in performance,
+as additional candidates had low baseline scores and were almost never chosen
+in practice.
 
 \paragraph*{Scores for attention model:}
 {Local features} $s_i(y_i)$ for the attention model are derived
@@ -189,7 +190,8 @@ Table~\ref{table:tac_results} shows our results for the TAC KBP 2010, 2011, and 
 evaluation datasets, where we used the KB+YAGO entity-alias map for all our experiments. 
 To compute $\NIL$ clusters required for $B^3+F_1$, we simply rely on the fact that our KB is larger than the TAC
 reference KB, similarly to previous work. We assign a unique $\NIL$ label to
-all mentions of an entity that is in our KB but not in TAC. 
+all mentions of an entity that is in our KB but not in TAC.  For mentions that cannot be linked
+to our KB, we simply use the mention string as the $\NIL$ identifier
 Once again, our attention models improve the performance over the baseline
 system in nearly all experiments, with multi-focus attention outperforming single-link. Compared to
 prior work, we achieve competitive performance on TAC 2010 and the best
