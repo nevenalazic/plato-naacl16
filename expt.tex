@@ -51,7 +51,11 @@ and 65.9 in YAGO.  Unsurprisingly, using only this source of aliases results in
 high accuracy on CoNLL \cite{Pershina2015,YamadaS0T16}.
 
 Table~\ref{tab:AliasTable} lists the statistics of the three alias-entity mappings
-and some of their combinations on the CoNLL test-b dataset.
+and some of their combinations on the CoNLL test-b dataset. 
+Table~\ref{tab:TACAliasTable} provides the candidate recall (percentage of
+non-$\NIL$ mentions for which the gold entity was in the candidate set) for the
+TAC KBP datasets.
+
 
 
 \begin{table}
@@ -78,6 +82,22 @@ and some of their combinations on the CoNLL test-b dataset.
     shows the number of candidates averaged over test-b mentions.}
   \label{tab:AliasTable}
   % old KG
+\end{table}
+
+\begin{table}
+  \centering
+  \begin{tabular}{l|l}
+    Dataset  &   Gold  recall   \\
+    \hline
+    TAC 2010 &  93.04  \\
+    \hline
+    TAC 2011  &  89.23 \\
+    \hline
+    TAC 2012  &   87.83
+  \end{tabular}
+  \caption{Gold candidate recall on linkable (non-NIL) mentions in the TAC KBP datasets,
+  using the Freebase-derived KB and YAGO mentions.}
+  \label{tab:TACAliasTable}
 \end{table}
 
 
