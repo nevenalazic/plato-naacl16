@@ -105,10 +105,10 @@ TAC KBP datasets.
 \label{sec:expt:features}
 
 Our baseline system is similar in design and accuracy to Plato \cite{Lazic2015}.
-Given the referrent phrase $m_i$ and textual context features ${\bf b}_i$, it computes
+Given the referent phrase $m_i$ and textual context features ${\bf b}_i$, it computes
 the probability of a candidate entity as $p_i(c) \propto p(c|m_i)p({\bf b}_i|c)$. 
 The system resolves mentions independently and does not have an explicit coherence model;
-however, it does capture some coherence information indirectly as referrent phrases are
+however, it does capture some coherence information indirectly as referent phrases are
 included as string context features. We experiment with several versions of the
 mention prior $p(c|m_i)$ as described in the previous section.
 
@@ -136,11 +136,12 @@ $\log p_i(c)$ and $\log(1-p_i(c))$. We set $\log0=0$ by convention,
 and handle the case where $\log$ is undefined by introducing two additional
 binary indicator features for $p_i(c)=0$ and $p_i(c)=1$.
 
-{Edge features} $\fp$ are set based three sources of information: (1) number of Freebase relations between $y_i$ and $y_j$, (2) number of hyperlinks between Wikipeda pages of $y_i$ and $y_j$ (in either direction), and
+{Edge features} $\fp$ are set based on three sources of information: (1) number of Freebase relations between $y_i$ and $y_j$, (2) number of hyperlinks between Wikipedia pages of $y_i$ and $y_j$ (in either direction), and
 (3) number of mentions of $y_i$ on the Wikipedia page of $y_j$ and vice versa, after
 annotating  Wikipedia with our baseline resolver. 
-We cap each count to 15 and encode it using 15 binary indicator features,
-where the $j^{th}$ feature is set to $1$ if the count is $j$ and $0$ otherwise.
+We cap each count to 5 and encode it using 5 binary indicator features,
+where the $j^{th}$ feature is set to $1$ if the count is $j$ and $0$ otherwise. Additionally, 
+for each count $c$ we add a feature $\log{\left(1+c\right)}$.
 
 We train the scores for the attention model on the 946 CoNLL train documents for CoNLL, and on the TAC 2009 evaluation and TAC 2010 training documents for TAC.  
 
@@ -211,7 +212,7 @@ evaluation datasets, where we used the KB+YAGO entity-alias map for all our expe
 To compute $\NIL$ clusters required for $B^3+F_1$, we simply rely on the fact that our KB is larger than the TAC
 reference KB, similarly to previous work. We assign a unique $\NIL$ label to
 all mentions of an entity that is in our KB but not in TAC.  For mentions that cannot be linked
-to our KB, we simply use the mention string as the $\NIL$ identifier
+to our KB, we simply use the mention string as the $\NIL$ identifier.
 Once again, our attention models improve the performance over the baseline
 system in nearly all experiments, with multi-focus attention outperforming single-link. Compared to
 prior work, we achieve competitive performance on TAC 2010 and the best
