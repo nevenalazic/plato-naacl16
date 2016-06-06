@@ -255,6 +255,24 @@ Our baseline &78.8 & 80.3 & 76.9\\
 \caption{Results on the TAC 2010 (top), TAC 2011 (middle), and TAC 2012 bottom evaluation datasets. \label{table:tac_results} }
 \end{table}
 
+\begin{table*}[ht!]
+\centering
+%\small
+\begin{tabular}{l|l|l}
+ Sentence with mention & { Entity}  & {Attn. focus mentions} \\  
+ \hline
+{\bf Caroline} has dropped her name & base: Caroline (/m/01cvzm) &  Democratic Party\\ 
+from consideration for the seat   & attn: Caroline Kennedy (/m/01y603) & New York \\
+that Hillary has left vacant. & & Robert Kennedy \\ \hline
+{\bf Chris Johnson} had just 13 tackles last & base: Chris Johnson (/m/03d753s) & Oakland Raiders  \\
+season, and the Raiders currently have & attn: Chris Johnson (/m/027nr9m) & Oakland Raiders \\
+have 11 defensive backs on their roster. & & Oakland Raiders
+\end{tabular}
+\caption{\label{table:examples} Examples of gains by our algorithm, showing the resolved mention,
+the entities the mention resolves to in the baseline model and in the attention model,
+and the attention focus mentions in the document. }
+\end{table*}
+
 
 \subsection{Effect of $K$ and $\beta$ on attention}
 
@@ -272,23 +290,6 @@ In \secref{sec:soft_attention} we proposed an extension of softmax smoothing to 
 we cross-validated over a wide range of $\beta$ values, including $\beta=\infty$ which corresponds to taking
 the exact sum of $K$ largest values. We found that the optimal value in most cases was large: $\beta=10, 100$, or even $\infty$. This suggests that a {\em hard} attention model, where exactly $K$ mentions are picked is adequate in the current settings.
 
-\begin{table*}[t!]
-\centering
-%\small
-\begin{tabular}{l|l|l}
- Sentence with mention & { Entity}  & {Attn. focus mentions} \\  
- \hline
-{\bf Caroline} has dropped her name & base: Caroline (/m/01cvzm) &  Democratic Party\\ 
-from consideration for the seat   & attn: Caroline Kennedy (/m/01y603) & New York \\
-that Hillary has left vacant. & & Robert Kennedy \\ \hline
-{\bf Chris Johnson} had just 13 tackles last & base: Chris Johnson (/m/03d753s) & Oakland Raiders  \\
-season, and the Raiders currently have & attn: Chris Johnson (/m/027nr9m) & Oakland Raiders \\
-have 11 defensive backs on their roster. & & Oakland Raiders
-\end{tabular}
-\caption{\label{table:examples} Examples of gains by our algorithm, showing the resolved mention,
-the entities the mention resolves to in the baseline model and in the attention model,
-and the attention focus mentions in the document. }
-\end{table*}
 
 
 
