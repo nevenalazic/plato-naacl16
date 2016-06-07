@@ -38,7 +38,7 @@ strength.\footnote{An exception to this framework are topic models in
   Support for a candidate is typically aggregated over
 relations to all other entities in the document. One problem with this approach is that it may
 dilute evidence for entities that are not salient in the document, or
-not well-connected in the KB. This is an issue we aim to address.
+not well-connected in the KB. Our work aims to address this issue.
 %Finding an entity
 % labeling that maximizes the objective is usually intractable and
 % tackled via various approximations, which we discuss in more detail in
@@ -57,7 +57,7 @@ not well-connected in the KB. This is an issue we aim to address.
 %objectives risk losing these delicate signals.  Our primary goal is to
 %fix this problem.
 
-In this work, we introduce a novel coherence model with an attention mechanism, where the 
+We introduce a novel coherence model with an attention mechanism, where the 
 score for each candidate only depends on a small subset of mentions.
  Attention has recently been
 used with considerable empirical success in tasks such as translation
@@ -68,16 +68,12 @@ relations for different entities.
 
 Attention models typically have a single focus, implemented using the
  softmax function. Our model allows each candidate to
- focus on multiple mentions, and to implement it we introduce a 
+ focus on multiple mentions, and, to implement it, we introduce a 
  novel smooth version of the
  multi-focus attention function, which generalizes soft-max.
-%Our model relies on a novel smooth version of the multi-focus
-%attention function, which generalizes the single-focus softmax
-%function. 
-%We use a simple and efficient inference procedure, and show
-%how the model parameters can be learned from data.
-Our system uses mention and context models similar to  
-\newcite{Lazic2015} (which do not use coherence) along with our novel 
+
+Our system uses mention and context models similar to those of 
+\newcite{Lazic2015}, along with our novel 
 multi-focal attention model to 
 enforce coherence, leading to significant performance improvements
 on CoNLL 2003 \cite{Hoffart2011} and TAC KBP 2010--2012 tasks \cite{TAC2010,TAC2011,TAC2012}.
@@ -88,12 +84,6 @@ Our contributions thus consist of defining a novel multi-focal
 attention model and applying it
 successfully to an entity resolution system.
 
-
-%The rest of the paper is organized as follows: \secref{sec:notation} introduces notation.
-%\secref{sec:attention} presents the new multi-focus attention
-% model.  \secref{sec:maxsum} discusses a baseline model with
-% single focus.  \secref{sec:related} reviews related work.
-% \secref{sec:expt} presents experimental results.
 
 
 %%% Local Variables: ***

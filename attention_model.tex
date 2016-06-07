@@ -12,11 +12,8 @@ makes it easy to integrate attention in terms of both inference and learning.
 \subsubsection{Star model}
 
 We start by considering a simple attention-free model in which inference is tractable, which we call a {\em star model}. For a particular mention $i$, the star model is a graphical model that contains $y_i$, all interactions between $y_i$ and other labels, and no other interactions, as illustrated in \figref{fig:star}. 
-% In this approach, the entity $y_i$ for mention $i$ is obtained as follows. Consider a star-shaped graphical model centered at $y_i$, as illustrated in \figref{fig:star}. Namely, the graph that contains all interactions of $y_i$ with other labels, but not interactions between the other labels. 
 
 While the star graph centered at $i$ contains up to $n$ variables, we will only use it to infer the label of mention $i$. 
-%We propose to obtain label $y_i$
-%by maximizing $f_i$ over all labels, and returning the label for $y_i$.
 Let $q_{ij}(y_i)$ be the support for label $y_i$ from mention $j$, defined as follows:
 \be
 q_{ij}(y_i) = \max_{y_j}  s_{ij}(y_i,y_j)  + s_j(y_j),
@@ -30,7 +27,6 @@ f_i(y_i) = s_i(y_i) + \sum_{j:j\neq i} q_{ij}(y_i)
 and predict the label $y_i = \arg \max_{y} f_i(y)$.
 
 Due to the structure of the star graph, inference is easy and can be done in $O(nC^2)$, where $C$ is the maximum number of candidates. A similar decomposition has previously been used in the context of approximate learning for structured prediction~\cite{SontagNIPS10}. 
-%To summarize, we replace the hard problem of maximizing  \eqref{eq:global_obj} with $n$ simple problems of maximizing over star shaped graphs. 
 Note that we do not view this approach as an approximation to the global problem, but rather as our inference procedure.
 
  \input{example-graphs}
@@ -40,10 +36,6 @@ The score function in \eqref{eq:star_obj} aggregates pairwise scores for each la
   Let $\amax_K({\bf z})$  be the sum of the largest $K$ values in the vector
 ${\bf z} = (z_1,\ldots,z_n)$.  For each label $y_i$,
 we redefine the score function to be
-% Thus, $q_{ij}(y_i)$ gives the strength of support that mention $j$
-% gives to candidate $y_i$, for the best choice of $y_j$.  Since we want
-% to only attend to the most informative mentions, we will only consider
-% the $K$ best mentions. Namely, we consider the score function:
 \be
 f_i(y_i) = s_i(y_i) + \amax_K({\bf q}_i (y_i)),
 \label{eq:amax_obj}
@@ -55,7 +47,7 @@ The inference rule is again $y_i = \arg\max_y f_i(y)$, and the computational cos
 \subsubsection{Soft attention}
 \label{sec:soft_attention}
 
-Several works on attention have shown that it is better to use a soft form of attention, where the level of attention is not zero or one, but can rather take intermediate values. Existing attention models focus on a single object, such as a single word \cite{bahdanau2014neural} or a single image window \cite{xu2015show}. In such models,
+Previous work on attention has shown that it is advantageous to use a soft form of attention, where the level of attention is not zero or one, but can rather take intermediate values. Existing attention models focus on a single object, such as a single word \cite{bahdanau2014neural} or a single image window \cite{xu2015show}. In such models,
  it is natural to change the max function in the attention operator to a soft-max. In our case, the attention beam contains $K$ elements, and we require a different notion of a soft-max, which we develop below.
 
 \newcommand{\cS}{{\cal S}}
@@ -66,28 +58,18 @@ the set ${\bf x} = (x_1,\ldots,x_n)$ such that $0\leq x_i \leq 1$ and $\sum_i x_
 \be
  \max_{ 
  \xx \in \cS
-%\begin{array}{l}
-%x_1,\ldots,x_n: \\
-%0 \leq x_i \leq 1\\
- %\sum_i x_i = K
- %\end{array}
  } \;{\bf z} \cdot {\bf x}
 \ee
 The optimization problem above is a linear program, whose solution is the sum of top $K$ elements of ${\bf z}$ as required. This follows since the optimal $x_i$ can easily be shown to attain only integral values. % Alternatively, it can be shown that the vertices of the constraining polytope are integral.
 
-Given this optimization view of $\amax_K({\bf z})$ it is natural to smooth it \cite{nesterov2005smooth} by adding a non-linearity to the optimization. Since the variables are non-negative, one possible choice is an entropy-like regularizer.\footnote{Note that $-\sum_i x_i \log x_i$ is different from the entropy function since variables $x_i$ sum to $K$ and not to 1.} We shall see that this choice results in a closed form solution, and also recovers the standard soft-max case for $K=1$.  Consider the optimization problem:
+Given this optimization view of $\amax_K({\bf z})$ it is natural to smooth it \cite{nesterov2005smooth} by adding a non-linearity to the optimization. Since the variables are non-negative, one possible choice is an entropy-like regularizer. We shall see that this choice results in a closed form solution, and also recovers the standard soft-max case for $K=1$.  Consider the optimization problem:
 \be
- \max_{ 
+ \samax_K({\bf z}) = \max_{ 
  \xx \in \cS
-%\begin{array}{l}
-%x_1,\ldots,x_n: \\
-%0 \leq x_i \leq 1\\
- %\sum_i x_i = K
- %\end{array}
  } \sum_i z_i x_i - \beta^{-1} \sum_i x_i \log{x_i},
  \label{eq:softkmax_opt}
  \ee
- where $\beta$ is a tuned hyperparameter.  We denote the solution by $\samax_K({\bf z})$. The following proposition provides a closed form solution for $\samax_K$, as well as its gradient.
+ where $\beta$ is a tuned hyperparameter.\footnote{Note that $-\sum_i x_i \log x_i$ is different from the entropy function since variables $x_i$ sum to $K$ and not to 1.}  The following proposition provides a closed form solution for $\samax_K$, as well as its gradient.
 
 \begin{proposition}
  \label{prop:softkmax}
@@ -100,7 +82,6 @@ Then:
 \be
 \samax_K({\bf z}) = \sum_{j=1}^{R} z_{j} + \frac{K - R}{\beta} \log\frac{\sum_{j=R+1}^n \expo{\beta z_{j}} }{K-R}
 \ee
-%The function $\samax_K({\bf z})$ is differentiable. 
 The function $\samax_K({\bf z})$ is differentiable with a gradient $\vv$ given by:
 \be
 v_{i} =
@@ -117,7 +98,6 @@ v_{i} =
 
 As noted, $K=1$ recovers the standard soft-max function.\footnote{When we refer to the {\em soft-max function}, we mean the function $\beta^{-1}\log\sum \expo{\beta a_i}$, which is an often used differentiable convex upper bound of the max function (e.g., see \cite{gimpel2010softmax}). Soft-max sometimes
 also refers to the activation function $\frac{\expo{a_i}}{\sum_{j} \expo{a_j}}$. The latter is in fact the gradient of the former (for $\beta=1$). }
-% For other values of $K$,  $\samax_K$ has an intuitive interpretation: take the sum of the top $R$ elements of $z_1,\ldots,z_n$, and add the soft-max of all other elements. 
 As $\beta \to \infty$, $\samax_K$ will approach the sum of the top $K$ elements as expected. For  finite $\beta$ we have a soft version of $\amax_K$.
 
 Our soft attention based model will therefore consider the soft-variant of \eqref{eq:amax_obj}:
@@ -128,10 +108,10 @@ f_i(y_i) = s_i(y_i) + \samax_K({\bf q}_{i}(y_i)) ~,
 and maximize $f(y_i)$ to obtain the label.
  
 \subsection{Score parameterization \label{sec:score_param}}
-Thus far we assumed the singleton and pairwise scores were given. We next discuss how to parameterize and learn these scores. As in other structured prediction works, we will assume that the scores are functions of the features of the input and labels. Specifically, denote a set of singleton features by $\fs\in\reals^{n_s}$ and a set of pairwise features by $\fp\in\reals^{n_p}$. Then the model has two sets of weights $\ws$ and $\wp$ and the scores are obtained as a linear combination of the features. Namely:
+Thus far we assumed the singleton and pairwise scores were given. We next discuss how to parameterize and learn these scores. As in other structured prediction work, we will assume that the scores are functions of the features of the input and labels. Specifically, denote a set of singleton features for mention $i$ and label $y_i$ by $\phiv^s_i(y_i)\in\reals^{n_s}$ and a set of pairwise features for mentions $i$ and $j$ and their labels by $\phiv^p_{ij}(y_i, y_j) \in\reals^{n_p}$. Then the model has two sets of weights $\ws$ and $\wp$ and the scores are obtained as a linear combination of the features. Namely:
 \bea
-s_i(y_i;\ws) &=& \ws\cdot\fs  \\
-s_{ij}(y_i,y_j;\wp) &=& \wp\cdot\fp ~,
+s_i(y_i;\ws) &=& \ws\cdot\phiv^s_i(y_i) \\
+s_{ij}(y_i,y_j;\wp) &=& \wp\cdot\phiv^p_{ij}(y_i, y_j) ~,
 \eea
 where we have explicitly denoted the dependence of the scores on the weight vectors.  See \secref{sec:expt:features} for details on how the features are chosen. It is of course possible to consider non-linear alternatives for the score function, as in recent deep learning parsing models \cite{chen2014fast,neurosis}, but we focus on the linear case for simplicity.
 

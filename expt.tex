@@ -13,7 +13,7 @@ test-a and test-b. Like most authors, we report performance on the
 
 \paragraph*{TAC KBP:} 
 The TAC KBP 2010, 2011, and 2012 evaluation datasets \cite{TAC2010,TAC2011,TAC2012} include 2250,
-2250, and 2226 mentions (2012) respectively,
+2250, and 2226 mentions respectively,
 of which roughly half are linkable
 to the reference KB.  The competition evaluation includes $\NIL$
 entities; participants are required to cluster $\NIL$ mentions across
@@ -27,12 +27,13 @@ metric $B^{3+} F_1$ which evaluates $\NIL$ clustering.
 \subsubsection{KB and entity aliases}
 
 Our KB is derived from the Wikipedia subset of Freebase
-\cite{BollackerEPST08}, with about 4M entities. For
+\cite{BollackerEPST08}, with about 4M entities. To obtain
 our mention prior (the probability of candidate entities given a mention), we
 collect alias counts from 
 Wikipedia page titles (including redirects and disambiguation
 pages), Freebase aliases, and Wikipedia anchor text.
-99.31\% of CoNLL test-b mentions are included, and 96.19\% map to the gold entity.
+99.31\% of CoNLL test-b mentions are covered by the KB, and 96.19\% include
+the gold entity in the candidates.
 
 We optionally use the mapping from aliases to candidate entities released
 by \newcite{Hoffart2011}, obtained by extending the
