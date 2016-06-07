@@ -119,7 +119,7 @@ In the single-link model, we simply set the local score for
 mention $i$ and candidate $c$ to $s_i(c) = \ln \frac{p_i(c )}{1 -
 p_i(c)}$, so that likely candidates get positive
 scores.  We set the pairwise score between two candidates heuristically to
-$s_{ij}(y_i, y_j) = \ln o(y_i, y_j) + 0.7$, where $o(y_i, y_j)$ is the number of
+$s_{ij}(y_i, y_j) = \ln o(y_i, y_j) + 2.3$, where $o(y_i, y_j)$ is the number of
 outlinks from the Wikipedia page of $y_i$ to the page of $y_j$.  We
 consider up to three candidates for each mention; if the baseline
 probability of the top candidate exceeds $0.9$, we only consider the top
