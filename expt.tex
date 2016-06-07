@@ -268,9 +268,13 @@ that Hillary has left vacant. & & Robert Kennedy \\ \hline
 season, and the Raiders currently have & attn: Chris Johnson (/m/027nr9m) & Oakland Raiders \\
 have 11 defensive backs on their roster. & & Oakland Raiders
 \end{tabular}
-\caption{\label{table:examples} Examples of gains by our algorithm, showing the resolved mention,
+\caption{\label{table:examples}{\small{Examples of gains by our algorithm, showing the resolved mention,
 the entities it resolves to in the baseline and the attention models,
-and the attention focus mentions in the document. }
+and the mentions in the document that are attended to (here $K=3$). In brackets
+is the Freebase MID. In the first example, the baseline labels the mention ``Caroline'' as the given name, whereas
+the attention model attends to mentions that identify it as the diplomat Caroline Kennedy. In the second
+example, both models label ``Chris Johnson'' as a football player, but the attention model finds the right one, by attending
+to three mentions of Oakland Raiders where /m/027nr9m played.}}}
 \end{table*}
 
 
