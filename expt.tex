@@ -121,7 +121,7 @@ p_i(c)}$, so that likely candidates get positive
 scores.  We set the pairwise score between two candidates heuristically to
 $s_{ij}(y_i, y_j) = \ln o(y_i, y_j) + 2.3$, where $o(y_i, y_j)$ is the number of
 outlinks from the Wikipedia page of $y_i$ to the page of $y_j$.  We
-consider up to three candidates for each mention; if the baseline
+consider up to three candidates for each mention for CONLL, and ten for TAC; if the baseline
 probability of the top candidate exceeds $0.9$, we only consider the top
 candidate. Including more candidates did not make a difference in performance,
 as additional candidates had low baseline scores and were almost never chosen
