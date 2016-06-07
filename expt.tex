@@ -199,9 +199,9 @@ easy to be considered a realistic benchmark.  Although we match
 \newcite{Pershina2015} using KB+HP, for completeness, we provide the
 performance of our system with candidate entities restricted to those
 in HP (KB+HP*), but this is not equivalent to using only HP during
-training and inference.  With KB+HP*, we beat \newcite{Pershina2015},
-and are close to recent unpublished work by \newcite{YamadaS0T16},
-which uses entity and word embeddings.  Adding these to our system may
+training and inference.  With KB+HP*, we outperform \newcite{Pershina2015},
+and are competitive with recent unpublished work by \newcite{YamadaS0T16},
+which uses entity and word embeddings.  Including embeddings as features in our system may
 lead to further gains.
 
 
@@ -233,14 +233,14 @@ Chisholm (2015) & 80.7& - & - \\
 Ling (2015) & - & {\bf 88.8} & - \\
 Yamada (2016)&  85.2 & - & - \\
   Our baseline & 84.5 & 87.6 & 83.0 \\
- Single link & 84.2 & 87.5 & 82.7\\
+ Single link & 84.3 & 87.5 & 82.8\\
  Attention & {\bf 87.2} & {88.7} & {\bf 84.4} \\
 \hline \hline
 Cucerzan (2011) & - & 86.8 &  84.1 \\
 Lazic (2015) & 79.3 & 86.5 & 84.0 \\
 Ling (2015) &- & - & 81.6 \\
 Our baseline & 81.5 & 86.8 & 84.3 \\
-Single link & 82.6 & 87.3 & 84.8 \\
+Single link & 82.8 & 87.3 & 84.9 \\
  Attention & {\bf 84.3} & {\bf 88.0} & {\bf 85.6} \\
 \hline
 \hline
@@ -249,7 +249,7 @@ Cucerzan (2012) R3 & 71.2 & 76.6 & 73.0 \\
 Lazic (2015) & {74.2} & {76.6} & 71.2 \\
 Ling (2015) & - & - & 66.7 \\
 Our baseline &78.8 & 80.3 & 76.9\\
- Single link & 79.7 & {80.8} & {77.4}  \\
+ Single link & 79.7 & {80.7} & {77.3}  \\
  Attention &{\bf 82.4} & {\bf 81.9} & {\bf 78.9} \\ \hline
 \end{tabular}
 \caption{Results on the TAC 2010 (top), TAC 2011 (middle), and TAC 2012 bottom evaluation datasets. \label{table:tac_results} }
@@ -261,20 +261,27 @@ Our baseline &78.8 & 80.3 & 76.9\\
 \begin{tabular}{l|l|l}
  Sentence with mention & { Entity}  & {Attn. focus mentions} \\  
  \hline
-{\bf Caroline} has dropped her name & base: Caroline (/m/01cvzm) &  Democratic Party\\ 
-from consideration for the seat   & attn: Caroline Kennedy (/m/01y603) & New York \\
+{\bf Caroline} has dropped her name 
+& base: \href{https://en.wikipedia.org/wiki/Caroline_(given_name)}{Caroline (given name)} 
+&  Democratic Party\\ 
+from consideration for the seat   
+& attn: \href{https://en.wikipedia.org/wiki/Caroline_Kennedy}{Caroline Kennedy}
+& New York \\
 that Hillary has left vacant. & & Robert Kennedy \\ \hline
-{\bf Chris Johnson} had just 13 tackles last & base: Chris Johnson (/m/03d753s) & Oakland Raiders  \\
-season, and the Raiders currently have & attn: Chris Johnson (/m/027nr9m) & Oakland Raiders \\
+{\bf Chris Johnson} had just 13 tackles last 
+& base: \href{https://en.wikipedia.org/wiki/Chris_Johnson_(running_back)}{Chris Johnson (running back)}
+& Oakland Raiders  \\
+season, and the Raiders currently have 
+& attn: \href{https://en.wikipedia.org/wiki/Chris_Johnson_(cornerback)}{Chris Johnson (cornerback)}
+ %Chris Johnson (/m/027nr9m) 
+& Oakland Raiders \\
 have 11 defensive backs on their roster. & & Oakland Raiders
 \end{tabular}
 \caption{\label{table:examples}{\small{Examples of gains by our algorithm, showing the resolved mention,
 the entities it resolves to in the baseline and the attention models,
-and the mentions in the document that are attended to (here $K=3$). In brackets
-is the Freebase MID. In the first example, the baseline labels the mention ``Caroline'' as the given name, whereas
+and the mentions in the document that are attended to (here $K=3$). In the first example, the baseline labels the mention ``Caroline'' as the given name, whereas
 the attention model attends to mentions that identify it as the diplomat Caroline Kennedy. In the second
-example, both models label ``Chris Johnson'' as a football player, but the attention model finds the right one, by attending
-to three mentions of Oakland Raiders where /m/027nr9m played.}}}
+example, both models resolve ``Chris Johnson'' to football players, but the attention model finds the correct one by attending to three mentions of his former team, the Oakland Raiders.}}}
 \end{table*}
 
 
@@ -284,7 +291,7 @@ We set the size of the multi-focus attention beam $K$ based on accuracy on
 CoNLL test-a (for CoNLL) and training accuracy (for TAC). 
 \figref{fig:k_effect} shows the effect of $K$ on the performance on 
 CoNLL test-a dataset. 
-Performance peaks for $K \in [3,5]$, with a sharp decrease after
+Performance peaks for $K = 6$, with a sharp decrease after
 $K=10$.  This validates our central premise: all-pairs label coupling
 may hurt accuracy.
 
