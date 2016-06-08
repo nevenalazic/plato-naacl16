@@ -10,7 +10,8 @@ In Sections \ref{sec:score_param} and \ref{sec:learning} we discuss how these sc
 
 Coherence models typically attempt to maximize a {\em global} objective function that assigns a score to each complete labeling ${\bf y} = (y_1,\ldots, y_n)$. 
 %, given the local and pairwise scores. 
-An example of such a function is the sum of all singleton and pairwise scores for each label:
+An example of such a function is the sum of all singleton and pairwise scores for each label:\footnote{The scores usually depend not only on the labels, 
+but also on the input text. We omit this dependence for brevity.}
  %A common example of such a function $g(y_1,\ldots,y_n)$ is:
 \be
 g({\bf y}) = \sum_i s_i(y_i) + \sum_i \sum_{j :  j \neq i} s_{ij}(y_i,y_j).

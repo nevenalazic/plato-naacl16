@@ -54,22 +54,22 @@ Previous work on attention has shown that it is advantageous to use a soft form 
 \newcommand{\xx}{{\mathbf{x}}}
 \newcommand{\zz}{{\mathbf{z}}}
 To obtain a soft version of the function  $\amax_K({\bf z})$, we first use an alternative definition. Denote by $\cS$
-the set ${\bf x} = (x_1,\ldots,x_n)$ such that $0\leq x_i \leq 1$ and $\sum_i x_i = K$. Then $\amax_K({\bf z})$ is equivalent to the optimization problem:
+the set ${\bf u} = (u_1,\ldots,u_n)$ such that $0\leq u_i \leq 1$ and $\sum_i u_i = K$. Then $\amax_K({\bf z})$ is equivalent to the optimization problem:
 \be
  \max_{ 
- \xx \in \cS
- } \;{\bf z} \cdot {\bf x}
+ \cdot {\bf u} \in \cS
+ } \;{\bf z} \cdot {\bf u}
 \ee
-The optimization problem above is a linear program, whose solution is the sum of top $K$ elements of ${\bf z}$ as required. This follows since the optimal $x_i$ can easily be shown to attain only integral values. % Alternatively, it can be shown that the vertices of the constraining polytope are integral.
+The optimization problem above is a linear program, whose solution is the sum of top $K$ elements of ${\bf z}$ as required. This follows since the optimal $u_i$ can easily be shown to attain only integral values. % Alternatively, it can be shown that the vertices of the constraining polytope are integral.
 
 Given this optimization view of $\amax_K({\bf z})$ it is natural to smooth it \cite{nesterov2005smooth} by adding a non-linearity to the optimization. Since the variables are non-negative, one possible choice is an entropy-like regularizer. We shall see that this choice results in a closed form solution, and also recovers the standard soft-max case for $K=1$.  Consider the optimization problem:
 \be
  \samax_K({\bf z}) = \max_{ 
- \xx \in \cS
- } \sum_i z_i x_i - \beta^{-1} \sum_i x_i \log{x_i},
+ {\bf u} \in \cS
+ } \sum_i z_i u_i - \beta^{-1} \sum_i u_i \log{u_i},
  \label{eq:softkmax_opt}
  \ee
- where $\beta$ is a tuned hyperparameter.\footnote{Note that $-\sum_i x_i \log x_i$ is different from the entropy function since variables $x_i$ sum to $K$ and not to 1.}  The following proposition provides a closed form solution for $\samax_K$, as well as its gradient.
+ where $\beta$ is a tuned hyperparameter.\footnote{Note that $-\sum_i u_i \log u_i$ is different from the entropy function since variables $u_i$ sum to $K$ and not to 1.}  The following proposition provides a closed form solution for $\samax_K$, as well as its gradient.
 
 \begin{proposition}
  \label{prop:softkmax}
@@ -108,10 +108,10 @@ f_i(y_i) = s_i(y_i) + \samax_K({\bf q}_{i}(y_i)) ~,
 and maximize $f(y_i)$ to obtain the label.
  
 \subsection{Score parameterization \label{sec:score_param}}
-Thus far we assumed the singleton and pairwise scores were given. We next discuss how to parameterize and learn these scores. As in other structured prediction work, we will assume that the scores are functions of the features of the input and labels. Specifically, denote a set of singleton features for mention $i$ and label $y_i$ by $\phiv^s_i(y_i)\in\reals^{n_s}$ and a set of pairwise features for mentions $i$ and $j$ and their labels by $\phiv^p_{ij}(y_i, y_j) \in\reals^{n_p}$. Then the model has two sets of weights $\ws$ and $\wp$ and the scores are obtained as a linear combination of the features. Namely:
+Thus far we assumed the singleton and pairwise scores were given. We next discuss how to parameterize and learn these scores. As in other structured prediction work, we will assume that the scores are functions of the features of the input $x$ and labels. Specifically, denote a set of singleton features for mention $i$ and label $y_i$ by $\phiv^s_i(x,y_i)\in\reals^{n_s}$ and a set of pairwise features for mentions $i$ and $j$ and their labels by $\phiv^p_{ij}(x,y_i, y_j) \in\reals^{n_p}$. Then the model has two sets of weights $\ws$ and $\wp$ and the scores are obtained as a linear combination of the features. Namely:\footnote{We again omit the dependence of the scores on the input $x$ for brevity.}
 \bea
-s_i(y_i;\ws) &=& \ws\cdot\phiv^s_i(y_i) \\
-s_{ij}(y_i,y_j;\wp) &=& \wp\cdot\phiv^p_{ij}(y_i, y_j) ~,
+s_i(y_i;\ws) &=& \ws\cdot\phiv^s_i(x,y_i) \\
+s_{ij}(y_i,y_j;\wp) &=& \wp\cdot\phiv^p_{ij}(x,y_i, y_j) ~,
 \eea
 where we have explicitly denoted the dependence of the scores on the weight vectors.  See \secref{sec:expt:features} for details on how the features are chosen. It is of course possible to consider non-linear alternatives for the score function, as in recent deep learning parsing models \cite{chen2014fast,neurosis}, but we focus on the linear case for simplicity.
 

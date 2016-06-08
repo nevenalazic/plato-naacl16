@@ -1,14 +1,14 @@
 \section{Proof of Proposition \ref{prop:softkmax}}
 %Assume w.l.o.g. that $z_i$ are sorted in decreasing order. 
 Begin with the optimization problem in \eqref{eq:softkmax_opt}. Introduce the following Lagrange multipliers: $\lambda$ 
-for the $\sum_i\mu_i=K$ constraint, and $\alpha_i\geq 0 $ for the $\mu_i \leq 1$ constraint. We can ignore the $\mu_i \geq 0 $
-constraint, as it will turn out to be satisfied. Denote the corresponding Lagrangian by $L(\mu,\lambda,\alpha)$. We will show the result
-by using the dual  $g(\lambda,\alpha) = \max_{\mu} L(\mu,\lambda,\alpha)$ and the fact that the solution of  \eqref{eq:softkmax_opt}
+for the $\sum_i u_i=K$ constraint, and $\alpha_i\geq 0 $ for the $u_i \leq 1$ constraint. We can ignore the $u_i \geq 0 $
+constraint, as it will turn out to be satisfied. Denote the corresponding Lagrangian by $L({\bf u},\lambda,\alpha)$. We will show the result
+by using the dual  $g(\lambda,\alpha) = \max_{{\bf u}} L({\bf u},\lambda,\alpha)$ and the fact that the solution of  \eqref{eq:softkmax_opt}
 is $\min_{\lambda,\alpha} g(\lambda,\alpha)$.
 
-Maximizing $L$ with respect to $\mu_i$ yields:
+Maximizing $L$ with respect to $u_i$ yields:
 \be
-\mu_i = e^{\beta z_i -1 + \beta \lambda - \beta \alpha_i}
+u_i = e^{\beta z_i -1 + \beta \lambda - \beta \alpha_i}
 \label{eq:opt_mu}
 \ee
 From this we can obtain the convex dual $g(\lambda,\alpha) $, and after minimizing over $\lambda$ we arrive at:
@@ -48,7 +48,7 @@ z_i - {1\over \beta} \log\frac{{\sum_{i=R + 1}^n e^{\beta z_i}}}{K - R} & 1 \leq
 \right.
 \label{eq:opt_alpha}
 \ee
-It can now be confirmed that the $\alpha,\gamma$ from Equations \ref{eq:opt_alpha} and \ref{eq:opt_gamma} satisfy the KKT conditions. Plugging the $\alpha $ value into $g(\alpha)$ yields the solution in the proposition. Differentiability follows from \newcite{nesterov2005smooth} and the gradient is $\mu_i$ in 
+It can now be confirmed that the $\alpha,\gamma$ from Equations \ref{eq:opt_alpha} and \ref{eq:opt_gamma} satisfy the KKT conditions. Plugging the $\alpha $ value into $g(\alpha)$ yields the solution in the proposition. Differentiability follows from \newcite{nesterov2005smooth} and the gradient is $u_i$ in 
 \eqref{eq:opt_mu}.
 %subgradient follows from standard results on subgradients of pointwise supermum functions.
 %The subgradient follows from the fact that $L(\mu,\lambda,\alpha)$ is minimized by \eqref{eq:opt_mu}, and a standard result on subgradient of pointwise supermum functions.
