@@ -136,7 +136,7 @@ $\log p_i(c)$ and $\log(1-p_i(c))$. We set $\log0=0$ by convention,
 and handle the case where $\log$ is undefined by introducing two additional
 binary indicator features for $p_i(c)=0$ and $p_i(c)=1$.
 
-{Edge features} $\fp$ are set based on three sources of information: (1) number of Freebase relations between $y_i$ and $y_j$, (2) number of hyperlinks between Wikipedia pages of $y_i$ and $y_j$ (in either direction), and
+{Edge features} $\phiv_{ij}^p$ are set based on three sources of information: (1) number of Freebase relations between $y_i$ and $y_j$, (2) number of hyperlinks between Wikipedia pages of $y_i$ and $y_j$ (in either direction), and
 (3) number of mentions of $y_i$ on the Wikipedia page of $y_j$ and vice versa, after
 annotating  Wikipedia with our baseline resolver. 
 We cap each count to five and encode it using five binary indicator features,
